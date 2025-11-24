@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viáticos Dispersados - Portal Grupo FG</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        .header p {
+            margin: 10px 0 0 0;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 30px;
+        }
+        .success-icon {
+            text-align: center;
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        .message {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            color: #155724;
+        }
+        .request-details {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        .detail-label {
+            font-weight: 600;
+            color: #495057;
+        }
+        .detail-value {
+            color: #212529;
+        }
+        .amount {
+            font-size: 24px;
+            font-weight: bold;
+            color: #28a745;
+        }
+        .next-steps {
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .next-steps h3 {
+            margin-top: 0;
+            color: #1976d2;
+        }
+        .next-steps ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .next-steps li {
+            margin-bottom: 8px;
+        }
+        .action-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            margin: 10px 5px;
+            transition: transform 0.2s;
+        }
+        .action-button:hover {
+            transform: translateY(-2px);
+            text-decoration: none;
+            color: white;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #6c757d;
+            font-size: 14px;
+        }
+        .highlight {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .card-info {
+            background-color: #e8f5e8;
+            border: 1px solid #c3e6cb;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎉 ¡Viáticos Dispersados!</h1>
+            <p>Tu solicitud de viáticos ha sido procesada exitosamente</p>
+        </div>
+
+        <div class="content">
+            <div class="success-icon">
+                ✅
+            </div>
+
+            <div class="message">
+                <h3>¡Excelente noticia!</h3>
+                <p>Tu solicitud de viáticos ha sido <strong>dispersada</strong> y los fondos han sido transferidos a tu tarjeta corporativa.</p>
+            </div>
+
+            <div class="request-details">
+                <h3>📋 Detalles de la Solicitud</h3>
+                <div class="detail-row">
+                    <span class="detail-label">Solicitante:</span>
+                    <span class="detail-value">{{user.name}} {{user.lastName}}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Empresa:</span>
+                    <span class="detail-value">{{user.company.name}}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Sucursal:</span>
+                    <span class="detail-value">{{user.branch.name}}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Motivo del viaje:</span>
+                    <span class="detail-value">{{travelReason}}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Fecha de salida:</span>
+                    <span class="detail-value">{{formatDate departureDate}}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Fecha de regreso:</span>
+                    <span class="detail-value">{{formatDate returnDate}}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Fecha de dispersión:</span>
+                    <span class="detail-value">{{formatDate disbursementDate}}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Monto total:</span>
+                    <span class="detail-value amount">${{formatCurrency totalAmount}}</span>
+                </div>
+            </div>
+
+            {{#if selectedCard}}
+            <div class="card-info">
+                <h3>💳 Información de la Tarjeta</h3>
+                <div class="detail-row">
+                    <span class="detail-label">Número de tarjeta:</span>
+                    <span class="detail-value">**** **** **** {{lastFourDigits selectedCard.cardNumber}}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Empresa de la tarjeta:</span>
+                    <span class="detail-value">{{selectedCard.company.name}}</span>
+                </div>
+            </div>
+            {{/if}}
+
+            <div class="next-steps">
+                <h3>📝 Próximos Pasos</h3>
+                <ul>
+                    <li><strong>Verifica tu tarjeta:</strong> Los fondos ya están disponibles en tu tarjeta corporativa</li>
+                    <li><strong>Realiza tus gastos:</strong> Utiliza la tarjeta para los gastos autorizados durante tu viaje</li>
+                    <li><strong>Guarda tus comprobantes:</strong> Conserva todos los tickets y facturas de tus gastos</li>
+                    <li><strong>Presenta tu comprobación:</strong> Al regresar, sube tus comprobantes en el portal</li>
+                </ul>
+            </div>
+
+            <div class="highlight">
+                <strong>💡 Recordatorio importante:</strong> 
+                Los viáticos deben utilizarse exclusivamente para gastos relacionados con el viaje autorizado. 
+                Mantén todos los comprobantes para la comprobación posterior.
+            </div>
+
+        </div>
+
+        <div class="footer">
+            <p>Portal Grupo FG - Sistema de Viáticos</p>
+            <p>Si tienes alguna pregunta, contacta al administrador del sistema</p>
+        </div>
+    </div>
+</body>
+</html>
+

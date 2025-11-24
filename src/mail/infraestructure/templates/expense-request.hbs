@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Solicitud de Viáticos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #2d3748;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section h3 {
+            color: #1a202c;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 3px solid #e2e8f0;
+            position: relative;
+        }
+
+        .section h3::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #4f46e5, #7c3aed);
+            border-radius: 2px;
+        }
+
+        .info-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .info-item {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            padding: 16px;
+            border-radius: 12px;
+            border-left: 4px solid #4f46e5;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease;
+        }
+
+        .info-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-item strong {
+            color: #2d3748;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 4px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-item span {
+            color: #4a5568;
+            font-size: 16px;
+        }
+
+        .expense-item {
+            background: linear-gradient(135deg, #e6fffa 0%, #b2f5ea 100%);
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            border-left: 4px solid #38b2ac;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease;
+        }
+
+        .expense-item:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .expense-item strong {
+            color: #2d3748;
+            font-weight: 600;
+        }
+
+        .expense-item span {
+            color: #38b2ac;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .objectives {
+            background: linear-gradient(135deg, #fef5e7 0%, #fed7aa 100%);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #ed8936;
+        }
+
+        .objectives p {
+            color: #744210;
+            font-size: 16px;
+            line-height: 1.7;
+        }
+
+        .actions {
+            background: linear-gradient(135deg, #f0fff4 0%, #c6f6d5 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+
+        .actions h3 {
+            color: #22543d;
+            margin-bottom: 20px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 24px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            min-width: 180px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-approve {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+        }
+
+        .btn-approve:hover {
+            background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+        }
+
+        .btn-reject {
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+            color: white;
+        }
+
+        .btn-reject:hover {
+            background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+        }
+
+        .footer {
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            color: #a0aec0;
+            text-align: center;
+            padding: 25px;
+            font-size: 14px;
+        }
+
+        .footer hr {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #4a5568, transparent);
+            margin-bottom: 15px;
+        }
+
+        .footer p {
+            color: #718096;
+            font-style: italic;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 10px;
+                border-radius: 12px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                min-width: auto;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>🛫 Nueva Solicitud de Viáticos</h2>
+            <p>Solicitante: {{requestedBy}}</p>
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <h3>📋 Información General</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <strong>Empresa</strong>
+                        <span>{{company}}</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Sucursal</strong>
+                        <span>{{branch}}</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Área</strong>
+                        <span>{{area}}</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Motivo del Viaje</strong>
+                        <span>{{travelReason}}</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Fecha de Salida</strong>
+                        <span>{{departureDate}}</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Fecha de Regreso</strong>
+                        <span>{{returnDate}}</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Fecha de Dispersión</strong>
+                        <span>{{disbursementDate}}</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Monto Total</strong>
+                        <span style="color: #38a169; font-weight: 700; font-size: 18px;">${{totalAmount}}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3>💰 Detalles de Gastos</h3>
+                {{#each details}}
+                    <div class="expense-item">
+                        <strong>{{concept}}:</strong> <span>${{amount}}</span>
+                    </div>
+                {{/each}}
+            </div>
+            
+            <div class="section">
+                <h3>🎯 Objetivos del Viaje</h3>
+                <div class="objectives">
+                    <p>{{travelObjectives}}</p>
+                </div>
+            </div>
+            
+            <div class="actions">
+                <h3>⚡ Acciones Requeridas</h3>
+                <p style="margin-bottom: 20px; color: #22543d;">Seleccione una opción para continuar:</p>
+                
+                <div class="action-buttons">
+                    <a href="{{apiUrl}}/expense-requests/{{requestId}}/approve?approverId={{approverId}}&comment=Aprobado" class="btn btn-approve">
+                        ✅ Aprobar Solicitud
+                    </a>
+                    
+                    <a href="{{apiUrl}}/expense-requests/{{requestId}}/reject?approverId={{approverId}}&comment=Rechazado" class="btn btn-reject">
+                        ❌ Rechazar Solicitud
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <hr>
+            <p><em>🚀 Portal Grupo FG - Sistema de Viáticos</em></p>
+        </div>
+    </div>
+</body>
+</html>
+

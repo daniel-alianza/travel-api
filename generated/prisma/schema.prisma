@@ -19,6 +19,7 @@ model Company {
   name      String   @db.VarChar(150)
   users     User[]
   branches  Branch[]
+  cards     Card[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -72,8 +73,88 @@ model User {
   supervisor   User?  @relation("UserSupervisor", fields: [supervisorId], references: [id])
   subordinates User[] @relation("UserSupervisor")
 
+  cards CardAssignment[]
+
+  travelRequests         TravelRequest[] @relation("UserRequests")
+  approvedTravelRequests TravelRequest[] @relation("UserApprovals")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([email])
+}
+
+model Card {
+  id         Int      @id @default(autoincrement())
+  cardNumber String   @unique @db.VarChar(50)
+  companyId  Int
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+
+  company        Company          @relation(fields: [companyId], references: [id])
+  assignments    CardAssignment[]
+  travelRequests TravelRequest[]
+}
+
+model CardAssignment {
+  id           Int       @id @default(autoincrement())
+  cardId       Int
+  userId       Int
+  assignedAt   DateTime  @default(now())
+  unassignedAt DateTime?
+
+  card Card @relation(fields: [cardId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([cardId])
+  @@index([userId])
+}
+
+model StatusTravelRequest {
+  id             Int             @id @default(autoincrement())
+  name           String          @unique @db.VarChar(100)
+  travelRequests TravelRequest[]
+}
+
+model TravelRequest {
+  id               Int      @id @default(autoincrement())
+  userId           Int
+  statusId         Int
+  cardId           Int?
+  totalAmount      Decimal  @db.Decimal(10, 2)
+  travelReason     String   @db.VarChar(255)
+  travelObjectives String   @db.VarChar(255)
+  departureDate    DateTime
+  returnDate       DateTime
+
+  disbursementDate DateTime?
+  approvalDate     DateTime?
+
+  approverId Int?
+  comment    String? @db.VarChar(255)
+
+  user     User                @relation("UserRequests", fields: [userId], references: [id])
+  status   StatusTravelRequest @relation(fields: [statusId], references: [id])
+  approver User?               @relation("UserApprovals", fields: [approverId], references: [id])
+  card     Card?               @relation(fields: [cardId], references: [id])
+
+  details TravelDetail[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([statusId])
+  @@index([cardId])
+}
+
+model TravelDetail {
+  id              Int     @id @default(autoincrement())
+  travelRequestId Int
+  concept         String  @db.VarChar(150)
+  amount          Decimal @db.Decimal(10, 2)
+
+  request TravelRequest @relation(fields: [travelRequestId], references: [id])
+
+  @@index([travelRequestId])
 }

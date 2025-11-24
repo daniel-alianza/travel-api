@@ -5,6 +5,7 @@ import { UsersModule } from './users/users.module';
 import { CompaniesModule } from './companies/companies.module';
 import { BranchesModule } from './branches/branches.module';
 import { AreaModule } from './area/area.module';
+import { TravelCardManagementModule } from './travel-card-management/travel-card-management.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { AreaModule } from './area/area.module';
     CompaniesModule,
     BranchesModule,
     AreaModule,
+    TravelCardManagementModule,
   ],
 
   controllers: [],

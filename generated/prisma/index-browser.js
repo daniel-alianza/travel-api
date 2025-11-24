@@ -166,6 +166,52 @@ exports.Prisma.UserScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.CardScalarFieldEnum = {
+  id: 'id',
+  cardNumber: 'cardNumber',
+  companyId: 'companyId',
+  isActive: 'isActive',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.CardAssignmentScalarFieldEnum = {
+  id: 'id',
+  cardId: 'cardId',
+  userId: 'userId',
+  assignedAt: 'assignedAt',
+  unassignedAt: 'unassignedAt'
+};
+
+exports.Prisma.StatusTravelRequestScalarFieldEnum = {
+  id: 'id',
+  name: 'name'
+};
+
+exports.Prisma.TravelRequestScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  statusId: 'statusId',
+  cardId: 'cardId',
+  totalAmount: 'totalAmount',
+  travelReason: 'travelReason',
+  travelObjectives: 'travelObjectives',
+  departureDate: 'departureDate',
+  returnDate: 'returnDate',
+  disbursementDate: 'disbursementDate',
+  approvalDate: 'approvalDate',
+  approverId: 'approverId',
+  comment: 'comment',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TravelDetailScalarFieldEnum = {
+  id: 'id',
+  travelRequestId: 'travelRequestId',
+  concept: 'concept',
+  amount: 'amount'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -200,13 +246,36 @@ exports.Prisma.UserOrderByRelevanceFieldEnum = {
   password: 'password'
 };
 
+exports.Prisma.CardOrderByRelevanceFieldEnum = {
+  cardNumber: 'cardNumber'
+};
+
+exports.Prisma.StatusTravelRequestOrderByRelevanceFieldEnum = {
+  name: 'name'
+};
+
+exports.Prisma.TravelRequestOrderByRelevanceFieldEnum = {
+  travelReason: 'travelReason',
+  travelObjectives: 'travelObjectives',
+  comment: 'comment'
+};
+
+exports.Prisma.TravelDetailOrderByRelevanceFieldEnum = {
+  concept: 'concept'
+};
+
 
 exports.Prisma.ModelName = {
   Company: 'Company',
   Branch: 'Branch',
   Area: 'Area',
   Role: 'Role',
-  User: 'User'
+  User: 'User',
+  Card: 'Card',
+  CardAssignment: 'CardAssignment',
+  StatusTravelRequest: 'StatusTravelRequest',
+  TravelRequest: 'TravelRequest',
+  TravelDetail: 'TravelDetail'
 };
 
 /**

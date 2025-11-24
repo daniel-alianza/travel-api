@@ -38,6 +38,31 @@ export type Role = $Result.DefaultSelection<Prisma.$RolePayload>
  * 
  */
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
+/**
+ * Model Card
+ * 
+ */
+export type Card = $Result.DefaultSelection<Prisma.$CardPayload>
+/**
+ * Model CardAssignment
+ * 
+ */
+export type CardAssignment = $Result.DefaultSelection<Prisma.$CardAssignmentPayload>
+/**
+ * Model StatusTravelRequest
+ * 
+ */
+export type StatusTravelRequest = $Result.DefaultSelection<Prisma.$StatusTravelRequestPayload>
+/**
+ * Model TravelRequest
+ * 
+ */
+export type TravelRequest = $Result.DefaultSelection<Prisma.$TravelRequestPayload>
+/**
+ * Model TravelDetail
+ * 
+ */
+export type TravelDetail = $Result.DefaultSelection<Prisma.$TravelDetailPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -213,6 +238,56 @@ export class PrismaClient<
     * ```
     */
   get user(): Prisma.UserDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.card`: Exposes CRUD operations for the **Card** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Cards
+    * const cards = await prisma.card.findMany()
+    * ```
+    */
+  get card(): Prisma.CardDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.cardAssignment`: Exposes CRUD operations for the **CardAssignment** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CardAssignments
+    * const cardAssignments = await prisma.cardAssignment.findMany()
+    * ```
+    */
+  get cardAssignment(): Prisma.CardAssignmentDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.statusTravelRequest`: Exposes CRUD operations for the **StatusTravelRequest** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more StatusTravelRequests
+    * const statusTravelRequests = await prisma.statusTravelRequest.findMany()
+    * ```
+    */
+  get statusTravelRequest(): Prisma.StatusTravelRequestDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.travelRequest`: Exposes CRUD operations for the **TravelRequest** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TravelRequests
+    * const travelRequests = await prisma.travelRequest.findMany()
+    * ```
+    */
+  get travelRequest(): Prisma.TravelRequestDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.travelDetail`: Exposes CRUD operations for the **TravelDetail** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TravelDetails
+    * const travelDetails = await prisma.travelDetail.findMany()
+    * ```
+    */
+  get travelDetail(): Prisma.TravelDetailDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -657,7 +732,12 @@ export namespace Prisma {
     Branch: 'Branch',
     Area: 'Area',
     Role: 'Role',
-    User: 'User'
+    User: 'User',
+    Card: 'Card',
+    CardAssignment: 'CardAssignment',
+    StatusTravelRequest: 'StatusTravelRequest',
+    TravelRequest: 'TravelRequest',
+    TravelDetail: 'TravelDetail'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -676,7 +756,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "company" | "branch" | "area" | "role" | "user"
+      modelProps: "company" | "branch" | "area" | "role" | "user" | "card" | "cardAssignment" | "statusTravelRequest" | "travelRequest" | "travelDetail"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1010,6 +1090,336 @@ export namespace Prisma {
           }
         }
       }
+      Card: {
+        payload: Prisma.$CardPayload<ExtArgs>
+        fields: Prisma.CardFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CardFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CardPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CardFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CardPayload>
+          }
+          findFirst: {
+            args: Prisma.CardFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CardPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CardFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CardPayload>
+          }
+          findMany: {
+            args: Prisma.CardFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CardPayload>[]
+          }
+          create: {
+            args: Prisma.CardCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CardPayload>
+          }
+          createMany: {
+            args: Prisma.CardCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.CardDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CardPayload>
+          }
+          update: {
+            args: Prisma.CardUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CardPayload>
+          }
+          deleteMany: {
+            args: Prisma.CardDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CardUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.CardUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CardPayload>
+          }
+          aggregate: {
+            args: Prisma.CardAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCard>
+          }
+          groupBy: {
+            args: Prisma.CardGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CardGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CardCountArgs<ExtArgs>
+            result: $Utils.Optional<CardCountAggregateOutputType> | number
+          }
+        }
+      }
+      CardAssignment: {
+        payload: Prisma.$CardAssignmentPayload<ExtArgs>
+        fields: Prisma.CardAssignmentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CardAssignmentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CardAssignmentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CardAssignmentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CardAssignmentPayload>
+          }
+          findFirst: {
+            args: Prisma.CardAssignmentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CardAssignmentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CardAssignmentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CardAssignmentPayload>
+          }
+          findMany: {
+            args: Prisma.CardAssignmentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CardAssignmentPayload>[]
+          }
+          create: {
+            args: Prisma.CardAssignmentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CardAssignmentPayload>
+          }
+          createMany: {
+            args: Prisma.CardAssignmentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.CardAssignmentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CardAssignmentPayload>
+          }
+          update: {
+            args: Prisma.CardAssignmentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CardAssignmentPayload>
+          }
+          deleteMany: {
+            args: Prisma.CardAssignmentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CardAssignmentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.CardAssignmentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CardAssignmentPayload>
+          }
+          aggregate: {
+            args: Prisma.CardAssignmentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCardAssignment>
+          }
+          groupBy: {
+            args: Prisma.CardAssignmentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CardAssignmentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CardAssignmentCountArgs<ExtArgs>
+            result: $Utils.Optional<CardAssignmentCountAggregateOutputType> | number
+          }
+        }
+      }
+      StatusTravelRequest: {
+        payload: Prisma.$StatusTravelRequestPayload<ExtArgs>
+        fields: Prisma.StatusTravelRequestFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.StatusTravelRequestFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StatusTravelRequestPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.StatusTravelRequestFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StatusTravelRequestPayload>
+          }
+          findFirst: {
+            args: Prisma.StatusTravelRequestFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StatusTravelRequestPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.StatusTravelRequestFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StatusTravelRequestPayload>
+          }
+          findMany: {
+            args: Prisma.StatusTravelRequestFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StatusTravelRequestPayload>[]
+          }
+          create: {
+            args: Prisma.StatusTravelRequestCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StatusTravelRequestPayload>
+          }
+          createMany: {
+            args: Prisma.StatusTravelRequestCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.StatusTravelRequestDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StatusTravelRequestPayload>
+          }
+          update: {
+            args: Prisma.StatusTravelRequestUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StatusTravelRequestPayload>
+          }
+          deleteMany: {
+            args: Prisma.StatusTravelRequestDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.StatusTravelRequestUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.StatusTravelRequestUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StatusTravelRequestPayload>
+          }
+          aggregate: {
+            args: Prisma.StatusTravelRequestAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateStatusTravelRequest>
+          }
+          groupBy: {
+            args: Prisma.StatusTravelRequestGroupByArgs<ExtArgs>
+            result: $Utils.Optional<StatusTravelRequestGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.StatusTravelRequestCountArgs<ExtArgs>
+            result: $Utils.Optional<StatusTravelRequestCountAggregateOutputType> | number
+          }
+        }
+      }
+      TravelRequest: {
+        payload: Prisma.$TravelRequestPayload<ExtArgs>
+        fields: Prisma.TravelRequestFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TravelRequestFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TravelRequestPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TravelRequestFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TravelRequestPayload>
+          }
+          findFirst: {
+            args: Prisma.TravelRequestFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TravelRequestPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TravelRequestFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TravelRequestPayload>
+          }
+          findMany: {
+            args: Prisma.TravelRequestFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TravelRequestPayload>[]
+          }
+          create: {
+            args: Prisma.TravelRequestCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TravelRequestPayload>
+          }
+          createMany: {
+            args: Prisma.TravelRequestCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.TravelRequestDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TravelRequestPayload>
+          }
+          update: {
+            args: Prisma.TravelRequestUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TravelRequestPayload>
+          }
+          deleteMany: {
+            args: Prisma.TravelRequestDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TravelRequestUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.TravelRequestUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TravelRequestPayload>
+          }
+          aggregate: {
+            args: Prisma.TravelRequestAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTravelRequest>
+          }
+          groupBy: {
+            args: Prisma.TravelRequestGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TravelRequestGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TravelRequestCountArgs<ExtArgs>
+            result: $Utils.Optional<TravelRequestCountAggregateOutputType> | number
+          }
+        }
+      }
+      TravelDetail: {
+        payload: Prisma.$TravelDetailPayload<ExtArgs>
+        fields: Prisma.TravelDetailFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TravelDetailFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TravelDetailPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TravelDetailFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TravelDetailPayload>
+          }
+          findFirst: {
+            args: Prisma.TravelDetailFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TravelDetailPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TravelDetailFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TravelDetailPayload>
+          }
+          findMany: {
+            args: Prisma.TravelDetailFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TravelDetailPayload>[]
+          }
+          create: {
+            args: Prisma.TravelDetailCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TravelDetailPayload>
+          }
+          createMany: {
+            args: Prisma.TravelDetailCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.TravelDetailDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TravelDetailPayload>
+          }
+          update: {
+            args: Prisma.TravelDetailUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TravelDetailPayload>
+          }
+          deleteMany: {
+            args: Prisma.TravelDetailDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TravelDetailUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.TravelDetailUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TravelDetailPayload>
+          }
+          aggregate: {
+            args: Prisma.TravelDetailAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTravelDetail>
+          }
+          groupBy: {
+            args: Prisma.TravelDetailGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TravelDetailGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TravelDetailCountArgs<ExtArgs>
+            result: $Utils.Optional<TravelDetailCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1099,6 +1509,11 @@ export namespace Prisma {
     area?: AreaOmit
     role?: RoleOmit
     user?: UserOmit
+    card?: CardOmit
+    cardAssignment?: CardAssignmentOmit
+    statusTravelRequest?: StatusTravelRequestOmit
+    travelRequest?: TravelRequestOmit
+    travelDetail?: TravelDetailOmit
   }
 
   /* Types for Logging */
@@ -1195,11 +1610,13 @@ export namespace Prisma {
   export type CompanyCountOutputType = {
     users: number
     branches: number
+    cards: number
   }
 
   export type CompanyCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     users?: boolean | CompanyCountOutputTypeCountUsersArgs
     branches?: boolean | CompanyCountOutputTypeCountBranchesArgs
+    cards?: boolean | CompanyCountOutputTypeCountCardsArgs
   }
 
   // Custom InputTypes
@@ -1225,6 +1642,13 @@ export namespace Prisma {
    */
   export type CompanyCountOutputTypeCountBranchesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: BranchWhereInput
+  }
+
+  /**
+   * CompanyCountOutputType without action
+   */
+  export type CompanyCountOutputTypeCountCardsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CardWhereInput
   }
 
 
@@ -1327,10 +1751,16 @@ export namespace Prisma {
 
   export type UserCountOutputType = {
     subordinates: number
+    cards: number
+    travelRequests: number
+    approvedTravelRequests: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     subordinates?: boolean | UserCountOutputTypeCountSubordinatesArgs
+    cards?: boolean | UserCountOutputTypeCountCardsArgs
+    travelRequests?: boolean | UserCountOutputTypeCountTravelRequestsArgs
+    approvedTravelRequests?: boolean | UserCountOutputTypeCountApprovedTravelRequestsArgs
   }
 
   // Custom InputTypes
@@ -1349,6 +1779,129 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountSubordinatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: UserWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountCardsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CardAssignmentWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountTravelRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TravelRequestWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountApprovedTravelRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TravelRequestWhereInput
+  }
+
+
+  /**
+   * Count Type CardCountOutputType
+   */
+
+  export type CardCountOutputType = {
+    assignments: number
+    travelRequests: number
+  }
+
+  export type CardCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    assignments?: boolean | CardCountOutputTypeCountAssignmentsArgs
+    travelRequests?: boolean | CardCountOutputTypeCountTravelRequestsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * CardCountOutputType without action
+   */
+  export type CardCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CardCountOutputType
+     */
+    select?: CardCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * CardCountOutputType without action
+   */
+  export type CardCountOutputTypeCountAssignmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CardAssignmentWhereInput
+  }
+
+  /**
+   * CardCountOutputType without action
+   */
+  export type CardCountOutputTypeCountTravelRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TravelRequestWhereInput
+  }
+
+
+  /**
+   * Count Type StatusTravelRequestCountOutputType
+   */
+
+  export type StatusTravelRequestCountOutputType = {
+    travelRequests: number
+  }
+
+  export type StatusTravelRequestCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    travelRequests?: boolean | StatusTravelRequestCountOutputTypeCountTravelRequestsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * StatusTravelRequestCountOutputType without action
+   */
+  export type StatusTravelRequestCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatusTravelRequestCountOutputType
+     */
+    select?: StatusTravelRequestCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * StatusTravelRequestCountOutputType without action
+   */
+  export type StatusTravelRequestCountOutputTypeCountTravelRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TravelRequestWhereInput
+  }
+
+
+  /**
+   * Count Type TravelRequestCountOutputType
+   */
+
+  export type TravelRequestCountOutputType = {
+    details: number
+  }
+
+  export type TravelRequestCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    details?: boolean | TravelRequestCountOutputTypeCountDetailsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * TravelRequestCountOutputType without action
+   */
+  export type TravelRequestCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TravelRequestCountOutputType
+     */
+    select?: TravelRequestCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * TravelRequestCountOutputType without action
+   */
+  export type TravelRequestCountOutputTypeCountDetailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TravelDetailWhereInput
   }
 
 
@@ -1548,6 +2101,7 @@ export namespace Prisma {
     updatedAt?: boolean
     users?: boolean | Company$usersArgs<ExtArgs>
     branches?: boolean | Company$branchesArgs<ExtArgs>
+    cards?: boolean | Company$cardsArgs<ExtArgs>
     _count?: boolean | CompanyCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["company"]>
 
@@ -1564,6 +2118,7 @@ export namespace Prisma {
   export type CompanyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     users?: boolean | Company$usersArgs<ExtArgs>
     branches?: boolean | Company$branchesArgs<ExtArgs>
+    cards?: boolean | Company$cardsArgs<ExtArgs>
     _count?: boolean | CompanyCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -1572,6 +2127,7 @@ export namespace Prisma {
     objects: {
       users: Prisma.$UserPayload<ExtArgs>[]
       branches: Prisma.$BranchPayload<ExtArgs>[]
+      cards: Prisma.$CardPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -1920,6 +2476,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     users<T extends Company$usersArgs<ExtArgs> = {}>(args?: Subset<T, Company$usersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     branches<T extends Company$branchesArgs<ExtArgs> = {}>(args?: Subset<T, Company$branchesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    cards<T extends Company$cardsArgs<ExtArgs> = {}>(args?: Subset<T, Company$cardsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2341,6 +2898,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: BranchScalarFieldEnum | BranchScalarFieldEnum[]
+  }
+
+  /**
+   * Company.cards
+   */
+  export type Company$cardsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Card
+     */
+    select?: CardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Card
+     */
+    omit?: CardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CardInclude<ExtArgs> | null
+    where?: CardWhereInput
+    orderBy?: CardOrderByWithRelationInput | CardOrderByWithRelationInput[]
+    cursor?: CardWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CardScalarFieldEnum | CardScalarFieldEnum[]
   }
 
   /**
@@ -5611,6 +6192,9 @@ export namespace Prisma {
     role?: boolean | RoleDefaultArgs<ExtArgs>
     supervisor?: boolean | User$supervisorArgs<ExtArgs>
     subordinates?: boolean | User$subordinatesArgs<ExtArgs>
+    cards?: boolean | User$cardsArgs<ExtArgs>
+    travelRequests?: boolean | User$travelRequestsArgs<ExtArgs>
+    approvedTravelRequests?: boolean | User$approvedTravelRequestsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -5641,6 +6225,9 @@ export namespace Prisma {
     role?: boolean | RoleDefaultArgs<ExtArgs>
     supervisor?: boolean | User$supervisorArgs<ExtArgs>
     subordinates?: boolean | User$subordinatesArgs<ExtArgs>
+    cards?: boolean | User$cardsArgs<ExtArgs>
+    travelRequests?: boolean | User$travelRequestsArgs<ExtArgs>
+    approvedTravelRequests?: boolean | User$approvedTravelRequestsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -5653,6 +6240,9 @@ export namespace Prisma {
       role: Prisma.$RolePayload<ExtArgs>
       supervisor: Prisma.$UserPayload<ExtArgs> | null
       subordinates: Prisma.$UserPayload<ExtArgs>[]
+      cards: Prisma.$CardAssignmentPayload<ExtArgs>[]
+      travelRequests: Prisma.$TravelRequestPayload<ExtArgs>[]
+      approvedTravelRequests: Prisma.$TravelRequestPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -6015,6 +6605,9 @@ export namespace Prisma {
     role<T extends RoleDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RoleDefaultArgs<ExtArgs>>): Prisma__RoleClient<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     supervisor<T extends User$supervisorArgs<ExtArgs> = {}>(args?: Subset<T, User$supervisorArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     subordinates<T extends User$subordinatesArgs<ExtArgs> = {}>(args?: Subset<T, User$subordinatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    cards<T extends User$cardsArgs<ExtArgs> = {}>(args?: Subset<T, User$cardsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CardAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    travelRequests<T extends User$travelRequestsArgs<ExtArgs> = {}>(args?: Subset<T, User$travelRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TravelRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    approvedTravelRequests<T extends User$approvedTravelRequestsArgs<ExtArgs> = {}>(args?: Subset<T, User$approvedTravelRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TravelRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6444,6 +7037,78 @@ export namespace Prisma {
   }
 
   /**
+   * User.cards
+   */
+  export type User$cardsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CardAssignment
+     */
+    select?: CardAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CardAssignment
+     */
+    omit?: CardAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CardAssignmentInclude<ExtArgs> | null
+    where?: CardAssignmentWhereInput
+    orderBy?: CardAssignmentOrderByWithRelationInput | CardAssignmentOrderByWithRelationInput[]
+    cursor?: CardAssignmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CardAssignmentScalarFieldEnum | CardAssignmentScalarFieldEnum[]
+  }
+
+  /**
+   * User.travelRequests
+   */
+  export type User$travelRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TravelRequest
+     */
+    select?: TravelRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TravelRequest
+     */
+    omit?: TravelRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TravelRequestInclude<ExtArgs> | null
+    where?: TravelRequestWhereInput
+    orderBy?: TravelRequestOrderByWithRelationInput | TravelRequestOrderByWithRelationInput[]
+    cursor?: TravelRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TravelRequestScalarFieldEnum | TravelRequestScalarFieldEnum[]
+  }
+
+  /**
+   * User.approvedTravelRequests
+   */
+  export type User$approvedTravelRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TravelRequest
+     */
+    select?: TravelRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TravelRequest
+     */
+    omit?: TravelRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TravelRequestInclude<ExtArgs> | null
+    where?: TravelRequestWhereInput
+    orderBy?: TravelRequestOrderByWithRelationInput | TravelRequestOrderByWithRelationInput[]
+    cursor?: TravelRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TravelRequestScalarFieldEnum | TravelRequestScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6459,6 +7124,5095 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Card
+   */
+
+  export type AggregateCard = {
+    _count: CardCountAggregateOutputType | null
+    _avg: CardAvgAggregateOutputType | null
+    _sum: CardSumAggregateOutputType | null
+    _min: CardMinAggregateOutputType | null
+    _max: CardMaxAggregateOutputType | null
+  }
+
+  export type CardAvgAggregateOutputType = {
+    id: number | null
+    companyId: number | null
+  }
+
+  export type CardSumAggregateOutputType = {
+    id: number | null
+    companyId: number | null
+  }
+
+  export type CardMinAggregateOutputType = {
+    id: number | null
+    cardNumber: string | null
+    companyId: number | null
+    isActive: boolean | null
+    createdAt: Date | null
+  }
+
+  export type CardMaxAggregateOutputType = {
+    id: number | null
+    cardNumber: string | null
+    companyId: number | null
+    isActive: boolean | null
+    createdAt: Date | null
+  }
+
+  export type CardCountAggregateOutputType = {
+    id: number
+    cardNumber: number
+    companyId: number
+    isActive: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type CardAvgAggregateInputType = {
+    id?: true
+    companyId?: true
+  }
+
+  export type CardSumAggregateInputType = {
+    id?: true
+    companyId?: true
+  }
+
+  export type CardMinAggregateInputType = {
+    id?: true
+    cardNumber?: true
+    companyId?: true
+    isActive?: true
+    createdAt?: true
+  }
+
+  export type CardMaxAggregateInputType = {
+    id?: true
+    cardNumber?: true
+    companyId?: true
+    isActive?: true
+    createdAt?: true
+  }
+
+  export type CardCountAggregateInputType = {
+    id?: true
+    cardNumber?: true
+    companyId?: true
+    isActive?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type CardAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Card to aggregate.
+     */
+    where?: CardWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Cards to fetch.
+     */
+    orderBy?: CardOrderByWithRelationInput | CardOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CardWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Cards from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Cards.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Cards
+    **/
+    _count?: true | CardCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CardAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CardSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CardMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CardMaxAggregateInputType
+  }
+
+  export type GetCardAggregateType<T extends CardAggregateArgs> = {
+        [P in keyof T & keyof AggregateCard]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCard[P]>
+      : GetScalarType<T[P], AggregateCard[P]>
+  }
+
+
+
+
+  export type CardGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CardWhereInput
+    orderBy?: CardOrderByWithAggregationInput | CardOrderByWithAggregationInput[]
+    by: CardScalarFieldEnum[] | CardScalarFieldEnum
+    having?: CardScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CardCountAggregateInputType | true
+    _avg?: CardAvgAggregateInputType
+    _sum?: CardSumAggregateInputType
+    _min?: CardMinAggregateInputType
+    _max?: CardMaxAggregateInputType
+  }
+
+  export type CardGroupByOutputType = {
+    id: number
+    cardNumber: string
+    companyId: number
+    isActive: boolean
+    createdAt: Date
+    _count: CardCountAggregateOutputType | null
+    _avg: CardAvgAggregateOutputType | null
+    _sum: CardSumAggregateOutputType | null
+    _min: CardMinAggregateOutputType | null
+    _max: CardMaxAggregateOutputType | null
+  }
+
+  type GetCardGroupByPayload<T extends CardGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CardGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CardGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CardGroupByOutputType[P]>
+            : GetScalarType<T[P], CardGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CardSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    cardNumber?: boolean
+    companyId?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    assignments?: boolean | Card$assignmentsArgs<ExtArgs>
+    travelRequests?: boolean | Card$travelRequestsArgs<ExtArgs>
+    _count?: boolean | CardCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["card"]>
+
+
+
+  export type CardSelectScalar = {
+    id?: boolean
+    cardNumber?: boolean
+    companyId?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+  }
+
+  export type CardOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cardNumber" | "companyId" | "isActive" | "createdAt", ExtArgs["result"]["card"]>
+  export type CardInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    assignments?: boolean | Card$assignmentsArgs<ExtArgs>
+    travelRequests?: boolean | Card$travelRequestsArgs<ExtArgs>
+    _count?: boolean | CardCountOutputTypeDefaultArgs<ExtArgs>
+  }
+
+  export type $CardPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Card"
+    objects: {
+      company: Prisma.$CompanyPayload<ExtArgs>
+      assignments: Prisma.$CardAssignmentPayload<ExtArgs>[]
+      travelRequests: Prisma.$TravelRequestPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      cardNumber: string
+      companyId: number
+      isActive: boolean
+      createdAt: Date
+    }, ExtArgs["result"]["card"]>
+    composites: {}
+  }
+
+  type CardGetPayload<S extends boolean | null | undefined | CardDefaultArgs> = $Result.GetResult<Prisma.$CardPayload, S>
+
+  type CardCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CardFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CardCountAggregateInputType | true
+    }
+
+  export interface CardDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Card'], meta: { name: 'Card' } }
+    /**
+     * Find zero or one Card that matches the filter.
+     * @param {CardFindUniqueArgs} args - Arguments to find a Card
+     * @example
+     * // Get one Card
+     * const card = await prisma.card.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CardFindUniqueArgs>(args: SelectSubset<T, CardFindUniqueArgs<ExtArgs>>): Prisma__CardClient<$Result.GetResult<Prisma.$CardPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Card that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CardFindUniqueOrThrowArgs} args - Arguments to find a Card
+     * @example
+     * // Get one Card
+     * const card = await prisma.card.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CardFindUniqueOrThrowArgs>(args: SelectSubset<T, CardFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CardClient<$Result.GetResult<Prisma.$CardPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Card that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CardFindFirstArgs} args - Arguments to find a Card
+     * @example
+     * // Get one Card
+     * const card = await prisma.card.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CardFindFirstArgs>(args?: SelectSubset<T, CardFindFirstArgs<ExtArgs>>): Prisma__CardClient<$Result.GetResult<Prisma.$CardPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Card that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CardFindFirstOrThrowArgs} args - Arguments to find a Card
+     * @example
+     * // Get one Card
+     * const card = await prisma.card.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CardFindFirstOrThrowArgs>(args?: SelectSubset<T, CardFindFirstOrThrowArgs<ExtArgs>>): Prisma__CardClient<$Result.GetResult<Prisma.$CardPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Cards that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CardFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Cards
+     * const cards = await prisma.card.findMany()
+     * 
+     * // Get first 10 Cards
+     * const cards = await prisma.card.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const cardWithIdOnly = await prisma.card.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CardFindManyArgs>(args?: SelectSubset<T, CardFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Card.
+     * @param {CardCreateArgs} args - Arguments to create a Card.
+     * @example
+     * // Create one Card
+     * const Card = await prisma.card.create({
+     *   data: {
+     *     // ... data to create a Card
+     *   }
+     * })
+     * 
+     */
+    create<T extends CardCreateArgs>(args: SelectSubset<T, CardCreateArgs<ExtArgs>>): Prisma__CardClient<$Result.GetResult<Prisma.$CardPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Cards.
+     * @param {CardCreateManyArgs} args - Arguments to create many Cards.
+     * @example
+     * // Create many Cards
+     * const card = await prisma.card.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CardCreateManyArgs>(args?: SelectSubset<T, CardCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Card.
+     * @param {CardDeleteArgs} args - Arguments to delete one Card.
+     * @example
+     * // Delete one Card
+     * const Card = await prisma.card.delete({
+     *   where: {
+     *     // ... filter to delete one Card
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CardDeleteArgs>(args: SelectSubset<T, CardDeleteArgs<ExtArgs>>): Prisma__CardClient<$Result.GetResult<Prisma.$CardPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Card.
+     * @param {CardUpdateArgs} args - Arguments to update one Card.
+     * @example
+     * // Update one Card
+     * const card = await prisma.card.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CardUpdateArgs>(args: SelectSubset<T, CardUpdateArgs<ExtArgs>>): Prisma__CardClient<$Result.GetResult<Prisma.$CardPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Cards.
+     * @param {CardDeleteManyArgs} args - Arguments to filter Cards to delete.
+     * @example
+     * // Delete a few Cards
+     * const { count } = await prisma.card.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CardDeleteManyArgs>(args?: SelectSubset<T, CardDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Cards.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CardUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Cards
+     * const card = await prisma.card.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CardUpdateManyArgs>(args: SelectSubset<T, CardUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Card.
+     * @param {CardUpsertArgs} args - Arguments to update or create a Card.
+     * @example
+     * // Update or create a Card
+     * const card = await prisma.card.upsert({
+     *   create: {
+     *     // ... data to create a Card
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Card we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CardUpsertArgs>(args: SelectSubset<T, CardUpsertArgs<ExtArgs>>): Prisma__CardClient<$Result.GetResult<Prisma.$CardPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Cards.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CardCountArgs} args - Arguments to filter Cards to count.
+     * @example
+     * // Count the number of Cards
+     * const count = await prisma.card.count({
+     *   where: {
+     *     // ... the filter for the Cards we want to count
+     *   }
+     * })
+    **/
+    count<T extends CardCountArgs>(
+      args?: Subset<T, CardCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CardCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Card.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CardAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CardAggregateArgs>(args: Subset<T, CardAggregateArgs>): Prisma.PrismaPromise<GetCardAggregateType<T>>
+
+    /**
+     * Group by Card.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CardGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CardGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CardGroupByArgs['orderBy'] }
+        : { orderBy?: CardGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CardGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCardGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Card model
+   */
+  readonly fields: CardFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Card.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CardClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    assignments<T extends Card$assignmentsArgs<ExtArgs> = {}>(args?: Subset<T, Card$assignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CardAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    travelRequests<T extends Card$travelRequestsArgs<ExtArgs> = {}>(args?: Subset<T, Card$travelRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TravelRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Card model
+   */
+  interface CardFieldRefs {
+    readonly id: FieldRef<"Card", 'Int'>
+    readonly cardNumber: FieldRef<"Card", 'String'>
+    readonly companyId: FieldRef<"Card", 'Int'>
+    readonly isActive: FieldRef<"Card", 'Boolean'>
+    readonly createdAt: FieldRef<"Card", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Card findUnique
+   */
+  export type CardFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Card
+     */
+    select?: CardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Card
+     */
+    omit?: CardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CardInclude<ExtArgs> | null
+    /**
+     * Filter, which Card to fetch.
+     */
+    where: CardWhereUniqueInput
+  }
+
+  /**
+   * Card findUniqueOrThrow
+   */
+  export type CardFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Card
+     */
+    select?: CardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Card
+     */
+    omit?: CardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CardInclude<ExtArgs> | null
+    /**
+     * Filter, which Card to fetch.
+     */
+    where: CardWhereUniqueInput
+  }
+
+  /**
+   * Card findFirst
+   */
+  export type CardFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Card
+     */
+    select?: CardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Card
+     */
+    omit?: CardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CardInclude<ExtArgs> | null
+    /**
+     * Filter, which Card to fetch.
+     */
+    where?: CardWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Cards to fetch.
+     */
+    orderBy?: CardOrderByWithRelationInput | CardOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Cards.
+     */
+    cursor?: CardWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Cards from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Cards.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Cards.
+     */
+    distinct?: CardScalarFieldEnum | CardScalarFieldEnum[]
+  }
+
+  /**
+   * Card findFirstOrThrow
+   */
+  export type CardFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Card
+     */
+    select?: CardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Card
+     */
+    omit?: CardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CardInclude<ExtArgs> | null
+    /**
+     * Filter, which Card to fetch.
+     */
+    where?: CardWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Cards to fetch.
+     */
+    orderBy?: CardOrderByWithRelationInput | CardOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Cards.
+     */
+    cursor?: CardWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Cards from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Cards.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Cards.
+     */
+    distinct?: CardScalarFieldEnum | CardScalarFieldEnum[]
+  }
+
+  /**
+   * Card findMany
+   */
+  export type CardFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Card
+     */
+    select?: CardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Card
+     */
+    omit?: CardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CardInclude<ExtArgs> | null
+    /**
+     * Filter, which Cards to fetch.
+     */
+    where?: CardWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Cards to fetch.
+     */
+    orderBy?: CardOrderByWithRelationInput | CardOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Cards.
+     */
+    cursor?: CardWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Cards from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Cards.
+     */
+    skip?: number
+    distinct?: CardScalarFieldEnum | CardScalarFieldEnum[]
+  }
+
+  /**
+   * Card create
+   */
+  export type CardCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Card
+     */
+    select?: CardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Card
+     */
+    omit?: CardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CardInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Card.
+     */
+    data: XOR<CardCreateInput, CardUncheckedCreateInput>
+  }
+
+  /**
+   * Card createMany
+   */
+  export type CardCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Cards.
+     */
+    data: CardCreateManyInput | CardCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Card update
+   */
+  export type CardUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Card
+     */
+    select?: CardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Card
+     */
+    omit?: CardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CardInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Card.
+     */
+    data: XOR<CardUpdateInput, CardUncheckedUpdateInput>
+    /**
+     * Choose, which Card to update.
+     */
+    where: CardWhereUniqueInput
+  }
+
+  /**
+   * Card updateMany
+   */
+  export type CardUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Cards.
+     */
+    data: XOR<CardUpdateManyMutationInput, CardUncheckedUpdateManyInput>
+    /**
+     * Filter which Cards to update
+     */
+    where?: CardWhereInput
+    /**
+     * Limit how many Cards to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Card upsert
+   */
+  export type CardUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Card
+     */
+    select?: CardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Card
+     */
+    omit?: CardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CardInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Card to update in case it exists.
+     */
+    where: CardWhereUniqueInput
+    /**
+     * In case the Card found by the `where` argument doesn't exist, create a new Card with this data.
+     */
+    create: XOR<CardCreateInput, CardUncheckedCreateInput>
+    /**
+     * In case the Card was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CardUpdateInput, CardUncheckedUpdateInput>
+  }
+
+  /**
+   * Card delete
+   */
+  export type CardDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Card
+     */
+    select?: CardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Card
+     */
+    omit?: CardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CardInclude<ExtArgs> | null
+    /**
+     * Filter which Card to delete.
+     */
+    where: CardWhereUniqueInput
+  }
+
+  /**
+   * Card deleteMany
+   */
+  export type CardDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Cards to delete
+     */
+    where?: CardWhereInput
+    /**
+     * Limit how many Cards to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Card.assignments
+   */
+  export type Card$assignmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CardAssignment
+     */
+    select?: CardAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CardAssignment
+     */
+    omit?: CardAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CardAssignmentInclude<ExtArgs> | null
+    where?: CardAssignmentWhereInput
+    orderBy?: CardAssignmentOrderByWithRelationInput | CardAssignmentOrderByWithRelationInput[]
+    cursor?: CardAssignmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CardAssignmentScalarFieldEnum | CardAssignmentScalarFieldEnum[]
+  }
+
+  /**
+   * Card.travelRequests
+   */
+  export type Card$travelRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TravelRequest
+     */
+    select?: TravelRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TravelRequest
+     */
+    omit?: TravelRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TravelRequestInclude<ExtArgs> | null
+    where?: TravelRequestWhereInput
+    orderBy?: TravelRequestOrderByWithRelationInput | TravelRequestOrderByWithRelationInput[]
+    cursor?: TravelRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TravelRequestScalarFieldEnum | TravelRequestScalarFieldEnum[]
+  }
+
+  /**
+   * Card without action
+   */
+  export type CardDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Card
+     */
+    select?: CardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Card
+     */
+    omit?: CardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CardInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model CardAssignment
+   */
+
+  export type AggregateCardAssignment = {
+    _count: CardAssignmentCountAggregateOutputType | null
+    _avg: CardAssignmentAvgAggregateOutputType | null
+    _sum: CardAssignmentSumAggregateOutputType | null
+    _min: CardAssignmentMinAggregateOutputType | null
+    _max: CardAssignmentMaxAggregateOutputType | null
+  }
+
+  export type CardAssignmentAvgAggregateOutputType = {
+    id: number | null
+    cardId: number | null
+    userId: number | null
+  }
+
+  export type CardAssignmentSumAggregateOutputType = {
+    id: number | null
+    cardId: number | null
+    userId: number | null
+  }
+
+  export type CardAssignmentMinAggregateOutputType = {
+    id: number | null
+    cardId: number | null
+    userId: number | null
+    assignedAt: Date | null
+    unassignedAt: Date | null
+  }
+
+  export type CardAssignmentMaxAggregateOutputType = {
+    id: number | null
+    cardId: number | null
+    userId: number | null
+    assignedAt: Date | null
+    unassignedAt: Date | null
+  }
+
+  export type CardAssignmentCountAggregateOutputType = {
+    id: number
+    cardId: number
+    userId: number
+    assignedAt: number
+    unassignedAt: number
+    _all: number
+  }
+
+
+  export type CardAssignmentAvgAggregateInputType = {
+    id?: true
+    cardId?: true
+    userId?: true
+  }
+
+  export type CardAssignmentSumAggregateInputType = {
+    id?: true
+    cardId?: true
+    userId?: true
+  }
+
+  export type CardAssignmentMinAggregateInputType = {
+    id?: true
+    cardId?: true
+    userId?: true
+    assignedAt?: true
+    unassignedAt?: true
+  }
+
+  export type CardAssignmentMaxAggregateInputType = {
+    id?: true
+    cardId?: true
+    userId?: true
+    assignedAt?: true
+    unassignedAt?: true
+  }
+
+  export type CardAssignmentCountAggregateInputType = {
+    id?: true
+    cardId?: true
+    userId?: true
+    assignedAt?: true
+    unassignedAt?: true
+    _all?: true
+  }
+
+  export type CardAssignmentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CardAssignment to aggregate.
+     */
+    where?: CardAssignmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CardAssignments to fetch.
+     */
+    orderBy?: CardAssignmentOrderByWithRelationInput | CardAssignmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CardAssignmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CardAssignments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CardAssignments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CardAssignments
+    **/
+    _count?: true | CardAssignmentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CardAssignmentAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CardAssignmentSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CardAssignmentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CardAssignmentMaxAggregateInputType
+  }
+
+  export type GetCardAssignmentAggregateType<T extends CardAssignmentAggregateArgs> = {
+        [P in keyof T & keyof AggregateCardAssignment]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCardAssignment[P]>
+      : GetScalarType<T[P], AggregateCardAssignment[P]>
+  }
+
+
+
+
+  export type CardAssignmentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CardAssignmentWhereInput
+    orderBy?: CardAssignmentOrderByWithAggregationInput | CardAssignmentOrderByWithAggregationInput[]
+    by: CardAssignmentScalarFieldEnum[] | CardAssignmentScalarFieldEnum
+    having?: CardAssignmentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CardAssignmentCountAggregateInputType | true
+    _avg?: CardAssignmentAvgAggregateInputType
+    _sum?: CardAssignmentSumAggregateInputType
+    _min?: CardAssignmentMinAggregateInputType
+    _max?: CardAssignmentMaxAggregateInputType
+  }
+
+  export type CardAssignmentGroupByOutputType = {
+    id: number
+    cardId: number
+    userId: number
+    assignedAt: Date
+    unassignedAt: Date | null
+    _count: CardAssignmentCountAggregateOutputType | null
+    _avg: CardAssignmentAvgAggregateOutputType | null
+    _sum: CardAssignmentSumAggregateOutputType | null
+    _min: CardAssignmentMinAggregateOutputType | null
+    _max: CardAssignmentMaxAggregateOutputType | null
+  }
+
+  type GetCardAssignmentGroupByPayload<T extends CardAssignmentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CardAssignmentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CardAssignmentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CardAssignmentGroupByOutputType[P]>
+            : GetScalarType<T[P], CardAssignmentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CardAssignmentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    cardId?: boolean
+    userId?: boolean
+    assignedAt?: boolean
+    unassignedAt?: boolean
+    card?: boolean | CardDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["cardAssignment"]>
+
+
+
+  export type CardAssignmentSelectScalar = {
+    id?: boolean
+    cardId?: boolean
+    userId?: boolean
+    assignedAt?: boolean
+    unassignedAt?: boolean
+  }
+
+  export type CardAssignmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cardId" | "userId" | "assignedAt" | "unassignedAt", ExtArgs["result"]["cardAssignment"]>
+  export type CardAssignmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    card?: boolean | CardDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $CardAssignmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CardAssignment"
+    objects: {
+      card: Prisma.$CardPayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      cardId: number
+      userId: number
+      assignedAt: Date
+      unassignedAt: Date | null
+    }, ExtArgs["result"]["cardAssignment"]>
+    composites: {}
+  }
+
+  type CardAssignmentGetPayload<S extends boolean | null | undefined | CardAssignmentDefaultArgs> = $Result.GetResult<Prisma.$CardAssignmentPayload, S>
+
+  type CardAssignmentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CardAssignmentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CardAssignmentCountAggregateInputType | true
+    }
+
+  export interface CardAssignmentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CardAssignment'], meta: { name: 'CardAssignment' } }
+    /**
+     * Find zero or one CardAssignment that matches the filter.
+     * @param {CardAssignmentFindUniqueArgs} args - Arguments to find a CardAssignment
+     * @example
+     * // Get one CardAssignment
+     * const cardAssignment = await prisma.cardAssignment.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CardAssignmentFindUniqueArgs>(args: SelectSubset<T, CardAssignmentFindUniqueArgs<ExtArgs>>): Prisma__CardAssignmentClient<$Result.GetResult<Prisma.$CardAssignmentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CardAssignment that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CardAssignmentFindUniqueOrThrowArgs} args - Arguments to find a CardAssignment
+     * @example
+     * // Get one CardAssignment
+     * const cardAssignment = await prisma.cardAssignment.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CardAssignmentFindUniqueOrThrowArgs>(args: SelectSubset<T, CardAssignmentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CardAssignmentClient<$Result.GetResult<Prisma.$CardAssignmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CardAssignment that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CardAssignmentFindFirstArgs} args - Arguments to find a CardAssignment
+     * @example
+     * // Get one CardAssignment
+     * const cardAssignment = await prisma.cardAssignment.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CardAssignmentFindFirstArgs>(args?: SelectSubset<T, CardAssignmentFindFirstArgs<ExtArgs>>): Prisma__CardAssignmentClient<$Result.GetResult<Prisma.$CardAssignmentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CardAssignment that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CardAssignmentFindFirstOrThrowArgs} args - Arguments to find a CardAssignment
+     * @example
+     * // Get one CardAssignment
+     * const cardAssignment = await prisma.cardAssignment.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CardAssignmentFindFirstOrThrowArgs>(args?: SelectSubset<T, CardAssignmentFindFirstOrThrowArgs<ExtArgs>>): Prisma__CardAssignmentClient<$Result.GetResult<Prisma.$CardAssignmentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CardAssignments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CardAssignmentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CardAssignments
+     * const cardAssignments = await prisma.cardAssignment.findMany()
+     * 
+     * // Get first 10 CardAssignments
+     * const cardAssignments = await prisma.cardAssignment.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const cardAssignmentWithIdOnly = await prisma.cardAssignment.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CardAssignmentFindManyArgs>(args?: SelectSubset<T, CardAssignmentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CardAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CardAssignment.
+     * @param {CardAssignmentCreateArgs} args - Arguments to create a CardAssignment.
+     * @example
+     * // Create one CardAssignment
+     * const CardAssignment = await prisma.cardAssignment.create({
+     *   data: {
+     *     // ... data to create a CardAssignment
+     *   }
+     * })
+     * 
+     */
+    create<T extends CardAssignmentCreateArgs>(args: SelectSubset<T, CardAssignmentCreateArgs<ExtArgs>>): Prisma__CardAssignmentClient<$Result.GetResult<Prisma.$CardAssignmentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CardAssignments.
+     * @param {CardAssignmentCreateManyArgs} args - Arguments to create many CardAssignments.
+     * @example
+     * // Create many CardAssignments
+     * const cardAssignment = await prisma.cardAssignment.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CardAssignmentCreateManyArgs>(args?: SelectSubset<T, CardAssignmentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a CardAssignment.
+     * @param {CardAssignmentDeleteArgs} args - Arguments to delete one CardAssignment.
+     * @example
+     * // Delete one CardAssignment
+     * const CardAssignment = await prisma.cardAssignment.delete({
+     *   where: {
+     *     // ... filter to delete one CardAssignment
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CardAssignmentDeleteArgs>(args: SelectSubset<T, CardAssignmentDeleteArgs<ExtArgs>>): Prisma__CardAssignmentClient<$Result.GetResult<Prisma.$CardAssignmentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CardAssignment.
+     * @param {CardAssignmentUpdateArgs} args - Arguments to update one CardAssignment.
+     * @example
+     * // Update one CardAssignment
+     * const cardAssignment = await prisma.cardAssignment.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CardAssignmentUpdateArgs>(args: SelectSubset<T, CardAssignmentUpdateArgs<ExtArgs>>): Prisma__CardAssignmentClient<$Result.GetResult<Prisma.$CardAssignmentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CardAssignments.
+     * @param {CardAssignmentDeleteManyArgs} args - Arguments to filter CardAssignments to delete.
+     * @example
+     * // Delete a few CardAssignments
+     * const { count } = await prisma.cardAssignment.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CardAssignmentDeleteManyArgs>(args?: SelectSubset<T, CardAssignmentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CardAssignments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CardAssignmentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CardAssignments
+     * const cardAssignment = await prisma.cardAssignment.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CardAssignmentUpdateManyArgs>(args: SelectSubset<T, CardAssignmentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one CardAssignment.
+     * @param {CardAssignmentUpsertArgs} args - Arguments to update or create a CardAssignment.
+     * @example
+     * // Update or create a CardAssignment
+     * const cardAssignment = await prisma.cardAssignment.upsert({
+     *   create: {
+     *     // ... data to create a CardAssignment
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CardAssignment we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CardAssignmentUpsertArgs>(args: SelectSubset<T, CardAssignmentUpsertArgs<ExtArgs>>): Prisma__CardAssignmentClient<$Result.GetResult<Prisma.$CardAssignmentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CardAssignments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CardAssignmentCountArgs} args - Arguments to filter CardAssignments to count.
+     * @example
+     * // Count the number of CardAssignments
+     * const count = await prisma.cardAssignment.count({
+     *   where: {
+     *     // ... the filter for the CardAssignments we want to count
+     *   }
+     * })
+    **/
+    count<T extends CardAssignmentCountArgs>(
+      args?: Subset<T, CardAssignmentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CardAssignmentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CardAssignment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CardAssignmentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CardAssignmentAggregateArgs>(args: Subset<T, CardAssignmentAggregateArgs>): Prisma.PrismaPromise<GetCardAssignmentAggregateType<T>>
+
+    /**
+     * Group by CardAssignment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CardAssignmentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CardAssignmentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CardAssignmentGroupByArgs['orderBy'] }
+        : { orderBy?: CardAssignmentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CardAssignmentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCardAssignmentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CardAssignment model
+   */
+  readonly fields: CardAssignmentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CardAssignment.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CardAssignmentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    card<T extends CardDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CardDefaultArgs<ExtArgs>>): Prisma__CardClient<$Result.GetResult<Prisma.$CardPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CardAssignment model
+   */
+  interface CardAssignmentFieldRefs {
+    readonly id: FieldRef<"CardAssignment", 'Int'>
+    readonly cardId: FieldRef<"CardAssignment", 'Int'>
+    readonly userId: FieldRef<"CardAssignment", 'Int'>
+    readonly assignedAt: FieldRef<"CardAssignment", 'DateTime'>
+    readonly unassignedAt: FieldRef<"CardAssignment", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CardAssignment findUnique
+   */
+  export type CardAssignmentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CardAssignment
+     */
+    select?: CardAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CardAssignment
+     */
+    omit?: CardAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CardAssignmentInclude<ExtArgs> | null
+    /**
+     * Filter, which CardAssignment to fetch.
+     */
+    where: CardAssignmentWhereUniqueInput
+  }
+
+  /**
+   * CardAssignment findUniqueOrThrow
+   */
+  export type CardAssignmentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CardAssignment
+     */
+    select?: CardAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CardAssignment
+     */
+    omit?: CardAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CardAssignmentInclude<ExtArgs> | null
+    /**
+     * Filter, which CardAssignment to fetch.
+     */
+    where: CardAssignmentWhereUniqueInput
+  }
+
+  /**
+   * CardAssignment findFirst
+   */
+  export type CardAssignmentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CardAssignment
+     */
+    select?: CardAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CardAssignment
+     */
+    omit?: CardAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CardAssignmentInclude<ExtArgs> | null
+    /**
+     * Filter, which CardAssignment to fetch.
+     */
+    where?: CardAssignmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CardAssignments to fetch.
+     */
+    orderBy?: CardAssignmentOrderByWithRelationInput | CardAssignmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CardAssignments.
+     */
+    cursor?: CardAssignmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CardAssignments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CardAssignments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CardAssignments.
+     */
+    distinct?: CardAssignmentScalarFieldEnum | CardAssignmentScalarFieldEnum[]
+  }
+
+  /**
+   * CardAssignment findFirstOrThrow
+   */
+  export type CardAssignmentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CardAssignment
+     */
+    select?: CardAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CardAssignment
+     */
+    omit?: CardAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CardAssignmentInclude<ExtArgs> | null
+    /**
+     * Filter, which CardAssignment to fetch.
+     */
+    where?: CardAssignmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CardAssignments to fetch.
+     */
+    orderBy?: CardAssignmentOrderByWithRelationInput | CardAssignmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CardAssignments.
+     */
+    cursor?: CardAssignmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CardAssignments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CardAssignments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CardAssignments.
+     */
+    distinct?: CardAssignmentScalarFieldEnum | CardAssignmentScalarFieldEnum[]
+  }
+
+  /**
+   * CardAssignment findMany
+   */
+  export type CardAssignmentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CardAssignment
+     */
+    select?: CardAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CardAssignment
+     */
+    omit?: CardAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CardAssignmentInclude<ExtArgs> | null
+    /**
+     * Filter, which CardAssignments to fetch.
+     */
+    where?: CardAssignmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CardAssignments to fetch.
+     */
+    orderBy?: CardAssignmentOrderByWithRelationInput | CardAssignmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CardAssignments.
+     */
+    cursor?: CardAssignmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CardAssignments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CardAssignments.
+     */
+    skip?: number
+    distinct?: CardAssignmentScalarFieldEnum | CardAssignmentScalarFieldEnum[]
+  }
+
+  /**
+   * CardAssignment create
+   */
+  export type CardAssignmentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CardAssignment
+     */
+    select?: CardAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CardAssignment
+     */
+    omit?: CardAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CardAssignmentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CardAssignment.
+     */
+    data: XOR<CardAssignmentCreateInput, CardAssignmentUncheckedCreateInput>
+  }
+
+  /**
+   * CardAssignment createMany
+   */
+  export type CardAssignmentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CardAssignments.
+     */
+    data: CardAssignmentCreateManyInput | CardAssignmentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CardAssignment update
+   */
+  export type CardAssignmentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CardAssignment
+     */
+    select?: CardAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CardAssignment
+     */
+    omit?: CardAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CardAssignmentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CardAssignment.
+     */
+    data: XOR<CardAssignmentUpdateInput, CardAssignmentUncheckedUpdateInput>
+    /**
+     * Choose, which CardAssignment to update.
+     */
+    where: CardAssignmentWhereUniqueInput
+  }
+
+  /**
+   * CardAssignment updateMany
+   */
+  export type CardAssignmentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CardAssignments.
+     */
+    data: XOR<CardAssignmentUpdateManyMutationInput, CardAssignmentUncheckedUpdateManyInput>
+    /**
+     * Filter which CardAssignments to update
+     */
+    where?: CardAssignmentWhereInput
+    /**
+     * Limit how many CardAssignments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CardAssignment upsert
+   */
+  export type CardAssignmentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CardAssignment
+     */
+    select?: CardAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CardAssignment
+     */
+    omit?: CardAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CardAssignmentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CardAssignment to update in case it exists.
+     */
+    where: CardAssignmentWhereUniqueInput
+    /**
+     * In case the CardAssignment found by the `where` argument doesn't exist, create a new CardAssignment with this data.
+     */
+    create: XOR<CardAssignmentCreateInput, CardAssignmentUncheckedCreateInput>
+    /**
+     * In case the CardAssignment was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CardAssignmentUpdateInput, CardAssignmentUncheckedUpdateInput>
+  }
+
+  /**
+   * CardAssignment delete
+   */
+  export type CardAssignmentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CardAssignment
+     */
+    select?: CardAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CardAssignment
+     */
+    omit?: CardAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CardAssignmentInclude<ExtArgs> | null
+    /**
+     * Filter which CardAssignment to delete.
+     */
+    where: CardAssignmentWhereUniqueInput
+  }
+
+  /**
+   * CardAssignment deleteMany
+   */
+  export type CardAssignmentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CardAssignments to delete
+     */
+    where?: CardAssignmentWhereInput
+    /**
+     * Limit how many CardAssignments to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CardAssignment without action
+   */
+  export type CardAssignmentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CardAssignment
+     */
+    select?: CardAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CardAssignment
+     */
+    omit?: CardAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CardAssignmentInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model StatusTravelRequest
+   */
+
+  export type AggregateStatusTravelRequest = {
+    _count: StatusTravelRequestCountAggregateOutputType | null
+    _avg: StatusTravelRequestAvgAggregateOutputType | null
+    _sum: StatusTravelRequestSumAggregateOutputType | null
+    _min: StatusTravelRequestMinAggregateOutputType | null
+    _max: StatusTravelRequestMaxAggregateOutputType | null
+  }
+
+  export type StatusTravelRequestAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type StatusTravelRequestSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type StatusTravelRequestMinAggregateOutputType = {
+    id: number | null
+    name: string | null
+  }
+
+  export type StatusTravelRequestMaxAggregateOutputType = {
+    id: number | null
+    name: string | null
+  }
+
+  export type StatusTravelRequestCountAggregateOutputType = {
+    id: number
+    name: number
+    _all: number
+  }
+
+
+  export type StatusTravelRequestAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type StatusTravelRequestSumAggregateInputType = {
+    id?: true
+  }
+
+  export type StatusTravelRequestMinAggregateInputType = {
+    id?: true
+    name?: true
+  }
+
+  export type StatusTravelRequestMaxAggregateInputType = {
+    id?: true
+    name?: true
+  }
+
+  export type StatusTravelRequestCountAggregateInputType = {
+    id?: true
+    name?: true
+    _all?: true
+  }
+
+  export type StatusTravelRequestAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StatusTravelRequest to aggregate.
+     */
+    where?: StatusTravelRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StatusTravelRequests to fetch.
+     */
+    orderBy?: StatusTravelRequestOrderByWithRelationInput | StatusTravelRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: StatusTravelRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StatusTravelRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StatusTravelRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned StatusTravelRequests
+    **/
+    _count?: true | StatusTravelRequestCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: StatusTravelRequestAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: StatusTravelRequestSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: StatusTravelRequestMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: StatusTravelRequestMaxAggregateInputType
+  }
+
+  export type GetStatusTravelRequestAggregateType<T extends StatusTravelRequestAggregateArgs> = {
+        [P in keyof T & keyof AggregateStatusTravelRequest]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateStatusTravelRequest[P]>
+      : GetScalarType<T[P], AggregateStatusTravelRequest[P]>
+  }
+
+
+
+
+  export type StatusTravelRequestGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StatusTravelRequestWhereInput
+    orderBy?: StatusTravelRequestOrderByWithAggregationInput | StatusTravelRequestOrderByWithAggregationInput[]
+    by: StatusTravelRequestScalarFieldEnum[] | StatusTravelRequestScalarFieldEnum
+    having?: StatusTravelRequestScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: StatusTravelRequestCountAggregateInputType | true
+    _avg?: StatusTravelRequestAvgAggregateInputType
+    _sum?: StatusTravelRequestSumAggregateInputType
+    _min?: StatusTravelRequestMinAggregateInputType
+    _max?: StatusTravelRequestMaxAggregateInputType
+  }
+
+  export type StatusTravelRequestGroupByOutputType = {
+    id: number
+    name: string
+    _count: StatusTravelRequestCountAggregateOutputType | null
+    _avg: StatusTravelRequestAvgAggregateOutputType | null
+    _sum: StatusTravelRequestSumAggregateOutputType | null
+    _min: StatusTravelRequestMinAggregateOutputType | null
+    _max: StatusTravelRequestMaxAggregateOutputType | null
+  }
+
+  type GetStatusTravelRequestGroupByPayload<T extends StatusTravelRequestGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<StatusTravelRequestGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof StatusTravelRequestGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], StatusTravelRequestGroupByOutputType[P]>
+            : GetScalarType<T[P], StatusTravelRequestGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type StatusTravelRequestSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    travelRequests?: boolean | StatusTravelRequest$travelRequestsArgs<ExtArgs>
+    _count?: boolean | StatusTravelRequestCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["statusTravelRequest"]>
+
+
+
+  export type StatusTravelRequestSelectScalar = {
+    id?: boolean
+    name?: boolean
+  }
+
+  export type StatusTravelRequestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name", ExtArgs["result"]["statusTravelRequest"]>
+  export type StatusTravelRequestInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    travelRequests?: boolean | StatusTravelRequest$travelRequestsArgs<ExtArgs>
+    _count?: boolean | StatusTravelRequestCountOutputTypeDefaultArgs<ExtArgs>
+  }
+
+  export type $StatusTravelRequestPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "StatusTravelRequest"
+    objects: {
+      travelRequests: Prisma.$TravelRequestPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      name: string
+    }, ExtArgs["result"]["statusTravelRequest"]>
+    composites: {}
+  }
+
+  type StatusTravelRequestGetPayload<S extends boolean | null | undefined | StatusTravelRequestDefaultArgs> = $Result.GetResult<Prisma.$StatusTravelRequestPayload, S>
+
+  type StatusTravelRequestCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<StatusTravelRequestFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: StatusTravelRequestCountAggregateInputType | true
+    }
+
+  export interface StatusTravelRequestDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['StatusTravelRequest'], meta: { name: 'StatusTravelRequest' } }
+    /**
+     * Find zero or one StatusTravelRequest that matches the filter.
+     * @param {StatusTravelRequestFindUniqueArgs} args - Arguments to find a StatusTravelRequest
+     * @example
+     * // Get one StatusTravelRequest
+     * const statusTravelRequest = await prisma.statusTravelRequest.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends StatusTravelRequestFindUniqueArgs>(args: SelectSubset<T, StatusTravelRequestFindUniqueArgs<ExtArgs>>): Prisma__StatusTravelRequestClient<$Result.GetResult<Prisma.$StatusTravelRequestPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one StatusTravelRequest that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {StatusTravelRequestFindUniqueOrThrowArgs} args - Arguments to find a StatusTravelRequest
+     * @example
+     * // Get one StatusTravelRequest
+     * const statusTravelRequest = await prisma.statusTravelRequest.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends StatusTravelRequestFindUniqueOrThrowArgs>(args: SelectSubset<T, StatusTravelRequestFindUniqueOrThrowArgs<ExtArgs>>): Prisma__StatusTravelRequestClient<$Result.GetResult<Prisma.$StatusTravelRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StatusTravelRequest that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StatusTravelRequestFindFirstArgs} args - Arguments to find a StatusTravelRequest
+     * @example
+     * // Get one StatusTravelRequest
+     * const statusTravelRequest = await prisma.statusTravelRequest.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends StatusTravelRequestFindFirstArgs>(args?: SelectSubset<T, StatusTravelRequestFindFirstArgs<ExtArgs>>): Prisma__StatusTravelRequestClient<$Result.GetResult<Prisma.$StatusTravelRequestPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StatusTravelRequest that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StatusTravelRequestFindFirstOrThrowArgs} args - Arguments to find a StatusTravelRequest
+     * @example
+     * // Get one StatusTravelRequest
+     * const statusTravelRequest = await prisma.statusTravelRequest.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends StatusTravelRequestFindFirstOrThrowArgs>(args?: SelectSubset<T, StatusTravelRequestFindFirstOrThrowArgs<ExtArgs>>): Prisma__StatusTravelRequestClient<$Result.GetResult<Prisma.$StatusTravelRequestPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more StatusTravelRequests that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StatusTravelRequestFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all StatusTravelRequests
+     * const statusTravelRequests = await prisma.statusTravelRequest.findMany()
+     * 
+     * // Get first 10 StatusTravelRequests
+     * const statusTravelRequests = await prisma.statusTravelRequest.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const statusTravelRequestWithIdOnly = await prisma.statusTravelRequest.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends StatusTravelRequestFindManyArgs>(args?: SelectSubset<T, StatusTravelRequestFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StatusTravelRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a StatusTravelRequest.
+     * @param {StatusTravelRequestCreateArgs} args - Arguments to create a StatusTravelRequest.
+     * @example
+     * // Create one StatusTravelRequest
+     * const StatusTravelRequest = await prisma.statusTravelRequest.create({
+     *   data: {
+     *     // ... data to create a StatusTravelRequest
+     *   }
+     * })
+     * 
+     */
+    create<T extends StatusTravelRequestCreateArgs>(args: SelectSubset<T, StatusTravelRequestCreateArgs<ExtArgs>>): Prisma__StatusTravelRequestClient<$Result.GetResult<Prisma.$StatusTravelRequestPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many StatusTravelRequests.
+     * @param {StatusTravelRequestCreateManyArgs} args - Arguments to create many StatusTravelRequests.
+     * @example
+     * // Create many StatusTravelRequests
+     * const statusTravelRequest = await prisma.statusTravelRequest.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends StatusTravelRequestCreateManyArgs>(args?: SelectSubset<T, StatusTravelRequestCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a StatusTravelRequest.
+     * @param {StatusTravelRequestDeleteArgs} args - Arguments to delete one StatusTravelRequest.
+     * @example
+     * // Delete one StatusTravelRequest
+     * const StatusTravelRequest = await prisma.statusTravelRequest.delete({
+     *   where: {
+     *     // ... filter to delete one StatusTravelRequest
+     *   }
+     * })
+     * 
+     */
+    delete<T extends StatusTravelRequestDeleteArgs>(args: SelectSubset<T, StatusTravelRequestDeleteArgs<ExtArgs>>): Prisma__StatusTravelRequestClient<$Result.GetResult<Prisma.$StatusTravelRequestPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one StatusTravelRequest.
+     * @param {StatusTravelRequestUpdateArgs} args - Arguments to update one StatusTravelRequest.
+     * @example
+     * // Update one StatusTravelRequest
+     * const statusTravelRequest = await prisma.statusTravelRequest.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends StatusTravelRequestUpdateArgs>(args: SelectSubset<T, StatusTravelRequestUpdateArgs<ExtArgs>>): Prisma__StatusTravelRequestClient<$Result.GetResult<Prisma.$StatusTravelRequestPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more StatusTravelRequests.
+     * @param {StatusTravelRequestDeleteManyArgs} args - Arguments to filter StatusTravelRequests to delete.
+     * @example
+     * // Delete a few StatusTravelRequests
+     * const { count } = await prisma.statusTravelRequest.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends StatusTravelRequestDeleteManyArgs>(args?: SelectSubset<T, StatusTravelRequestDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StatusTravelRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StatusTravelRequestUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many StatusTravelRequests
+     * const statusTravelRequest = await prisma.statusTravelRequest.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends StatusTravelRequestUpdateManyArgs>(args: SelectSubset<T, StatusTravelRequestUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one StatusTravelRequest.
+     * @param {StatusTravelRequestUpsertArgs} args - Arguments to update or create a StatusTravelRequest.
+     * @example
+     * // Update or create a StatusTravelRequest
+     * const statusTravelRequest = await prisma.statusTravelRequest.upsert({
+     *   create: {
+     *     // ... data to create a StatusTravelRequest
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the StatusTravelRequest we want to update
+     *   }
+     * })
+     */
+    upsert<T extends StatusTravelRequestUpsertArgs>(args: SelectSubset<T, StatusTravelRequestUpsertArgs<ExtArgs>>): Prisma__StatusTravelRequestClient<$Result.GetResult<Prisma.$StatusTravelRequestPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of StatusTravelRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StatusTravelRequestCountArgs} args - Arguments to filter StatusTravelRequests to count.
+     * @example
+     * // Count the number of StatusTravelRequests
+     * const count = await prisma.statusTravelRequest.count({
+     *   where: {
+     *     // ... the filter for the StatusTravelRequests we want to count
+     *   }
+     * })
+    **/
+    count<T extends StatusTravelRequestCountArgs>(
+      args?: Subset<T, StatusTravelRequestCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], StatusTravelRequestCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a StatusTravelRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StatusTravelRequestAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends StatusTravelRequestAggregateArgs>(args: Subset<T, StatusTravelRequestAggregateArgs>): Prisma.PrismaPromise<GetStatusTravelRequestAggregateType<T>>
+
+    /**
+     * Group by StatusTravelRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StatusTravelRequestGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends StatusTravelRequestGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: StatusTravelRequestGroupByArgs['orderBy'] }
+        : { orderBy?: StatusTravelRequestGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, StatusTravelRequestGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetStatusTravelRequestGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the StatusTravelRequest model
+   */
+  readonly fields: StatusTravelRequestFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for StatusTravelRequest.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__StatusTravelRequestClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    travelRequests<T extends StatusTravelRequest$travelRequestsArgs<ExtArgs> = {}>(args?: Subset<T, StatusTravelRequest$travelRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TravelRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the StatusTravelRequest model
+   */
+  interface StatusTravelRequestFieldRefs {
+    readonly id: FieldRef<"StatusTravelRequest", 'Int'>
+    readonly name: FieldRef<"StatusTravelRequest", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * StatusTravelRequest findUnique
+   */
+  export type StatusTravelRequestFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatusTravelRequest
+     */
+    select?: StatusTravelRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatusTravelRequest
+     */
+    omit?: StatusTravelRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatusTravelRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which StatusTravelRequest to fetch.
+     */
+    where: StatusTravelRequestWhereUniqueInput
+  }
+
+  /**
+   * StatusTravelRequest findUniqueOrThrow
+   */
+  export type StatusTravelRequestFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatusTravelRequest
+     */
+    select?: StatusTravelRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatusTravelRequest
+     */
+    omit?: StatusTravelRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatusTravelRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which StatusTravelRequest to fetch.
+     */
+    where: StatusTravelRequestWhereUniqueInput
+  }
+
+  /**
+   * StatusTravelRequest findFirst
+   */
+  export type StatusTravelRequestFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatusTravelRequest
+     */
+    select?: StatusTravelRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatusTravelRequest
+     */
+    omit?: StatusTravelRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatusTravelRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which StatusTravelRequest to fetch.
+     */
+    where?: StatusTravelRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StatusTravelRequests to fetch.
+     */
+    orderBy?: StatusTravelRequestOrderByWithRelationInput | StatusTravelRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StatusTravelRequests.
+     */
+    cursor?: StatusTravelRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StatusTravelRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StatusTravelRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StatusTravelRequests.
+     */
+    distinct?: StatusTravelRequestScalarFieldEnum | StatusTravelRequestScalarFieldEnum[]
+  }
+
+  /**
+   * StatusTravelRequest findFirstOrThrow
+   */
+  export type StatusTravelRequestFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatusTravelRequest
+     */
+    select?: StatusTravelRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatusTravelRequest
+     */
+    omit?: StatusTravelRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatusTravelRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which StatusTravelRequest to fetch.
+     */
+    where?: StatusTravelRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StatusTravelRequests to fetch.
+     */
+    orderBy?: StatusTravelRequestOrderByWithRelationInput | StatusTravelRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StatusTravelRequests.
+     */
+    cursor?: StatusTravelRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StatusTravelRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StatusTravelRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StatusTravelRequests.
+     */
+    distinct?: StatusTravelRequestScalarFieldEnum | StatusTravelRequestScalarFieldEnum[]
+  }
+
+  /**
+   * StatusTravelRequest findMany
+   */
+  export type StatusTravelRequestFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatusTravelRequest
+     */
+    select?: StatusTravelRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatusTravelRequest
+     */
+    omit?: StatusTravelRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatusTravelRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which StatusTravelRequests to fetch.
+     */
+    where?: StatusTravelRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StatusTravelRequests to fetch.
+     */
+    orderBy?: StatusTravelRequestOrderByWithRelationInput | StatusTravelRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing StatusTravelRequests.
+     */
+    cursor?: StatusTravelRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StatusTravelRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StatusTravelRequests.
+     */
+    skip?: number
+    distinct?: StatusTravelRequestScalarFieldEnum | StatusTravelRequestScalarFieldEnum[]
+  }
+
+  /**
+   * StatusTravelRequest create
+   */
+  export type StatusTravelRequestCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatusTravelRequest
+     */
+    select?: StatusTravelRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatusTravelRequest
+     */
+    omit?: StatusTravelRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatusTravelRequestInclude<ExtArgs> | null
+    /**
+     * The data needed to create a StatusTravelRequest.
+     */
+    data: XOR<StatusTravelRequestCreateInput, StatusTravelRequestUncheckedCreateInput>
+  }
+
+  /**
+   * StatusTravelRequest createMany
+   */
+  export type StatusTravelRequestCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many StatusTravelRequests.
+     */
+    data: StatusTravelRequestCreateManyInput | StatusTravelRequestCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * StatusTravelRequest update
+   */
+  export type StatusTravelRequestUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatusTravelRequest
+     */
+    select?: StatusTravelRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatusTravelRequest
+     */
+    omit?: StatusTravelRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatusTravelRequestInclude<ExtArgs> | null
+    /**
+     * The data needed to update a StatusTravelRequest.
+     */
+    data: XOR<StatusTravelRequestUpdateInput, StatusTravelRequestUncheckedUpdateInput>
+    /**
+     * Choose, which StatusTravelRequest to update.
+     */
+    where: StatusTravelRequestWhereUniqueInput
+  }
+
+  /**
+   * StatusTravelRequest updateMany
+   */
+  export type StatusTravelRequestUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update StatusTravelRequests.
+     */
+    data: XOR<StatusTravelRequestUpdateManyMutationInput, StatusTravelRequestUncheckedUpdateManyInput>
+    /**
+     * Filter which StatusTravelRequests to update
+     */
+    where?: StatusTravelRequestWhereInput
+    /**
+     * Limit how many StatusTravelRequests to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * StatusTravelRequest upsert
+   */
+  export type StatusTravelRequestUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatusTravelRequest
+     */
+    select?: StatusTravelRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatusTravelRequest
+     */
+    omit?: StatusTravelRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatusTravelRequestInclude<ExtArgs> | null
+    /**
+     * The filter to search for the StatusTravelRequest to update in case it exists.
+     */
+    where: StatusTravelRequestWhereUniqueInput
+    /**
+     * In case the StatusTravelRequest found by the `where` argument doesn't exist, create a new StatusTravelRequest with this data.
+     */
+    create: XOR<StatusTravelRequestCreateInput, StatusTravelRequestUncheckedCreateInput>
+    /**
+     * In case the StatusTravelRequest was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<StatusTravelRequestUpdateInput, StatusTravelRequestUncheckedUpdateInput>
+  }
+
+  /**
+   * StatusTravelRequest delete
+   */
+  export type StatusTravelRequestDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatusTravelRequest
+     */
+    select?: StatusTravelRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatusTravelRequest
+     */
+    omit?: StatusTravelRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatusTravelRequestInclude<ExtArgs> | null
+    /**
+     * Filter which StatusTravelRequest to delete.
+     */
+    where: StatusTravelRequestWhereUniqueInput
+  }
+
+  /**
+   * StatusTravelRequest deleteMany
+   */
+  export type StatusTravelRequestDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StatusTravelRequests to delete
+     */
+    where?: StatusTravelRequestWhereInput
+    /**
+     * Limit how many StatusTravelRequests to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * StatusTravelRequest.travelRequests
+   */
+  export type StatusTravelRequest$travelRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TravelRequest
+     */
+    select?: TravelRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TravelRequest
+     */
+    omit?: TravelRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TravelRequestInclude<ExtArgs> | null
+    where?: TravelRequestWhereInput
+    orderBy?: TravelRequestOrderByWithRelationInput | TravelRequestOrderByWithRelationInput[]
+    cursor?: TravelRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TravelRequestScalarFieldEnum | TravelRequestScalarFieldEnum[]
+  }
+
+  /**
+   * StatusTravelRequest without action
+   */
+  export type StatusTravelRequestDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StatusTravelRequest
+     */
+    select?: StatusTravelRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StatusTravelRequest
+     */
+    omit?: StatusTravelRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StatusTravelRequestInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model TravelRequest
+   */
+
+  export type AggregateTravelRequest = {
+    _count: TravelRequestCountAggregateOutputType | null
+    _avg: TravelRequestAvgAggregateOutputType | null
+    _sum: TravelRequestSumAggregateOutputType | null
+    _min: TravelRequestMinAggregateOutputType | null
+    _max: TravelRequestMaxAggregateOutputType | null
+  }
+
+  export type TravelRequestAvgAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    statusId: number | null
+    cardId: number | null
+    totalAmount: Decimal | null
+    approverId: number | null
+  }
+
+  export type TravelRequestSumAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    statusId: number | null
+    cardId: number | null
+    totalAmount: Decimal | null
+    approverId: number | null
+  }
+
+  export type TravelRequestMinAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    statusId: number | null
+    cardId: number | null
+    totalAmount: Decimal | null
+    travelReason: string | null
+    travelObjectives: string | null
+    departureDate: Date | null
+    returnDate: Date | null
+    disbursementDate: Date | null
+    approvalDate: Date | null
+    approverId: number | null
+    comment: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TravelRequestMaxAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    statusId: number | null
+    cardId: number | null
+    totalAmount: Decimal | null
+    travelReason: string | null
+    travelObjectives: string | null
+    departureDate: Date | null
+    returnDate: Date | null
+    disbursementDate: Date | null
+    approvalDate: Date | null
+    approverId: number | null
+    comment: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TravelRequestCountAggregateOutputType = {
+    id: number
+    userId: number
+    statusId: number
+    cardId: number
+    totalAmount: number
+    travelReason: number
+    travelObjectives: number
+    departureDate: number
+    returnDate: number
+    disbursementDate: number
+    approvalDate: number
+    approverId: number
+    comment: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type TravelRequestAvgAggregateInputType = {
+    id?: true
+    userId?: true
+    statusId?: true
+    cardId?: true
+    totalAmount?: true
+    approverId?: true
+  }
+
+  export type TravelRequestSumAggregateInputType = {
+    id?: true
+    userId?: true
+    statusId?: true
+    cardId?: true
+    totalAmount?: true
+    approverId?: true
+  }
+
+  export type TravelRequestMinAggregateInputType = {
+    id?: true
+    userId?: true
+    statusId?: true
+    cardId?: true
+    totalAmount?: true
+    travelReason?: true
+    travelObjectives?: true
+    departureDate?: true
+    returnDate?: true
+    disbursementDate?: true
+    approvalDate?: true
+    approverId?: true
+    comment?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TravelRequestMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    statusId?: true
+    cardId?: true
+    totalAmount?: true
+    travelReason?: true
+    travelObjectives?: true
+    departureDate?: true
+    returnDate?: true
+    disbursementDate?: true
+    approvalDate?: true
+    approverId?: true
+    comment?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TravelRequestCountAggregateInputType = {
+    id?: true
+    userId?: true
+    statusId?: true
+    cardId?: true
+    totalAmount?: true
+    travelReason?: true
+    travelObjectives?: true
+    departureDate?: true
+    returnDate?: true
+    disbursementDate?: true
+    approvalDate?: true
+    approverId?: true
+    comment?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type TravelRequestAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TravelRequest to aggregate.
+     */
+    where?: TravelRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TravelRequests to fetch.
+     */
+    orderBy?: TravelRequestOrderByWithRelationInput | TravelRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TravelRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TravelRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TravelRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TravelRequests
+    **/
+    _count?: true | TravelRequestCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TravelRequestAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TravelRequestSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TravelRequestMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TravelRequestMaxAggregateInputType
+  }
+
+  export type GetTravelRequestAggregateType<T extends TravelRequestAggregateArgs> = {
+        [P in keyof T & keyof AggregateTravelRequest]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTravelRequest[P]>
+      : GetScalarType<T[P], AggregateTravelRequest[P]>
+  }
+
+
+
+
+  export type TravelRequestGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TravelRequestWhereInput
+    orderBy?: TravelRequestOrderByWithAggregationInput | TravelRequestOrderByWithAggregationInput[]
+    by: TravelRequestScalarFieldEnum[] | TravelRequestScalarFieldEnum
+    having?: TravelRequestScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TravelRequestCountAggregateInputType | true
+    _avg?: TravelRequestAvgAggregateInputType
+    _sum?: TravelRequestSumAggregateInputType
+    _min?: TravelRequestMinAggregateInputType
+    _max?: TravelRequestMaxAggregateInputType
+  }
+
+  export type TravelRequestGroupByOutputType = {
+    id: number
+    userId: number
+    statusId: number
+    cardId: number | null
+    totalAmount: Decimal
+    travelReason: string
+    travelObjectives: string
+    departureDate: Date
+    returnDate: Date
+    disbursementDate: Date | null
+    approvalDate: Date | null
+    approverId: number | null
+    comment: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: TravelRequestCountAggregateOutputType | null
+    _avg: TravelRequestAvgAggregateOutputType | null
+    _sum: TravelRequestSumAggregateOutputType | null
+    _min: TravelRequestMinAggregateOutputType | null
+    _max: TravelRequestMaxAggregateOutputType | null
+  }
+
+  type GetTravelRequestGroupByPayload<T extends TravelRequestGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TravelRequestGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TravelRequestGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TravelRequestGroupByOutputType[P]>
+            : GetScalarType<T[P], TravelRequestGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TravelRequestSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    statusId?: boolean
+    cardId?: boolean
+    totalAmount?: boolean
+    travelReason?: boolean
+    travelObjectives?: boolean
+    departureDate?: boolean
+    returnDate?: boolean
+    disbursementDate?: boolean
+    approvalDate?: boolean
+    approverId?: boolean
+    comment?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    status?: boolean | StatusTravelRequestDefaultArgs<ExtArgs>
+    approver?: boolean | TravelRequest$approverArgs<ExtArgs>
+    card?: boolean | TravelRequest$cardArgs<ExtArgs>
+    details?: boolean | TravelRequest$detailsArgs<ExtArgs>
+    _count?: boolean | TravelRequestCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["travelRequest"]>
+
+
+
+  export type TravelRequestSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    statusId?: boolean
+    cardId?: boolean
+    totalAmount?: boolean
+    travelReason?: boolean
+    travelObjectives?: boolean
+    departureDate?: boolean
+    returnDate?: boolean
+    disbursementDate?: boolean
+    approvalDate?: boolean
+    approverId?: boolean
+    comment?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type TravelRequestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "statusId" | "cardId" | "totalAmount" | "travelReason" | "travelObjectives" | "departureDate" | "returnDate" | "disbursementDate" | "approvalDate" | "approverId" | "comment" | "createdAt" | "updatedAt", ExtArgs["result"]["travelRequest"]>
+  export type TravelRequestInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    status?: boolean | StatusTravelRequestDefaultArgs<ExtArgs>
+    approver?: boolean | TravelRequest$approverArgs<ExtArgs>
+    card?: boolean | TravelRequest$cardArgs<ExtArgs>
+    details?: boolean | TravelRequest$detailsArgs<ExtArgs>
+    _count?: boolean | TravelRequestCountOutputTypeDefaultArgs<ExtArgs>
+  }
+
+  export type $TravelRequestPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TravelRequest"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      status: Prisma.$StatusTravelRequestPayload<ExtArgs>
+      approver: Prisma.$UserPayload<ExtArgs> | null
+      card: Prisma.$CardPayload<ExtArgs> | null
+      details: Prisma.$TravelDetailPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      userId: number
+      statusId: number
+      cardId: number | null
+      totalAmount: Prisma.Decimal
+      travelReason: string
+      travelObjectives: string
+      departureDate: Date
+      returnDate: Date
+      disbursementDate: Date | null
+      approvalDate: Date | null
+      approverId: number | null
+      comment: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["travelRequest"]>
+    composites: {}
+  }
+
+  type TravelRequestGetPayload<S extends boolean | null | undefined | TravelRequestDefaultArgs> = $Result.GetResult<Prisma.$TravelRequestPayload, S>
+
+  type TravelRequestCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TravelRequestFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TravelRequestCountAggregateInputType | true
+    }
+
+  export interface TravelRequestDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TravelRequest'], meta: { name: 'TravelRequest' } }
+    /**
+     * Find zero or one TravelRequest that matches the filter.
+     * @param {TravelRequestFindUniqueArgs} args - Arguments to find a TravelRequest
+     * @example
+     * // Get one TravelRequest
+     * const travelRequest = await prisma.travelRequest.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TravelRequestFindUniqueArgs>(args: SelectSubset<T, TravelRequestFindUniqueArgs<ExtArgs>>): Prisma__TravelRequestClient<$Result.GetResult<Prisma.$TravelRequestPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one TravelRequest that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TravelRequestFindUniqueOrThrowArgs} args - Arguments to find a TravelRequest
+     * @example
+     * // Get one TravelRequest
+     * const travelRequest = await prisma.travelRequest.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TravelRequestFindUniqueOrThrowArgs>(args: SelectSubset<T, TravelRequestFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TravelRequestClient<$Result.GetResult<Prisma.$TravelRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TravelRequest that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TravelRequestFindFirstArgs} args - Arguments to find a TravelRequest
+     * @example
+     * // Get one TravelRequest
+     * const travelRequest = await prisma.travelRequest.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TravelRequestFindFirstArgs>(args?: SelectSubset<T, TravelRequestFindFirstArgs<ExtArgs>>): Prisma__TravelRequestClient<$Result.GetResult<Prisma.$TravelRequestPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TravelRequest that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TravelRequestFindFirstOrThrowArgs} args - Arguments to find a TravelRequest
+     * @example
+     * // Get one TravelRequest
+     * const travelRequest = await prisma.travelRequest.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TravelRequestFindFirstOrThrowArgs>(args?: SelectSubset<T, TravelRequestFindFirstOrThrowArgs<ExtArgs>>): Prisma__TravelRequestClient<$Result.GetResult<Prisma.$TravelRequestPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more TravelRequests that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TravelRequestFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TravelRequests
+     * const travelRequests = await prisma.travelRequest.findMany()
+     * 
+     * // Get first 10 TravelRequests
+     * const travelRequests = await prisma.travelRequest.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const travelRequestWithIdOnly = await prisma.travelRequest.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TravelRequestFindManyArgs>(args?: SelectSubset<T, TravelRequestFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TravelRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a TravelRequest.
+     * @param {TravelRequestCreateArgs} args - Arguments to create a TravelRequest.
+     * @example
+     * // Create one TravelRequest
+     * const TravelRequest = await prisma.travelRequest.create({
+     *   data: {
+     *     // ... data to create a TravelRequest
+     *   }
+     * })
+     * 
+     */
+    create<T extends TravelRequestCreateArgs>(args: SelectSubset<T, TravelRequestCreateArgs<ExtArgs>>): Prisma__TravelRequestClient<$Result.GetResult<Prisma.$TravelRequestPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many TravelRequests.
+     * @param {TravelRequestCreateManyArgs} args - Arguments to create many TravelRequests.
+     * @example
+     * // Create many TravelRequests
+     * const travelRequest = await prisma.travelRequest.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TravelRequestCreateManyArgs>(args?: SelectSubset<T, TravelRequestCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a TravelRequest.
+     * @param {TravelRequestDeleteArgs} args - Arguments to delete one TravelRequest.
+     * @example
+     * // Delete one TravelRequest
+     * const TravelRequest = await prisma.travelRequest.delete({
+     *   where: {
+     *     // ... filter to delete one TravelRequest
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TravelRequestDeleteArgs>(args: SelectSubset<T, TravelRequestDeleteArgs<ExtArgs>>): Prisma__TravelRequestClient<$Result.GetResult<Prisma.$TravelRequestPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one TravelRequest.
+     * @param {TravelRequestUpdateArgs} args - Arguments to update one TravelRequest.
+     * @example
+     * // Update one TravelRequest
+     * const travelRequest = await prisma.travelRequest.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TravelRequestUpdateArgs>(args: SelectSubset<T, TravelRequestUpdateArgs<ExtArgs>>): Prisma__TravelRequestClient<$Result.GetResult<Prisma.$TravelRequestPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more TravelRequests.
+     * @param {TravelRequestDeleteManyArgs} args - Arguments to filter TravelRequests to delete.
+     * @example
+     * // Delete a few TravelRequests
+     * const { count } = await prisma.travelRequest.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TravelRequestDeleteManyArgs>(args?: SelectSubset<T, TravelRequestDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TravelRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TravelRequestUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TravelRequests
+     * const travelRequest = await prisma.travelRequest.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TravelRequestUpdateManyArgs>(args: SelectSubset<T, TravelRequestUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one TravelRequest.
+     * @param {TravelRequestUpsertArgs} args - Arguments to update or create a TravelRequest.
+     * @example
+     * // Update or create a TravelRequest
+     * const travelRequest = await prisma.travelRequest.upsert({
+     *   create: {
+     *     // ... data to create a TravelRequest
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TravelRequest we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TravelRequestUpsertArgs>(args: SelectSubset<T, TravelRequestUpsertArgs<ExtArgs>>): Prisma__TravelRequestClient<$Result.GetResult<Prisma.$TravelRequestPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of TravelRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TravelRequestCountArgs} args - Arguments to filter TravelRequests to count.
+     * @example
+     * // Count the number of TravelRequests
+     * const count = await prisma.travelRequest.count({
+     *   where: {
+     *     // ... the filter for the TravelRequests we want to count
+     *   }
+     * })
+    **/
+    count<T extends TravelRequestCountArgs>(
+      args?: Subset<T, TravelRequestCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TravelRequestCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TravelRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TravelRequestAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TravelRequestAggregateArgs>(args: Subset<T, TravelRequestAggregateArgs>): Prisma.PrismaPromise<GetTravelRequestAggregateType<T>>
+
+    /**
+     * Group by TravelRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TravelRequestGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TravelRequestGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TravelRequestGroupByArgs['orderBy'] }
+        : { orderBy?: TravelRequestGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TravelRequestGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTravelRequestGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TravelRequest model
+   */
+  readonly fields: TravelRequestFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TravelRequest.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TravelRequestClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    status<T extends StatusTravelRequestDefaultArgs<ExtArgs> = {}>(args?: Subset<T, StatusTravelRequestDefaultArgs<ExtArgs>>): Prisma__StatusTravelRequestClient<$Result.GetResult<Prisma.$StatusTravelRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    approver<T extends TravelRequest$approverArgs<ExtArgs> = {}>(args?: Subset<T, TravelRequest$approverArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    card<T extends TravelRequest$cardArgs<ExtArgs> = {}>(args?: Subset<T, TravelRequest$cardArgs<ExtArgs>>): Prisma__CardClient<$Result.GetResult<Prisma.$CardPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    details<T extends TravelRequest$detailsArgs<ExtArgs> = {}>(args?: Subset<T, TravelRequest$detailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TravelDetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TravelRequest model
+   */
+  interface TravelRequestFieldRefs {
+    readonly id: FieldRef<"TravelRequest", 'Int'>
+    readonly userId: FieldRef<"TravelRequest", 'Int'>
+    readonly statusId: FieldRef<"TravelRequest", 'Int'>
+    readonly cardId: FieldRef<"TravelRequest", 'Int'>
+    readonly totalAmount: FieldRef<"TravelRequest", 'Decimal'>
+    readonly travelReason: FieldRef<"TravelRequest", 'String'>
+    readonly travelObjectives: FieldRef<"TravelRequest", 'String'>
+    readonly departureDate: FieldRef<"TravelRequest", 'DateTime'>
+    readonly returnDate: FieldRef<"TravelRequest", 'DateTime'>
+    readonly disbursementDate: FieldRef<"TravelRequest", 'DateTime'>
+    readonly approvalDate: FieldRef<"TravelRequest", 'DateTime'>
+    readonly approverId: FieldRef<"TravelRequest", 'Int'>
+    readonly comment: FieldRef<"TravelRequest", 'String'>
+    readonly createdAt: FieldRef<"TravelRequest", 'DateTime'>
+    readonly updatedAt: FieldRef<"TravelRequest", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TravelRequest findUnique
+   */
+  export type TravelRequestFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TravelRequest
+     */
+    select?: TravelRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TravelRequest
+     */
+    omit?: TravelRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TravelRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which TravelRequest to fetch.
+     */
+    where: TravelRequestWhereUniqueInput
+  }
+
+  /**
+   * TravelRequest findUniqueOrThrow
+   */
+  export type TravelRequestFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TravelRequest
+     */
+    select?: TravelRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TravelRequest
+     */
+    omit?: TravelRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TravelRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which TravelRequest to fetch.
+     */
+    where: TravelRequestWhereUniqueInput
+  }
+
+  /**
+   * TravelRequest findFirst
+   */
+  export type TravelRequestFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TravelRequest
+     */
+    select?: TravelRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TravelRequest
+     */
+    omit?: TravelRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TravelRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which TravelRequest to fetch.
+     */
+    where?: TravelRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TravelRequests to fetch.
+     */
+    orderBy?: TravelRequestOrderByWithRelationInput | TravelRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TravelRequests.
+     */
+    cursor?: TravelRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TravelRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TravelRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TravelRequests.
+     */
+    distinct?: TravelRequestScalarFieldEnum | TravelRequestScalarFieldEnum[]
+  }
+
+  /**
+   * TravelRequest findFirstOrThrow
+   */
+  export type TravelRequestFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TravelRequest
+     */
+    select?: TravelRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TravelRequest
+     */
+    omit?: TravelRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TravelRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which TravelRequest to fetch.
+     */
+    where?: TravelRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TravelRequests to fetch.
+     */
+    orderBy?: TravelRequestOrderByWithRelationInput | TravelRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TravelRequests.
+     */
+    cursor?: TravelRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TravelRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TravelRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TravelRequests.
+     */
+    distinct?: TravelRequestScalarFieldEnum | TravelRequestScalarFieldEnum[]
+  }
+
+  /**
+   * TravelRequest findMany
+   */
+  export type TravelRequestFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TravelRequest
+     */
+    select?: TravelRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TravelRequest
+     */
+    omit?: TravelRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TravelRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which TravelRequests to fetch.
+     */
+    where?: TravelRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TravelRequests to fetch.
+     */
+    orderBy?: TravelRequestOrderByWithRelationInput | TravelRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TravelRequests.
+     */
+    cursor?: TravelRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TravelRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TravelRequests.
+     */
+    skip?: number
+    distinct?: TravelRequestScalarFieldEnum | TravelRequestScalarFieldEnum[]
+  }
+
+  /**
+   * TravelRequest create
+   */
+  export type TravelRequestCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TravelRequest
+     */
+    select?: TravelRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TravelRequest
+     */
+    omit?: TravelRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TravelRequestInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TravelRequest.
+     */
+    data: XOR<TravelRequestCreateInput, TravelRequestUncheckedCreateInput>
+  }
+
+  /**
+   * TravelRequest createMany
+   */
+  export type TravelRequestCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TravelRequests.
+     */
+    data: TravelRequestCreateManyInput | TravelRequestCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TravelRequest update
+   */
+  export type TravelRequestUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TravelRequest
+     */
+    select?: TravelRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TravelRequest
+     */
+    omit?: TravelRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TravelRequestInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TravelRequest.
+     */
+    data: XOR<TravelRequestUpdateInput, TravelRequestUncheckedUpdateInput>
+    /**
+     * Choose, which TravelRequest to update.
+     */
+    where: TravelRequestWhereUniqueInput
+  }
+
+  /**
+   * TravelRequest updateMany
+   */
+  export type TravelRequestUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TravelRequests.
+     */
+    data: XOR<TravelRequestUpdateManyMutationInput, TravelRequestUncheckedUpdateManyInput>
+    /**
+     * Filter which TravelRequests to update
+     */
+    where?: TravelRequestWhereInput
+    /**
+     * Limit how many TravelRequests to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TravelRequest upsert
+   */
+  export type TravelRequestUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TravelRequest
+     */
+    select?: TravelRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TravelRequest
+     */
+    omit?: TravelRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TravelRequestInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TravelRequest to update in case it exists.
+     */
+    where: TravelRequestWhereUniqueInput
+    /**
+     * In case the TravelRequest found by the `where` argument doesn't exist, create a new TravelRequest with this data.
+     */
+    create: XOR<TravelRequestCreateInput, TravelRequestUncheckedCreateInput>
+    /**
+     * In case the TravelRequest was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TravelRequestUpdateInput, TravelRequestUncheckedUpdateInput>
+  }
+
+  /**
+   * TravelRequest delete
+   */
+  export type TravelRequestDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TravelRequest
+     */
+    select?: TravelRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TravelRequest
+     */
+    omit?: TravelRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TravelRequestInclude<ExtArgs> | null
+    /**
+     * Filter which TravelRequest to delete.
+     */
+    where: TravelRequestWhereUniqueInput
+  }
+
+  /**
+   * TravelRequest deleteMany
+   */
+  export type TravelRequestDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TravelRequests to delete
+     */
+    where?: TravelRequestWhereInput
+    /**
+     * Limit how many TravelRequests to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * TravelRequest.approver
+   */
+  export type TravelRequest$approverArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * TravelRequest.card
+   */
+  export type TravelRequest$cardArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Card
+     */
+    select?: CardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Card
+     */
+    omit?: CardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CardInclude<ExtArgs> | null
+    where?: CardWhereInput
+  }
+
+  /**
+   * TravelRequest.details
+   */
+  export type TravelRequest$detailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TravelDetail
+     */
+    select?: TravelDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TravelDetail
+     */
+    omit?: TravelDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TravelDetailInclude<ExtArgs> | null
+    where?: TravelDetailWhereInput
+    orderBy?: TravelDetailOrderByWithRelationInput | TravelDetailOrderByWithRelationInput[]
+    cursor?: TravelDetailWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TravelDetailScalarFieldEnum | TravelDetailScalarFieldEnum[]
+  }
+
+  /**
+   * TravelRequest without action
+   */
+  export type TravelRequestDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TravelRequest
+     */
+    select?: TravelRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TravelRequest
+     */
+    omit?: TravelRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TravelRequestInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model TravelDetail
+   */
+
+  export type AggregateTravelDetail = {
+    _count: TravelDetailCountAggregateOutputType | null
+    _avg: TravelDetailAvgAggregateOutputType | null
+    _sum: TravelDetailSumAggregateOutputType | null
+    _min: TravelDetailMinAggregateOutputType | null
+    _max: TravelDetailMaxAggregateOutputType | null
+  }
+
+  export type TravelDetailAvgAggregateOutputType = {
+    id: number | null
+    travelRequestId: number | null
+    amount: Decimal | null
+  }
+
+  export type TravelDetailSumAggregateOutputType = {
+    id: number | null
+    travelRequestId: number | null
+    amount: Decimal | null
+  }
+
+  export type TravelDetailMinAggregateOutputType = {
+    id: number | null
+    travelRequestId: number | null
+    concept: string | null
+    amount: Decimal | null
+  }
+
+  export type TravelDetailMaxAggregateOutputType = {
+    id: number | null
+    travelRequestId: number | null
+    concept: string | null
+    amount: Decimal | null
+  }
+
+  export type TravelDetailCountAggregateOutputType = {
+    id: number
+    travelRequestId: number
+    concept: number
+    amount: number
+    _all: number
+  }
+
+
+  export type TravelDetailAvgAggregateInputType = {
+    id?: true
+    travelRequestId?: true
+    amount?: true
+  }
+
+  export type TravelDetailSumAggregateInputType = {
+    id?: true
+    travelRequestId?: true
+    amount?: true
+  }
+
+  export type TravelDetailMinAggregateInputType = {
+    id?: true
+    travelRequestId?: true
+    concept?: true
+    amount?: true
+  }
+
+  export type TravelDetailMaxAggregateInputType = {
+    id?: true
+    travelRequestId?: true
+    concept?: true
+    amount?: true
+  }
+
+  export type TravelDetailCountAggregateInputType = {
+    id?: true
+    travelRequestId?: true
+    concept?: true
+    amount?: true
+    _all?: true
+  }
+
+  export type TravelDetailAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TravelDetail to aggregate.
+     */
+    where?: TravelDetailWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TravelDetails to fetch.
+     */
+    orderBy?: TravelDetailOrderByWithRelationInput | TravelDetailOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TravelDetailWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TravelDetails from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TravelDetails.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TravelDetails
+    **/
+    _count?: true | TravelDetailCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TravelDetailAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TravelDetailSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TravelDetailMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TravelDetailMaxAggregateInputType
+  }
+
+  export type GetTravelDetailAggregateType<T extends TravelDetailAggregateArgs> = {
+        [P in keyof T & keyof AggregateTravelDetail]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTravelDetail[P]>
+      : GetScalarType<T[P], AggregateTravelDetail[P]>
+  }
+
+
+
+
+  export type TravelDetailGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TravelDetailWhereInput
+    orderBy?: TravelDetailOrderByWithAggregationInput | TravelDetailOrderByWithAggregationInput[]
+    by: TravelDetailScalarFieldEnum[] | TravelDetailScalarFieldEnum
+    having?: TravelDetailScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TravelDetailCountAggregateInputType | true
+    _avg?: TravelDetailAvgAggregateInputType
+    _sum?: TravelDetailSumAggregateInputType
+    _min?: TravelDetailMinAggregateInputType
+    _max?: TravelDetailMaxAggregateInputType
+  }
+
+  export type TravelDetailGroupByOutputType = {
+    id: number
+    travelRequestId: number
+    concept: string
+    amount: Decimal
+    _count: TravelDetailCountAggregateOutputType | null
+    _avg: TravelDetailAvgAggregateOutputType | null
+    _sum: TravelDetailSumAggregateOutputType | null
+    _min: TravelDetailMinAggregateOutputType | null
+    _max: TravelDetailMaxAggregateOutputType | null
+  }
+
+  type GetTravelDetailGroupByPayload<T extends TravelDetailGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TravelDetailGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TravelDetailGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TravelDetailGroupByOutputType[P]>
+            : GetScalarType<T[P], TravelDetailGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TravelDetailSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    travelRequestId?: boolean
+    concept?: boolean
+    amount?: boolean
+    request?: boolean | TravelRequestDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["travelDetail"]>
+
+
+
+  export type TravelDetailSelectScalar = {
+    id?: boolean
+    travelRequestId?: boolean
+    concept?: boolean
+    amount?: boolean
+  }
+
+  export type TravelDetailOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "travelRequestId" | "concept" | "amount", ExtArgs["result"]["travelDetail"]>
+  export type TravelDetailInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    request?: boolean | TravelRequestDefaultArgs<ExtArgs>
+  }
+
+  export type $TravelDetailPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TravelDetail"
+    objects: {
+      request: Prisma.$TravelRequestPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      travelRequestId: number
+      concept: string
+      amount: Prisma.Decimal
+    }, ExtArgs["result"]["travelDetail"]>
+    composites: {}
+  }
+
+  type TravelDetailGetPayload<S extends boolean | null | undefined | TravelDetailDefaultArgs> = $Result.GetResult<Prisma.$TravelDetailPayload, S>
+
+  type TravelDetailCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TravelDetailFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TravelDetailCountAggregateInputType | true
+    }
+
+  export interface TravelDetailDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TravelDetail'], meta: { name: 'TravelDetail' } }
+    /**
+     * Find zero or one TravelDetail that matches the filter.
+     * @param {TravelDetailFindUniqueArgs} args - Arguments to find a TravelDetail
+     * @example
+     * // Get one TravelDetail
+     * const travelDetail = await prisma.travelDetail.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TravelDetailFindUniqueArgs>(args: SelectSubset<T, TravelDetailFindUniqueArgs<ExtArgs>>): Prisma__TravelDetailClient<$Result.GetResult<Prisma.$TravelDetailPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one TravelDetail that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TravelDetailFindUniqueOrThrowArgs} args - Arguments to find a TravelDetail
+     * @example
+     * // Get one TravelDetail
+     * const travelDetail = await prisma.travelDetail.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TravelDetailFindUniqueOrThrowArgs>(args: SelectSubset<T, TravelDetailFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TravelDetailClient<$Result.GetResult<Prisma.$TravelDetailPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TravelDetail that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TravelDetailFindFirstArgs} args - Arguments to find a TravelDetail
+     * @example
+     * // Get one TravelDetail
+     * const travelDetail = await prisma.travelDetail.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TravelDetailFindFirstArgs>(args?: SelectSubset<T, TravelDetailFindFirstArgs<ExtArgs>>): Prisma__TravelDetailClient<$Result.GetResult<Prisma.$TravelDetailPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TravelDetail that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TravelDetailFindFirstOrThrowArgs} args - Arguments to find a TravelDetail
+     * @example
+     * // Get one TravelDetail
+     * const travelDetail = await prisma.travelDetail.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TravelDetailFindFirstOrThrowArgs>(args?: SelectSubset<T, TravelDetailFindFirstOrThrowArgs<ExtArgs>>): Prisma__TravelDetailClient<$Result.GetResult<Prisma.$TravelDetailPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more TravelDetails that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TravelDetailFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TravelDetails
+     * const travelDetails = await prisma.travelDetail.findMany()
+     * 
+     * // Get first 10 TravelDetails
+     * const travelDetails = await prisma.travelDetail.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const travelDetailWithIdOnly = await prisma.travelDetail.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TravelDetailFindManyArgs>(args?: SelectSubset<T, TravelDetailFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TravelDetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a TravelDetail.
+     * @param {TravelDetailCreateArgs} args - Arguments to create a TravelDetail.
+     * @example
+     * // Create one TravelDetail
+     * const TravelDetail = await prisma.travelDetail.create({
+     *   data: {
+     *     // ... data to create a TravelDetail
+     *   }
+     * })
+     * 
+     */
+    create<T extends TravelDetailCreateArgs>(args: SelectSubset<T, TravelDetailCreateArgs<ExtArgs>>): Prisma__TravelDetailClient<$Result.GetResult<Prisma.$TravelDetailPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many TravelDetails.
+     * @param {TravelDetailCreateManyArgs} args - Arguments to create many TravelDetails.
+     * @example
+     * // Create many TravelDetails
+     * const travelDetail = await prisma.travelDetail.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TravelDetailCreateManyArgs>(args?: SelectSubset<T, TravelDetailCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a TravelDetail.
+     * @param {TravelDetailDeleteArgs} args - Arguments to delete one TravelDetail.
+     * @example
+     * // Delete one TravelDetail
+     * const TravelDetail = await prisma.travelDetail.delete({
+     *   where: {
+     *     // ... filter to delete one TravelDetail
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TravelDetailDeleteArgs>(args: SelectSubset<T, TravelDetailDeleteArgs<ExtArgs>>): Prisma__TravelDetailClient<$Result.GetResult<Prisma.$TravelDetailPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one TravelDetail.
+     * @param {TravelDetailUpdateArgs} args - Arguments to update one TravelDetail.
+     * @example
+     * // Update one TravelDetail
+     * const travelDetail = await prisma.travelDetail.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TravelDetailUpdateArgs>(args: SelectSubset<T, TravelDetailUpdateArgs<ExtArgs>>): Prisma__TravelDetailClient<$Result.GetResult<Prisma.$TravelDetailPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more TravelDetails.
+     * @param {TravelDetailDeleteManyArgs} args - Arguments to filter TravelDetails to delete.
+     * @example
+     * // Delete a few TravelDetails
+     * const { count } = await prisma.travelDetail.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TravelDetailDeleteManyArgs>(args?: SelectSubset<T, TravelDetailDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TravelDetails.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TravelDetailUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TravelDetails
+     * const travelDetail = await prisma.travelDetail.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TravelDetailUpdateManyArgs>(args: SelectSubset<T, TravelDetailUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one TravelDetail.
+     * @param {TravelDetailUpsertArgs} args - Arguments to update or create a TravelDetail.
+     * @example
+     * // Update or create a TravelDetail
+     * const travelDetail = await prisma.travelDetail.upsert({
+     *   create: {
+     *     // ... data to create a TravelDetail
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TravelDetail we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TravelDetailUpsertArgs>(args: SelectSubset<T, TravelDetailUpsertArgs<ExtArgs>>): Prisma__TravelDetailClient<$Result.GetResult<Prisma.$TravelDetailPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of TravelDetails.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TravelDetailCountArgs} args - Arguments to filter TravelDetails to count.
+     * @example
+     * // Count the number of TravelDetails
+     * const count = await prisma.travelDetail.count({
+     *   where: {
+     *     // ... the filter for the TravelDetails we want to count
+     *   }
+     * })
+    **/
+    count<T extends TravelDetailCountArgs>(
+      args?: Subset<T, TravelDetailCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TravelDetailCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TravelDetail.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TravelDetailAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TravelDetailAggregateArgs>(args: Subset<T, TravelDetailAggregateArgs>): Prisma.PrismaPromise<GetTravelDetailAggregateType<T>>
+
+    /**
+     * Group by TravelDetail.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TravelDetailGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TravelDetailGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TravelDetailGroupByArgs['orderBy'] }
+        : { orderBy?: TravelDetailGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TravelDetailGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTravelDetailGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TravelDetail model
+   */
+  readonly fields: TravelDetailFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TravelDetail.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TravelDetailClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    request<T extends TravelRequestDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TravelRequestDefaultArgs<ExtArgs>>): Prisma__TravelRequestClient<$Result.GetResult<Prisma.$TravelRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TravelDetail model
+   */
+  interface TravelDetailFieldRefs {
+    readonly id: FieldRef<"TravelDetail", 'Int'>
+    readonly travelRequestId: FieldRef<"TravelDetail", 'Int'>
+    readonly concept: FieldRef<"TravelDetail", 'String'>
+    readonly amount: FieldRef<"TravelDetail", 'Decimal'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TravelDetail findUnique
+   */
+  export type TravelDetailFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TravelDetail
+     */
+    select?: TravelDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TravelDetail
+     */
+    omit?: TravelDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TravelDetailInclude<ExtArgs> | null
+    /**
+     * Filter, which TravelDetail to fetch.
+     */
+    where: TravelDetailWhereUniqueInput
+  }
+
+  /**
+   * TravelDetail findUniqueOrThrow
+   */
+  export type TravelDetailFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TravelDetail
+     */
+    select?: TravelDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TravelDetail
+     */
+    omit?: TravelDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TravelDetailInclude<ExtArgs> | null
+    /**
+     * Filter, which TravelDetail to fetch.
+     */
+    where: TravelDetailWhereUniqueInput
+  }
+
+  /**
+   * TravelDetail findFirst
+   */
+  export type TravelDetailFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TravelDetail
+     */
+    select?: TravelDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TravelDetail
+     */
+    omit?: TravelDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TravelDetailInclude<ExtArgs> | null
+    /**
+     * Filter, which TravelDetail to fetch.
+     */
+    where?: TravelDetailWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TravelDetails to fetch.
+     */
+    orderBy?: TravelDetailOrderByWithRelationInput | TravelDetailOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TravelDetails.
+     */
+    cursor?: TravelDetailWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TravelDetails from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TravelDetails.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TravelDetails.
+     */
+    distinct?: TravelDetailScalarFieldEnum | TravelDetailScalarFieldEnum[]
+  }
+
+  /**
+   * TravelDetail findFirstOrThrow
+   */
+  export type TravelDetailFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TravelDetail
+     */
+    select?: TravelDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TravelDetail
+     */
+    omit?: TravelDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TravelDetailInclude<ExtArgs> | null
+    /**
+     * Filter, which TravelDetail to fetch.
+     */
+    where?: TravelDetailWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TravelDetails to fetch.
+     */
+    orderBy?: TravelDetailOrderByWithRelationInput | TravelDetailOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TravelDetails.
+     */
+    cursor?: TravelDetailWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TravelDetails from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TravelDetails.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TravelDetails.
+     */
+    distinct?: TravelDetailScalarFieldEnum | TravelDetailScalarFieldEnum[]
+  }
+
+  /**
+   * TravelDetail findMany
+   */
+  export type TravelDetailFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TravelDetail
+     */
+    select?: TravelDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TravelDetail
+     */
+    omit?: TravelDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TravelDetailInclude<ExtArgs> | null
+    /**
+     * Filter, which TravelDetails to fetch.
+     */
+    where?: TravelDetailWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TravelDetails to fetch.
+     */
+    orderBy?: TravelDetailOrderByWithRelationInput | TravelDetailOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TravelDetails.
+     */
+    cursor?: TravelDetailWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TravelDetails from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TravelDetails.
+     */
+    skip?: number
+    distinct?: TravelDetailScalarFieldEnum | TravelDetailScalarFieldEnum[]
+  }
+
+  /**
+   * TravelDetail create
+   */
+  export type TravelDetailCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TravelDetail
+     */
+    select?: TravelDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TravelDetail
+     */
+    omit?: TravelDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TravelDetailInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TravelDetail.
+     */
+    data: XOR<TravelDetailCreateInput, TravelDetailUncheckedCreateInput>
+  }
+
+  /**
+   * TravelDetail createMany
+   */
+  export type TravelDetailCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TravelDetails.
+     */
+    data: TravelDetailCreateManyInput | TravelDetailCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TravelDetail update
+   */
+  export type TravelDetailUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TravelDetail
+     */
+    select?: TravelDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TravelDetail
+     */
+    omit?: TravelDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TravelDetailInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TravelDetail.
+     */
+    data: XOR<TravelDetailUpdateInput, TravelDetailUncheckedUpdateInput>
+    /**
+     * Choose, which TravelDetail to update.
+     */
+    where: TravelDetailWhereUniqueInput
+  }
+
+  /**
+   * TravelDetail updateMany
+   */
+  export type TravelDetailUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TravelDetails.
+     */
+    data: XOR<TravelDetailUpdateManyMutationInput, TravelDetailUncheckedUpdateManyInput>
+    /**
+     * Filter which TravelDetails to update
+     */
+    where?: TravelDetailWhereInput
+    /**
+     * Limit how many TravelDetails to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TravelDetail upsert
+   */
+  export type TravelDetailUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TravelDetail
+     */
+    select?: TravelDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TravelDetail
+     */
+    omit?: TravelDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TravelDetailInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TravelDetail to update in case it exists.
+     */
+    where: TravelDetailWhereUniqueInput
+    /**
+     * In case the TravelDetail found by the `where` argument doesn't exist, create a new TravelDetail with this data.
+     */
+    create: XOR<TravelDetailCreateInput, TravelDetailUncheckedCreateInput>
+    /**
+     * In case the TravelDetail was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TravelDetailUpdateInput, TravelDetailUncheckedUpdateInput>
+  }
+
+  /**
+   * TravelDetail delete
+   */
+  export type TravelDetailDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TravelDetail
+     */
+    select?: TravelDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TravelDetail
+     */
+    omit?: TravelDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TravelDetailInclude<ExtArgs> | null
+    /**
+     * Filter which TravelDetail to delete.
+     */
+    where: TravelDetailWhereUniqueInput
+  }
+
+  /**
+   * TravelDetail deleteMany
+   */
+  export type TravelDetailDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TravelDetails to delete
+     */
+    where?: TravelDetailWhereInput
+    /**
+     * Limit how many TravelDetails to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * TravelDetail without action
+   */
+  export type TravelDetailDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TravelDetail
+     */
+    select?: TravelDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TravelDetail
+     */
+    omit?: TravelDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TravelDetailInclude<ExtArgs> | null
   }
 
 
@@ -6537,6 +12291,67 @@ export namespace Prisma {
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+  export const CardScalarFieldEnum: {
+    id: 'id',
+    cardNumber: 'cardNumber',
+    companyId: 'companyId',
+    isActive: 'isActive',
+    createdAt: 'createdAt'
+  };
+
+  export type CardScalarFieldEnum = (typeof CardScalarFieldEnum)[keyof typeof CardScalarFieldEnum]
+
+
+  export const CardAssignmentScalarFieldEnum: {
+    id: 'id',
+    cardId: 'cardId',
+    userId: 'userId',
+    assignedAt: 'assignedAt',
+    unassignedAt: 'unassignedAt'
+  };
+
+  export type CardAssignmentScalarFieldEnum = (typeof CardAssignmentScalarFieldEnum)[keyof typeof CardAssignmentScalarFieldEnum]
+
+
+  export const StatusTravelRequestScalarFieldEnum: {
+    id: 'id',
+    name: 'name'
+  };
+
+  export type StatusTravelRequestScalarFieldEnum = (typeof StatusTravelRequestScalarFieldEnum)[keyof typeof StatusTravelRequestScalarFieldEnum]
+
+
+  export const TravelRequestScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    statusId: 'statusId',
+    cardId: 'cardId',
+    totalAmount: 'totalAmount',
+    travelReason: 'travelReason',
+    travelObjectives: 'travelObjectives',
+    departureDate: 'departureDate',
+    returnDate: 'returnDate',
+    disbursementDate: 'disbursementDate',
+    approvalDate: 'approvalDate',
+    approverId: 'approverId',
+    comment: 'comment',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type TravelRequestScalarFieldEnum = (typeof TravelRequestScalarFieldEnum)[keyof typeof TravelRequestScalarFieldEnum]
+
+
+  export const TravelDetailScalarFieldEnum: {
+    id: 'id',
+    travelRequestId: 'travelRequestId',
+    concept: 'concept',
+    amount: 'amount'
+  };
+
+  export type TravelDetailScalarFieldEnum = (typeof TravelDetailScalarFieldEnum)[keyof typeof TravelDetailScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -6592,6 +12407,36 @@ export namespace Prisma {
   export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
 
 
+  export const CardOrderByRelevanceFieldEnum: {
+    cardNumber: 'cardNumber'
+  };
+
+  export type CardOrderByRelevanceFieldEnum = (typeof CardOrderByRelevanceFieldEnum)[keyof typeof CardOrderByRelevanceFieldEnum]
+
+
+  export const StatusTravelRequestOrderByRelevanceFieldEnum: {
+    name: 'name'
+  };
+
+  export type StatusTravelRequestOrderByRelevanceFieldEnum = (typeof StatusTravelRequestOrderByRelevanceFieldEnum)[keyof typeof StatusTravelRequestOrderByRelevanceFieldEnum]
+
+
+  export const TravelRequestOrderByRelevanceFieldEnum: {
+    travelReason: 'travelReason',
+    travelObjectives: 'travelObjectives',
+    comment: 'comment'
+  };
+
+  export type TravelRequestOrderByRelevanceFieldEnum = (typeof TravelRequestOrderByRelevanceFieldEnum)[keyof typeof TravelRequestOrderByRelevanceFieldEnum]
+
+
+  export const TravelDetailOrderByRelevanceFieldEnum: {
+    concept: 'concept'
+  };
+
+  export type TravelDetailOrderByRelevanceFieldEnum = (typeof TravelDetailOrderByRelevanceFieldEnum)[keyof typeof TravelDetailOrderByRelevanceFieldEnum]
+
+
   /**
    * Field references
    */
@@ -6626,6 +12471,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Decimal'
+   */
+  export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -6645,6 +12497,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Company"> | Date | string
     users?: UserListRelationFilter
     branches?: BranchListRelationFilter
+    cards?: CardListRelationFilter
   }
 
   export type CompanyOrderByWithRelationInput = {
@@ -6654,6 +12507,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     users?: UserOrderByRelationAggregateInput
     branches?: BranchOrderByRelationAggregateInput
+    cards?: CardOrderByRelationAggregateInput
     _relevance?: CompanyOrderByRelevanceInput
   }
 
@@ -6667,6 +12521,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Company"> | Date | string
     users?: UserListRelationFilter
     branches?: BranchListRelationFilter
+    cards?: CardListRelationFilter
   }, "id">
 
   export type CompanyOrderByWithAggregationInput = {
@@ -6882,6 +12737,9 @@ export namespace Prisma {
     role?: XOR<RoleScalarRelationFilter, RoleWhereInput>
     supervisor?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     subordinates?: UserListRelationFilter
+    cards?: CardAssignmentListRelationFilter
+    travelRequests?: TravelRequestListRelationFilter
+    approvedTravelRequests?: TravelRequestListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -6905,6 +12763,9 @@ export namespace Prisma {
     role?: RoleOrderByWithRelationInput
     supervisor?: UserOrderByWithRelationInput
     subordinates?: UserOrderByRelationAggregateInput
+    cards?: CardAssignmentOrderByRelationAggregateInput
+    travelRequests?: TravelRequestOrderByRelationAggregateInput
+    approvedTravelRequests?: TravelRequestOrderByRelationAggregateInput
     _relevance?: UserOrderByRelevanceInput
   }
 
@@ -6932,6 +12793,9 @@ export namespace Prisma {
     role?: XOR<RoleScalarRelationFilter, RoleWhereInput>
     supervisor?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     subordinates?: UserListRelationFilter
+    cards?: CardAssignmentListRelationFilter
+    travelRequests?: TravelRequestListRelationFilter
+    approvedTravelRequests?: TravelRequestListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -6976,12 +12840,353 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
 
+  export type CardWhereInput = {
+    AND?: CardWhereInput | CardWhereInput[]
+    OR?: CardWhereInput[]
+    NOT?: CardWhereInput | CardWhereInput[]
+    id?: IntFilter<"Card"> | number
+    cardNumber?: StringFilter<"Card"> | string
+    companyId?: IntFilter<"Card"> | number
+    isActive?: BoolFilter<"Card"> | boolean
+    createdAt?: DateTimeFilter<"Card"> | Date | string
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    assignments?: CardAssignmentListRelationFilter
+    travelRequests?: TravelRequestListRelationFilter
+  }
+
+  export type CardOrderByWithRelationInput = {
+    id?: SortOrder
+    cardNumber?: SortOrder
+    companyId?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    company?: CompanyOrderByWithRelationInput
+    assignments?: CardAssignmentOrderByRelationAggregateInput
+    travelRequests?: TravelRequestOrderByRelationAggregateInput
+    _relevance?: CardOrderByRelevanceInput
+  }
+
+  export type CardWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    cardNumber?: string
+    AND?: CardWhereInput | CardWhereInput[]
+    OR?: CardWhereInput[]
+    NOT?: CardWhereInput | CardWhereInput[]
+    companyId?: IntFilter<"Card"> | number
+    isActive?: BoolFilter<"Card"> | boolean
+    createdAt?: DateTimeFilter<"Card"> | Date | string
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    assignments?: CardAssignmentListRelationFilter
+    travelRequests?: TravelRequestListRelationFilter
+  }, "id" | "cardNumber">
+
+  export type CardOrderByWithAggregationInput = {
+    id?: SortOrder
+    cardNumber?: SortOrder
+    companyId?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    _count?: CardCountOrderByAggregateInput
+    _avg?: CardAvgOrderByAggregateInput
+    _max?: CardMaxOrderByAggregateInput
+    _min?: CardMinOrderByAggregateInput
+    _sum?: CardSumOrderByAggregateInput
+  }
+
+  export type CardScalarWhereWithAggregatesInput = {
+    AND?: CardScalarWhereWithAggregatesInput | CardScalarWhereWithAggregatesInput[]
+    OR?: CardScalarWhereWithAggregatesInput[]
+    NOT?: CardScalarWhereWithAggregatesInput | CardScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Card"> | number
+    cardNumber?: StringWithAggregatesFilter<"Card"> | string
+    companyId?: IntWithAggregatesFilter<"Card"> | number
+    isActive?: BoolWithAggregatesFilter<"Card"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"Card"> | Date | string
+  }
+
+  export type CardAssignmentWhereInput = {
+    AND?: CardAssignmentWhereInput | CardAssignmentWhereInput[]
+    OR?: CardAssignmentWhereInput[]
+    NOT?: CardAssignmentWhereInput | CardAssignmentWhereInput[]
+    id?: IntFilter<"CardAssignment"> | number
+    cardId?: IntFilter<"CardAssignment"> | number
+    userId?: IntFilter<"CardAssignment"> | number
+    assignedAt?: DateTimeFilter<"CardAssignment"> | Date | string
+    unassignedAt?: DateTimeNullableFilter<"CardAssignment"> | Date | string | null
+    card?: XOR<CardScalarRelationFilter, CardWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type CardAssignmentOrderByWithRelationInput = {
+    id?: SortOrder
+    cardId?: SortOrder
+    userId?: SortOrder
+    assignedAt?: SortOrder
+    unassignedAt?: SortOrderInput | SortOrder
+    card?: CardOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type CardAssignmentWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: CardAssignmentWhereInput | CardAssignmentWhereInput[]
+    OR?: CardAssignmentWhereInput[]
+    NOT?: CardAssignmentWhereInput | CardAssignmentWhereInput[]
+    cardId?: IntFilter<"CardAssignment"> | number
+    userId?: IntFilter<"CardAssignment"> | number
+    assignedAt?: DateTimeFilter<"CardAssignment"> | Date | string
+    unassignedAt?: DateTimeNullableFilter<"CardAssignment"> | Date | string | null
+    card?: XOR<CardScalarRelationFilter, CardWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type CardAssignmentOrderByWithAggregationInput = {
+    id?: SortOrder
+    cardId?: SortOrder
+    userId?: SortOrder
+    assignedAt?: SortOrder
+    unassignedAt?: SortOrderInput | SortOrder
+    _count?: CardAssignmentCountOrderByAggregateInput
+    _avg?: CardAssignmentAvgOrderByAggregateInput
+    _max?: CardAssignmentMaxOrderByAggregateInput
+    _min?: CardAssignmentMinOrderByAggregateInput
+    _sum?: CardAssignmentSumOrderByAggregateInput
+  }
+
+  export type CardAssignmentScalarWhereWithAggregatesInput = {
+    AND?: CardAssignmentScalarWhereWithAggregatesInput | CardAssignmentScalarWhereWithAggregatesInput[]
+    OR?: CardAssignmentScalarWhereWithAggregatesInput[]
+    NOT?: CardAssignmentScalarWhereWithAggregatesInput | CardAssignmentScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"CardAssignment"> | number
+    cardId?: IntWithAggregatesFilter<"CardAssignment"> | number
+    userId?: IntWithAggregatesFilter<"CardAssignment"> | number
+    assignedAt?: DateTimeWithAggregatesFilter<"CardAssignment"> | Date | string
+    unassignedAt?: DateTimeNullableWithAggregatesFilter<"CardAssignment"> | Date | string | null
+  }
+
+  export type StatusTravelRequestWhereInput = {
+    AND?: StatusTravelRequestWhereInput | StatusTravelRequestWhereInput[]
+    OR?: StatusTravelRequestWhereInput[]
+    NOT?: StatusTravelRequestWhereInput | StatusTravelRequestWhereInput[]
+    id?: IntFilter<"StatusTravelRequest"> | number
+    name?: StringFilter<"StatusTravelRequest"> | string
+    travelRequests?: TravelRequestListRelationFilter
+  }
+
+  export type StatusTravelRequestOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    travelRequests?: TravelRequestOrderByRelationAggregateInput
+    _relevance?: StatusTravelRequestOrderByRelevanceInput
+  }
+
+  export type StatusTravelRequestWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    name?: string
+    AND?: StatusTravelRequestWhereInput | StatusTravelRequestWhereInput[]
+    OR?: StatusTravelRequestWhereInput[]
+    NOT?: StatusTravelRequestWhereInput | StatusTravelRequestWhereInput[]
+    travelRequests?: TravelRequestListRelationFilter
+  }, "id" | "name">
+
+  export type StatusTravelRequestOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    _count?: StatusTravelRequestCountOrderByAggregateInput
+    _avg?: StatusTravelRequestAvgOrderByAggregateInput
+    _max?: StatusTravelRequestMaxOrderByAggregateInput
+    _min?: StatusTravelRequestMinOrderByAggregateInput
+    _sum?: StatusTravelRequestSumOrderByAggregateInput
+  }
+
+  export type StatusTravelRequestScalarWhereWithAggregatesInput = {
+    AND?: StatusTravelRequestScalarWhereWithAggregatesInput | StatusTravelRequestScalarWhereWithAggregatesInput[]
+    OR?: StatusTravelRequestScalarWhereWithAggregatesInput[]
+    NOT?: StatusTravelRequestScalarWhereWithAggregatesInput | StatusTravelRequestScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"StatusTravelRequest"> | number
+    name?: StringWithAggregatesFilter<"StatusTravelRequest"> | string
+  }
+
+  export type TravelRequestWhereInput = {
+    AND?: TravelRequestWhereInput | TravelRequestWhereInput[]
+    OR?: TravelRequestWhereInput[]
+    NOT?: TravelRequestWhereInput | TravelRequestWhereInput[]
+    id?: IntFilter<"TravelRequest"> | number
+    userId?: IntFilter<"TravelRequest"> | number
+    statusId?: IntFilter<"TravelRequest"> | number
+    cardId?: IntNullableFilter<"TravelRequest"> | number | null
+    totalAmount?: DecimalFilter<"TravelRequest"> | Decimal | DecimalJsLike | number | string
+    travelReason?: StringFilter<"TravelRequest"> | string
+    travelObjectives?: StringFilter<"TravelRequest"> | string
+    departureDate?: DateTimeFilter<"TravelRequest"> | Date | string
+    returnDate?: DateTimeFilter<"TravelRequest"> | Date | string
+    disbursementDate?: DateTimeNullableFilter<"TravelRequest"> | Date | string | null
+    approvalDate?: DateTimeNullableFilter<"TravelRequest"> | Date | string | null
+    approverId?: IntNullableFilter<"TravelRequest"> | number | null
+    comment?: StringNullableFilter<"TravelRequest"> | string | null
+    createdAt?: DateTimeFilter<"TravelRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"TravelRequest"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    status?: XOR<StatusTravelRequestScalarRelationFilter, StatusTravelRequestWhereInput>
+    approver?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    card?: XOR<CardNullableScalarRelationFilter, CardWhereInput> | null
+    details?: TravelDetailListRelationFilter
+  }
+
+  export type TravelRequestOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    statusId?: SortOrder
+    cardId?: SortOrderInput | SortOrder
+    totalAmount?: SortOrder
+    travelReason?: SortOrder
+    travelObjectives?: SortOrder
+    departureDate?: SortOrder
+    returnDate?: SortOrder
+    disbursementDate?: SortOrderInput | SortOrder
+    approvalDate?: SortOrderInput | SortOrder
+    approverId?: SortOrderInput | SortOrder
+    comment?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+    status?: StatusTravelRequestOrderByWithRelationInput
+    approver?: UserOrderByWithRelationInput
+    card?: CardOrderByWithRelationInput
+    details?: TravelDetailOrderByRelationAggregateInput
+    _relevance?: TravelRequestOrderByRelevanceInput
+  }
+
+  export type TravelRequestWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: TravelRequestWhereInput | TravelRequestWhereInput[]
+    OR?: TravelRequestWhereInput[]
+    NOT?: TravelRequestWhereInput | TravelRequestWhereInput[]
+    userId?: IntFilter<"TravelRequest"> | number
+    statusId?: IntFilter<"TravelRequest"> | number
+    cardId?: IntNullableFilter<"TravelRequest"> | number | null
+    totalAmount?: DecimalFilter<"TravelRequest"> | Decimal | DecimalJsLike | number | string
+    travelReason?: StringFilter<"TravelRequest"> | string
+    travelObjectives?: StringFilter<"TravelRequest"> | string
+    departureDate?: DateTimeFilter<"TravelRequest"> | Date | string
+    returnDate?: DateTimeFilter<"TravelRequest"> | Date | string
+    disbursementDate?: DateTimeNullableFilter<"TravelRequest"> | Date | string | null
+    approvalDate?: DateTimeNullableFilter<"TravelRequest"> | Date | string | null
+    approverId?: IntNullableFilter<"TravelRequest"> | number | null
+    comment?: StringNullableFilter<"TravelRequest"> | string | null
+    createdAt?: DateTimeFilter<"TravelRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"TravelRequest"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    status?: XOR<StatusTravelRequestScalarRelationFilter, StatusTravelRequestWhereInput>
+    approver?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    card?: XOR<CardNullableScalarRelationFilter, CardWhereInput> | null
+    details?: TravelDetailListRelationFilter
+  }, "id">
+
+  export type TravelRequestOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    statusId?: SortOrder
+    cardId?: SortOrderInput | SortOrder
+    totalAmount?: SortOrder
+    travelReason?: SortOrder
+    travelObjectives?: SortOrder
+    departureDate?: SortOrder
+    returnDate?: SortOrder
+    disbursementDate?: SortOrderInput | SortOrder
+    approvalDate?: SortOrderInput | SortOrder
+    approverId?: SortOrderInput | SortOrder
+    comment?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: TravelRequestCountOrderByAggregateInput
+    _avg?: TravelRequestAvgOrderByAggregateInput
+    _max?: TravelRequestMaxOrderByAggregateInput
+    _min?: TravelRequestMinOrderByAggregateInput
+    _sum?: TravelRequestSumOrderByAggregateInput
+  }
+
+  export type TravelRequestScalarWhereWithAggregatesInput = {
+    AND?: TravelRequestScalarWhereWithAggregatesInput | TravelRequestScalarWhereWithAggregatesInput[]
+    OR?: TravelRequestScalarWhereWithAggregatesInput[]
+    NOT?: TravelRequestScalarWhereWithAggregatesInput | TravelRequestScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"TravelRequest"> | number
+    userId?: IntWithAggregatesFilter<"TravelRequest"> | number
+    statusId?: IntWithAggregatesFilter<"TravelRequest"> | number
+    cardId?: IntNullableWithAggregatesFilter<"TravelRequest"> | number | null
+    totalAmount?: DecimalWithAggregatesFilter<"TravelRequest"> | Decimal | DecimalJsLike | number | string
+    travelReason?: StringWithAggregatesFilter<"TravelRequest"> | string
+    travelObjectives?: StringWithAggregatesFilter<"TravelRequest"> | string
+    departureDate?: DateTimeWithAggregatesFilter<"TravelRequest"> | Date | string
+    returnDate?: DateTimeWithAggregatesFilter<"TravelRequest"> | Date | string
+    disbursementDate?: DateTimeNullableWithAggregatesFilter<"TravelRequest"> | Date | string | null
+    approvalDate?: DateTimeNullableWithAggregatesFilter<"TravelRequest"> | Date | string | null
+    approverId?: IntNullableWithAggregatesFilter<"TravelRequest"> | number | null
+    comment?: StringNullableWithAggregatesFilter<"TravelRequest"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"TravelRequest"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"TravelRequest"> | Date | string
+  }
+
+  export type TravelDetailWhereInput = {
+    AND?: TravelDetailWhereInput | TravelDetailWhereInput[]
+    OR?: TravelDetailWhereInput[]
+    NOT?: TravelDetailWhereInput | TravelDetailWhereInput[]
+    id?: IntFilter<"TravelDetail"> | number
+    travelRequestId?: IntFilter<"TravelDetail"> | number
+    concept?: StringFilter<"TravelDetail"> | string
+    amount?: DecimalFilter<"TravelDetail"> | Decimal | DecimalJsLike | number | string
+    request?: XOR<TravelRequestScalarRelationFilter, TravelRequestWhereInput>
+  }
+
+  export type TravelDetailOrderByWithRelationInput = {
+    id?: SortOrder
+    travelRequestId?: SortOrder
+    concept?: SortOrder
+    amount?: SortOrder
+    request?: TravelRequestOrderByWithRelationInput
+    _relevance?: TravelDetailOrderByRelevanceInput
+  }
+
+  export type TravelDetailWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: TravelDetailWhereInput | TravelDetailWhereInput[]
+    OR?: TravelDetailWhereInput[]
+    NOT?: TravelDetailWhereInput | TravelDetailWhereInput[]
+    travelRequestId?: IntFilter<"TravelDetail"> | number
+    concept?: StringFilter<"TravelDetail"> | string
+    amount?: DecimalFilter<"TravelDetail"> | Decimal | DecimalJsLike | number | string
+    request?: XOR<TravelRequestScalarRelationFilter, TravelRequestWhereInput>
+  }, "id">
+
+  export type TravelDetailOrderByWithAggregationInput = {
+    id?: SortOrder
+    travelRequestId?: SortOrder
+    concept?: SortOrder
+    amount?: SortOrder
+    _count?: TravelDetailCountOrderByAggregateInput
+    _avg?: TravelDetailAvgOrderByAggregateInput
+    _max?: TravelDetailMaxOrderByAggregateInput
+    _min?: TravelDetailMinOrderByAggregateInput
+    _sum?: TravelDetailSumOrderByAggregateInput
+  }
+
+  export type TravelDetailScalarWhereWithAggregatesInput = {
+    AND?: TravelDetailScalarWhereWithAggregatesInput | TravelDetailScalarWhereWithAggregatesInput[]
+    OR?: TravelDetailScalarWhereWithAggregatesInput[]
+    NOT?: TravelDetailScalarWhereWithAggregatesInput | TravelDetailScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"TravelDetail"> | number
+    travelRequestId?: IntWithAggregatesFilter<"TravelDetail"> | number
+    concept?: StringWithAggregatesFilter<"TravelDetail"> | string
+    amount?: DecimalWithAggregatesFilter<"TravelDetail"> | Decimal | DecimalJsLike | number | string
+  }
+
   export type CompanyCreateInput = {
     name: string
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserCreateNestedManyWithoutCompanyInput
     branches?: BranchCreateNestedManyWithoutCompanyInput
+    cards?: CardCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateInput = {
@@ -6991,6 +13196,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     branches?: BranchUncheckedCreateNestedManyWithoutCompanyInput
+    cards?: CardUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUpdateInput = {
@@ -6999,6 +13205,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutCompanyNestedInput
     branches?: BranchUpdateManyWithoutCompanyNestedInput
+    cards?: CardUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateInput = {
@@ -7008,6 +13215,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     branches?: BranchUncheckedUpdateManyWithoutCompanyNestedInput
+    cards?: CardUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyCreateManyInput = {
@@ -7201,6 +13409,9 @@ export namespace Prisma {
     role: RoleCreateNestedOneWithoutUsersInput
     supervisor?: UserCreateNestedOneWithoutSubordinatesInput
     subordinates?: UserCreateNestedManyWithoutSupervisorInput
+    cards?: CardAssignmentCreateNestedManyWithoutUserInput
+    travelRequests?: TravelRequestCreateNestedManyWithoutUserInput
+    approvedTravelRequests?: TravelRequestCreateNestedManyWithoutApproverInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -7219,6 +13430,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     subordinates?: UserUncheckedCreateNestedManyWithoutSupervisorInput
+    cards?: CardAssignmentUncheckedCreateNestedManyWithoutUserInput
+    travelRequests?: TravelRequestUncheckedCreateNestedManyWithoutUserInput
+    approvedTravelRequests?: TravelRequestUncheckedCreateNestedManyWithoutApproverInput
   }
 
   export type UserUpdateInput = {
@@ -7236,6 +13450,9 @@ export namespace Prisma {
     role?: RoleUpdateOneRequiredWithoutUsersNestedInput
     supervisor?: UserUpdateOneWithoutSubordinatesNestedInput
     subordinates?: UserUpdateManyWithoutSupervisorNestedInput
+    cards?: CardAssignmentUpdateManyWithoutUserNestedInput
+    travelRequests?: TravelRequestUpdateManyWithoutUserNestedInput
+    approvedTravelRequests?: TravelRequestUpdateManyWithoutApproverNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -7254,6 +13471,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subordinates?: UserUncheckedUpdateManyWithoutSupervisorNestedInput
+    cards?: CardAssignmentUncheckedUpdateManyWithoutUserNestedInput
+    travelRequests?: TravelRequestUncheckedUpdateManyWithoutUserNestedInput
+    approvedTravelRequests?: TravelRequestUncheckedUpdateManyWithoutApproverNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -7299,6 +13519,321 @@ export namespace Prisma {
     supervisorId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CardCreateInput = {
+    cardNumber: string
+    isActive?: boolean
+    createdAt?: Date | string
+    company: CompanyCreateNestedOneWithoutCardsInput
+    assignments?: CardAssignmentCreateNestedManyWithoutCardInput
+    travelRequests?: TravelRequestCreateNestedManyWithoutCardInput
+  }
+
+  export type CardUncheckedCreateInput = {
+    id?: number
+    cardNumber: string
+    companyId: number
+    isActive?: boolean
+    createdAt?: Date | string
+    assignments?: CardAssignmentUncheckedCreateNestedManyWithoutCardInput
+    travelRequests?: TravelRequestUncheckedCreateNestedManyWithoutCardInput
+  }
+
+  export type CardUpdateInput = {
+    cardNumber?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    company?: CompanyUpdateOneRequiredWithoutCardsNestedInput
+    assignments?: CardAssignmentUpdateManyWithoutCardNestedInput
+    travelRequests?: TravelRequestUpdateManyWithoutCardNestedInput
+  }
+
+  export type CardUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cardNumber?: StringFieldUpdateOperationsInput | string
+    companyId?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignments?: CardAssignmentUncheckedUpdateManyWithoutCardNestedInput
+    travelRequests?: TravelRequestUncheckedUpdateManyWithoutCardNestedInput
+  }
+
+  export type CardCreateManyInput = {
+    id?: number
+    cardNumber: string
+    companyId: number
+    isActive?: boolean
+    createdAt?: Date | string
+  }
+
+  export type CardUpdateManyMutationInput = {
+    cardNumber?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CardUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cardNumber?: StringFieldUpdateOperationsInput | string
+    companyId?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CardAssignmentCreateInput = {
+    assignedAt?: Date | string
+    unassignedAt?: Date | string | null
+    card: CardCreateNestedOneWithoutAssignmentsInput
+    user: UserCreateNestedOneWithoutCardsInput
+  }
+
+  export type CardAssignmentUncheckedCreateInput = {
+    id?: number
+    cardId: number
+    userId: number
+    assignedAt?: Date | string
+    unassignedAt?: Date | string | null
+  }
+
+  export type CardAssignmentUpdateInput = {
+    assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    unassignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    card?: CardUpdateOneRequiredWithoutAssignmentsNestedInput
+    user?: UserUpdateOneRequiredWithoutCardsNestedInput
+  }
+
+  export type CardAssignmentUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cardId?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    unassignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type CardAssignmentCreateManyInput = {
+    id?: number
+    cardId: number
+    userId: number
+    assignedAt?: Date | string
+    unassignedAt?: Date | string | null
+  }
+
+  export type CardAssignmentUpdateManyMutationInput = {
+    assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    unassignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type CardAssignmentUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cardId?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    unassignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type StatusTravelRequestCreateInput = {
+    name: string
+    travelRequests?: TravelRequestCreateNestedManyWithoutStatusInput
+  }
+
+  export type StatusTravelRequestUncheckedCreateInput = {
+    id?: number
+    name: string
+    travelRequests?: TravelRequestUncheckedCreateNestedManyWithoutStatusInput
+  }
+
+  export type StatusTravelRequestUpdateInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    travelRequests?: TravelRequestUpdateManyWithoutStatusNestedInput
+  }
+
+  export type StatusTravelRequestUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    travelRequests?: TravelRequestUncheckedUpdateManyWithoutStatusNestedInput
+  }
+
+  export type StatusTravelRequestCreateManyInput = {
+    id?: number
+    name: string
+  }
+
+  export type StatusTravelRequestUpdateManyMutationInput = {
+    name?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type StatusTravelRequestUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type TravelRequestCreateInput = {
+    totalAmount: Decimal | DecimalJsLike | number | string
+    travelReason: string
+    travelObjectives: string
+    departureDate: Date | string
+    returnDate: Date | string
+    disbursementDate?: Date | string | null
+    approvalDate?: Date | string | null
+    comment?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutTravelRequestsInput
+    status: StatusTravelRequestCreateNestedOneWithoutTravelRequestsInput
+    approver?: UserCreateNestedOneWithoutApprovedTravelRequestsInput
+    card?: CardCreateNestedOneWithoutTravelRequestsInput
+    details?: TravelDetailCreateNestedManyWithoutRequestInput
+  }
+
+  export type TravelRequestUncheckedCreateInput = {
+    id?: number
+    userId: number
+    statusId: number
+    cardId?: number | null
+    totalAmount: Decimal | DecimalJsLike | number | string
+    travelReason: string
+    travelObjectives: string
+    departureDate: Date | string
+    returnDate: Date | string
+    disbursementDate?: Date | string | null
+    approvalDate?: Date | string | null
+    approverId?: number | null
+    comment?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    details?: TravelDetailUncheckedCreateNestedManyWithoutRequestInput
+  }
+
+  export type TravelRequestUpdateInput = {
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    travelReason?: StringFieldUpdateOperationsInput | string
+    travelObjectives?: StringFieldUpdateOperationsInput | string
+    departureDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    returnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    disbursementDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutTravelRequestsNestedInput
+    status?: StatusTravelRequestUpdateOneRequiredWithoutTravelRequestsNestedInput
+    approver?: UserUpdateOneWithoutApprovedTravelRequestsNestedInput
+    card?: CardUpdateOneWithoutTravelRequestsNestedInput
+    details?: TravelDetailUpdateManyWithoutRequestNestedInput
+  }
+
+  export type TravelRequestUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    statusId?: IntFieldUpdateOperationsInput | number
+    cardId?: NullableIntFieldUpdateOperationsInput | number | null
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    travelReason?: StringFieldUpdateOperationsInput | string
+    travelObjectives?: StringFieldUpdateOperationsInput | string
+    departureDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    returnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    disbursementDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approverId?: NullableIntFieldUpdateOperationsInput | number | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: TravelDetailUncheckedUpdateManyWithoutRequestNestedInput
+  }
+
+  export type TravelRequestCreateManyInput = {
+    id?: number
+    userId: number
+    statusId: number
+    cardId?: number | null
+    totalAmount: Decimal | DecimalJsLike | number | string
+    travelReason: string
+    travelObjectives: string
+    departureDate: Date | string
+    returnDate: Date | string
+    disbursementDate?: Date | string | null
+    approvalDate?: Date | string | null
+    approverId?: number | null
+    comment?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TravelRequestUpdateManyMutationInput = {
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    travelReason?: StringFieldUpdateOperationsInput | string
+    travelObjectives?: StringFieldUpdateOperationsInput | string
+    departureDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    returnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    disbursementDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TravelRequestUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    statusId?: IntFieldUpdateOperationsInput | number
+    cardId?: NullableIntFieldUpdateOperationsInput | number | null
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    travelReason?: StringFieldUpdateOperationsInput | string
+    travelObjectives?: StringFieldUpdateOperationsInput | string
+    departureDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    returnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    disbursementDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approverId?: NullableIntFieldUpdateOperationsInput | number | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TravelDetailCreateInput = {
+    concept: string
+    amount: Decimal | DecimalJsLike | number | string
+    request: TravelRequestCreateNestedOneWithoutDetailsInput
+  }
+
+  export type TravelDetailUncheckedCreateInput = {
+    id?: number
+    travelRequestId: number
+    concept: string
+    amount: Decimal | DecimalJsLike | number | string
+  }
+
+  export type TravelDetailUpdateInput = {
+    concept?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    request?: TravelRequestUpdateOneRequiredWithoutDetailsNestedInput
+  }
+
+  export type TravelDetailUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    travelRequestId?: IntFieldUpdateOperationsInput | number
+    concept?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+  }
+
+  export type TravelDetailCreateManyInput = {
+    id?: number
+    travelRequestId: number
+    concept: string
+    amount: Decimal | DecimalJsLike | number | string
+  }
+
+  export type TravelDetailUpdateManyMutationInput = {
+    concept?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+  }
+
+  export type TravelDetailUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    travelRequestId?: IntFieldUpdateOperationsInput | number
+    concept?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -7350,11 +13885,21 @@ export namespace Prisma {
     none?: BranchWhereInput
   }
 
+  export type CardListRelationFilter = {
+    every?: CardWhereInput
+    some?: CardWhereInput
+    none?: CardWhereInput
+  }
+
   export type UserOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type BranchOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CardOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -7592,9 +14137,29 @@ export namespace Prisma {
     isNot?: UserWhereInput | null
   }
 
+  export type CardAssignmentListRelationFilter = {
+    every?: CardAssignmentWhereInput
+    some?: CardAssignmentWhereInput
+    none?: CardAssignmentWhereInput
+  }
+
+  export type TravelRequestListRelationFilter = {
+    every?: TravelRequestWhereInput
+    some?: TravelRequestWhereInput
+    none?: TravelRequestWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
+  }
+
+  export type CardAssignmentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TravelRequestOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type UserOrderByRelevanceInput = {
@@ -7696,6 +14261,348 @@ export namespace Prisma {
     _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
+  export type CardOrderByRelevanceInput = {
+    fields: CardOrderByRelevanceFieldEnum | CardOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type CardCountOrderByAggregateInput = {
+    id?: SortOrder
+    cardNumber?: SortOrder
+    companyId?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type CardAvgOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+  }
+
+  export type CardMaxOrderByAggregateInput = {
+    id?: SortOrder
+    cardNumber?: SortOrder
+    companyId?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type CardMinOrderByAggregateInput = {
+    id?: SortOrder
+    cardNumber?: SortOrder
+    companyId?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type CardSumOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+  }
+
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type CardScalarRelationFilter = {
+    is?: CardWhereInput
+    isNot?: CardWhereInput
+  }
+
+  export type UserScalarRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
+  }
+
+  export type CardAssignmentCountOrderByAggregateInput = {
+    id?: SortOrder
+    cardId?: SortOrder
+    userId?: SortOrder
+    assignedAt?: SortOrder
+    unassignedAt?: SortOrder
+  }
+
+  export type CardAssignmentAvgOrderByAggregateInput = {
+    id?: SortOrder
+    cardId?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type CardAssignmentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    cardId?: SortOrder
+    userId?: SortOrder
+    assignedAt?: SortOrder
+    unassignedAt?: SortOrder
+  }
+
+  export type CardAssignmentMinOrderByAggregateInput = {
+    id?: SortOrder
+    cardId?: SortOrder
+    userId?: SortOrder
+    assignedAt?: SortOrder
+    unassignedAt?: SortOrder
+  }
+
+  export type CardAssignmentSumOrderByAggregateInput = {
+    id?: SortOrder
+    cardId?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type StatusTravelRequestOrderByRelevanceInput = {
+    fields: StatusTravelRequestOrderByRelevanceFieldEnum | StatusTravelRequestOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type StatusTravelRequestCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+  }
+
+  export type StatusTravelRequestAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type StatusTravelRequestMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+  }
+
+  export type StatusTravelRequestMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+  }
+
+  export type StatusTravelRequestSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type DecimalFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[]
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[]
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+  }
+
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | null
+    notIn?: string[] | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type StatusTravelRequestScalarRelationFilter = {
+    is?: StatusTravelRequestWhereInput
+    isNot?: StatusTravelRequestWhereInput
+  }
+
+  export type CardNullableScalarRelationFilter = {
+    is?: CardWhereInput | null
+    isNot?: CardWhereInput | null
+  }
+
+  export type TravelDetailListRelationFilter = {
+    every?: TravelDetailWhereInput
+    some?: TravelDetailWhereInput
+    none?: TravelDetailWhereInput
+  }
+
+  export type TravelDetailOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TravelRequestOrderByRelevanceInput = {
+    fields: TravelRequestOrderByRelevanceFieldEnum | TravelRequestOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type TravelRequestCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    statusId?: SortOrder
+    cardId?: SortOrder
+    totalAmount?: SortOrder
+    travelReason?: SortOrder
+    travelObjectives?: SortOrder
+    departureDate?: SortOrder
+    returnDate?: SortOrder
+    disbursementDate?: SortOrder
+    approvalDate?: SortOrder
+    approverId?: SortOrder
+    comment?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TravelRequestAvgOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    statusId?: SortOrder
+    cardId?: SortOrder
+    totalAmount?: SortOrder
+    approverId?: SortOrder
+  }
+
+  export type TravelRequestMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    statusId?: SortOrder
+    cardId?: SortOrder
+    totalAmount?: SortOrder
+    travelReason?: SortOrder
+    travelObjectives?: SortOrder
+    departureDate?: SortOrder
+    returnDate?: SortOrder
+    disbursementDate?: SortOrder
+    approvalDate?: SortOrder
+    approverId?: SortOrder
+    comment?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TravelRequestMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    statusId?: SortOrder
+    cardId?: SortOrder
+    totalAmount?: SortOrder
+    travelReason?: SortOrder
+    travelObjectives?: SortOrder
+    departureDate?: SortOrder
+    returnDate?: SortOrder
+    disbursementDate?: SortOrder
+    approvalDate?: SortOrder
+    approverId?: SortOrder
+    comment?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TravelRequestSumOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    statusId?: SortOrder
+    cardId?: SortOrder
+    totalAmount?: SortOrder
+    approverId?: SortOrder
+  }
+
+  export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[]
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[]
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedDecimalFilter<$PrismaModel>
+    _sum?: NestedDecimalFilter<$PrismaModel>
+    _min?: NestedDecimalFilter<$PrismaModel>
+    _max?: NestedDecimalFilter<$PrismaModel>
+  }
+
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | null
+    notIn?: string[] | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type TravelRequestScalarRelationFilter = {
+    is?: TravelRequestWhereInput
+    isNot?: TravelRequestWhereInput
+  }
+
+  export type TravelDetailOrderByRelevanceInput = {
+    fields: TravelDetailOrderByRelevanceFieldEnum | TravelDetailOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type TravelDetailCountOrderByAggregateInput = {
+    id?: SortOrder
+    travelRequestId?: SortOrder
+    concept?: SortOrder
+    amount?: SortOrder
+  }
+
+  export type TravelDetailAvgOrderByAggregateInput = {
+    id?: SortOrder
+    travelRequestId?: SortOrder
+    amount?: SortOrder
+  }
+
+  export type TravelDetailMaxOrderByAggregateInput = {
+    id?: SortOrder
+    travelRequestId?: SortOrder
+    concept?: SortOrder
+    amount?: SortOrder
+  }
+
+  export type TravelDetailMinOrderByAggregateInput = {
+    id?: SortOrder
+    travelRequestId?: SortOrder
+    concept?: SortOrder
+    amount?: SortOrder
+  }
+
+  export type TravelDetailSumOrderByAggregateInput = {
+    id?: SortOrder
+    travelRequestId?: SortOrder
+    amount?: SortOrder
+  }
+
   export type UserCreateNestedManyWithoutCompanyInput = {
     create?: XOR<UserCreateWithoutCompanyInput, UserUncheckedCreateWithoutCompanyInput> | UserCreateWithoutCompanyInput[] | UserUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: UserCreateOrConnectWithoutCompanyInput | UserCreateOrConnectWithoutCompanyInput[]
@@ -7710,6 +14617,13 @@ export namespace Prisma {
     connect?: BranchWhereUniqueInput | BranchWhereUniqueInput[]
   }
 
+  export type CardCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<CardCreateWithoutCompanyInput, CardUncheckedCreateWithoutCompanyInput> | CardCreateWithoutCompanyInput[] | CardUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: CardCreateOrConnectWithoutCompanyInput | CardCreateOrConnectWithoutCompanyInput[]
+    createMany?: CardCreateManyCompanyInputEnvelope
+    connect?: CardWhereUniqueInput | CardWhereUniqueInput[]
+  }
+
   export type UserUncheckedCreateNestedManyWithoutCompanyInput = {
     create?: XOR<UserCreateWithoutCompanyInput, UserUncheckedCreateWithoutCompanyInput> | UserCreateWithoutCompanyInput[] | UserUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: UserCreateOrConnectWithoutCompanyInput | UserCreateOrConnectWithoutCompanyInput[]
@@ -7722,6 +14636,13 @@ export namespace Prisma {
     connectOrCreate?: BranchCreateOrConnectWithoutCompanyInput | BranchCreateOrConnectWithoutCompanyInput[]
     createMany?: BranchCreateManyCompanyInputEnvelope
     connect?: BranchWhereUniqueInput | BranchWhereUniqueInput[]
+  }
+
+  export type CardUncheckedCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<CardCreateWithoutCompanyInput, CardUncheckedCreateWithoutCompanyInput> | CardCreateWithoutCompanyInput[] | CardUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: CardCreateOrConnectWithoutCompanyInput | CardCreateOrConnectWithoutCompanyInput[]
+    createMany?: CardCreateManyCompanyInputEnvelope
+    connect?: CardWhereUniqueInput | CardWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -7760,6 +14681,20 @@ export namespace Prisma {
     deleteMany?: BranchScalarWhereInput | BranchScalarWhereInput[]
   }
 
+  export type CardUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<CardCreateWithoutCompanyInput, CardUncheckedCreateWithoutCompanyInput> | CardCreateWithoutCompanyInput[] | CardUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: CardCreateOrConnectWithoutCompanyInput | CardCreateOrConnectWithoutCompanyInput[]
+    upsert?: CardUpsertWithWhereUniqueWithoutCompanyInput | CardUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: CardCreateManyCompanyInputEnvelope
+    set?: CardWhereUniqueInput | CardWhereUniqueInput[]
+    disconnect?: CardWhereUniqueInput | CardWhereUniqueInput[]
+    delete?: CardWhereUniqueInput | CardWhereUniqueInput[]
+    connect?: CardWhereUniqueInput | CardWhereUniqueInput[]
+    update?: CardUpdateWithWhereUniqueWithoutCompanyInput | CardUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: CardUpdateManyWithWhereWithoutCompanyInput | CardUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: CardScalarWhereInput | CardScalarWhereInput[]
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -7794,6 +14729,20 @@ export namespace Prisma {
     update?: BranchUpdateWithWhereUniqueWithoutCompanyInput | BranchUpdateWithWhereUniqueWithoutCompanyInput[]
     updateMany?: BranchUpdateManyWithWhereWithoutCompanyInput | BranchUpdateManyWithWhereWithoutCompanyInput[]
     deleteMany?: BranchScalarWhereInput | BranchScalarWhereInput[]
+  }
+
+  export type CardUncheckedUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<CardCreateWithoutCompanyInput, CardUncheckedCreateWithoutCompanyInput> | CardCreateWithoutCompanyInput[] | CardUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: CardCreateOrConnectWithoutCompanyInput | CardCreateOrConnectWithoutCompanyInput[]
+    upsert?: CardUpsertWithWhereUniqueWithoutCompanyInput | CardUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: CardCreateManyCompanyInputEnvelope
+    set?: CardWhereUniqueInput | CardWhereUniqueInput[]
+    disconnect?: CardWhereUniqueInput | CardWhereUniqueInput[]
+    delete?: CardWhereUniqueInput | CardWhereUniqueInput[]
+    connect?: CardWhereUniqueInput | CardWhereUniqueInput[]
+    update?: CardUpdateWithWhereUniqueWithoutCompanyInput | CardUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: CardUpdateManyWithWhereWithoutCompanyInput | CardUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: CardScalarWhereInput | CardScalarWhereInput[]
   }
 
   export type CompanyCreateNestedOneWithoutBranchesInput = {
@@ -7973,11 +14922,53 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
   }
 
+  export type CardAssignmentCreateNestedManyWithoutUserInput = {
+    create?: XOR<CardAssignmentCreateWithoutUserInput, CardAssignmentUncheckedCreateWithoutUserInput> | CardAssignmentCreateWithoutUserInput[] | CardAssignmentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CardAssignmentCreateOrConnectWithoutUserInput | CardAssignmentCreateOrConnectWithoutUserInput[]
+    createMany?: CardAssignmentCreateManyUserInputEnvelope
+    connect?: CardAssignmentWhereUniqueInput | CardAssignmentWhereUniqueInput[]
+  }
+
+  export type TravelRequestCreateNestedManyWithoutUserInput = {
+    create?: XOR<TravelRequestCreateWithoutUserInput, TravelRequestUncheckedCreateWithoutUserInput> | TravelRequestCreateWithoutUserInput[] | TravelRequestUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TravelRequestCreateOrConnectWithoutUserInput | TravelRequestCreateOrConnectWithoutUserInput[]
+    createMany?: TravelRequestCreateManyUserInputEnvelope
+    connect?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+  }
+
+  export type TravelRequestCreateNestedManyWithoutApproverInput = {
+    create?: XOR<TravelRequestCreateWithoutApproverInput, TravelRequestUncheckedCreateWithoutApproverInput> | TravelRequestCreateWithoutApproverInput[] | TravelRequestUncheckedCreateWithoutApproverInput[]
+    connectOrCreate?: TravelRequestCreateOrConnectWithoutApproverInput | TravelRequestCreateOrConnectWithoutApproverInput[]
+    createMany?: TravelRequestCreateManyApproverInputEnvelope
+    connect?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+  }
+
   export type UserUncheckedCreateNestedManyWithoutSupervisorInput = {
     create?: XOR<UserCreateWithoutSupervisorInput, UserUncheckedCreateWithoutSupervisorInput> | UserCreateWithoutSupervisorInput[] | UserUncheckedCreateWithoutSupervisorInput[]
     connectOrCreate?: UserCreateOrConnectWithoutSupervisorInput | UserCreateOrConnectWithoutSupervisorInput[]
     createMany?: UserCreateManySupervisorInputEnvelope
     connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type CardAssignmentUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<CardAssignmentCreateWithoutUserInput, CardAssignmentUncheckedCreateWithoutUserInput> | CardAssignmentCreateWithoutUserInput[] | CardAssignmentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CardAssignmentCreateOrConnectWithoutUserInput | CardAssignmentCreateOrConnectWithoutUserInput[]
+    createMany?: CardAssignmentCreateManyUserInputEnvelope
+    connect?: CardAssignmentWhereUniqueInput | CardAssignmentWhereUniqueInput[]
+  }
+
+  export type TravelRequestUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<TravelRequestCreateWithoutUserInput, TravelRequestUncheckedCreateWithoutUserInput> | TravelRequestCreateWithoutUserInput[] | TravelRequestUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TravelRequestCreateOrConnectWithoutUserInput | TravelRequestCreateOrConnectWithoutUserInput[]
+    createMany?: TravelRequestCreateManyUserInputEnvelope
+    connect?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+  }
+
+  export type TravelRequestUncheckedCreateNestedManyWithoutApproverInput = {
+    create?: XOR<TravelRequestCreateWithoutApproverInput, TravelRequestUncheckedCreateWithoutApproverInput> | TravelRequestCreateWithoutApproverInput[] | TravelRequestUncheckedCreateWithoutApproverInput[]
+    connectOrCreate?: TravelRequestCreateOrConnectWithoutApproverInput | TravelRequestCreateOrConnectWithoutApproverInput[]
+    createMany?: TravelRequestCreateManyApproverInputEnvelope
+    connect?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
   }
 
   export type BoolFieldUpdateOperationsInput = {
@@ -8040,6 +15031,48 @@ export namespace Prisma {
     deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
   }
 
+  export type CardAssignmentUpdateManyWithoutUserNestedInput = {
+    create?: XOR<CardAssignmentCreateWithoutUserInput, CardAssignmentUncheckedCreateWithoutUserInput> | CardAssignmentCreateWithoutUserInput[] | CardAssignmentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CardAssignmentCreateOrConnectWithoutUserInput | CardAssignmentCreateOrConnectWithoutUserInput[]
+    upsert?: CardAssignmentUpsertWithWhereUniqueWithoutUserInput | CardAssignmentUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: CardAssignmentCreateManyUserInputEnvelope
+    set?: CardAssignmentWhereUniqueInput | CardAssignmentWhereUniqueInput[]
+    disconnect?: CardAssignmentWhereUniqueInput | CardAssignmentWhereUniqueInput[]
+    delete?: CardAssignmentWhereUniqueInput | CardAssignmentWhereUniqueInput[]
+    connect?: CardAssignmentWhereUniqueInput | CardAssignmentWhereUniqueInput[]
+    update?: CardAssignmentUpdateWithWhereUniqueWithoutUserInput | CardAssignmentUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: CardAssignmentUpdateManyWithWhereWithoutUserInput | CardAssignmentUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: CardAssignmentScalarWhereInput | CardAssignmentScalarWhereInput[]
+  }
+
+  export type TravelRequestUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TravelRequestCreateWithoutUserInput, TravelRequestUncheckedCreateWithoutUserInput> | TravelRequestCreateWithoutUserInput[] | TravelRequestUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TravelRequestCreateOrConnectWithoutUserInput | TravelRequestCreateOrConnectWithoutUserInput[]
+    upsert?: TravelRequestUpsertWithWhereUniqueWithoutUserInput | TravelRequestUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TravelRequestCreateManyUserInputEnvelope
+    set?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    disconnect?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    delete?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    connect?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    update?: TravelRequestUpdateWithWhereUniqueWithoutUserInput | TravelRequestUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TravelRequestUpdateManyWithWhereWithoutUserInput | TravelRequestUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TravelRequestScalarWhereInput | TravelRequestScalarWhereInput[]
+  }
+
+  export type TravelRequestUpdateManyWithoutApproverNestedInput = {
+    create?: XOR<TravelRequestCreateWithoutApproverInput, TravelRequestUncheckedCreateWithoutApproverInput> | TravelRequestCreateWithoutApproverInput[] | TravelRequestUncheckedCreateWithoutApproverInput[]
+    connectOrCreate?: TravelRequestCreateOrConnectWithoutApproverInput | TravelRequestCreateOrConnectWithoutApproverInput[]
+    upsert?: TravelRequestUpsertWithWhereUniqueWithoutApproverInput | TravelRequestUpsertWithWhereUniqueWithoutApproverInput[]
+    createMany?: TravelRequestCreateManyApproverInputEnvelope
+    set?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    disconnect?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    delete?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    connect?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    update?: TravelRequestUpdateWithWhereUniqueWithoutApproverInput | TravelRequestUpdateWithWhereUniqueWithoutApproverInput[]
+    updateMany?: TravelRequestUpdateManyWithWhereWithoutApproverInput | TravelRequestUpdateManyWithWhereWithoutApproverInput[]
+    deleteMany?: TravelRequestScalarWhereInput | TravelRequestScalarWhereInput[]
+  }
+
   export type NullableIntFieldUpdateOperationsInput = {
     set?: number | null
     increment?: number
@@ -8060,6 +15093,348 @@ export namespace Prisma {
     update?: UserUpdateWithWhereUniqueWithoutSupervisorInput | UserUpdateWithWhereUniqueWithoutSupervisorInput[]
     updateMany?: UserUpdateManyWithWhereWithoutSupervisorInput | UserUpdateManyWithWhereWithoutSupervisorInput[]
     deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
+  export type CardAssignmentUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<CardAssignmentCreateWithoutUserInput, CardAssignmentUncheckedCreateWithoutUserInput> | CardAssignmentCreateWithoutUserInput[] | CardAssignmentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CardAssignmentCreateOrConnectWithoutUserInput | CardAssignmentCreateOrConnectWithoutUserInput[]
+    upsert?: CardAssignmentUpsertWithWhereUniqueWithoutUserInput | CardAssignmentUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: CardAssignmentCreateManyUserInputEnvelope
+    set?: CardAssignmentWhereUniqueInput | CardAssignmentWhereUniqueInput[]
+    disconnect?: CardAssignmentWhereUniqueInput | CardAssignmentWhereUniqueInput[]
+    delete?: CardAssignmentWhereUniqueInput | CardAssignmentWhereUniqueInput[]
+    connect?: CardAssignmentWhereUniqueInput | CardAssignmentWhereUniqueInput[]
+    update?: CardAssignmentUpdateWithWhereUniqueWithoutUserInput | CardAssignmentUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: CardAssignmentUpdateManyWithWhereWithoutUserInput | CardAssignmentUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: CardAssignmentScalarWhereInput | CardAssignmentScalarWhereInput[]
+  }
+
+  export type TravelRequestUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TravelRequestCreateWithoutUserInput, TravelRequestUncheckedCreateWithoutUserInput> | TravelRequestCreateWithoutUserInput[] | TravelRequestUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TravelRequestCreateOrConnectWithoutUserInput | TravelRequestCreateOrConnectWithoutUserInput[]
+    upsert?: TravelRequestUpsertWithWhereUniqueWithoutUserInput | TravelRequestUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TravelRequestCreateManyUserInputEnvelope
+    set?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    disconnect?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    delete?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    connect?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    update?: TravelRequestUpdateWithWhereUniqueWithoutUserInput | TravelRequestUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TravelRequestUpdateManyWithWhereWithoutUserInput | TravelRequestUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TravelRequestScalarWhereInput | TravelRequestScalarWhereInput[]
+  }
+
+  export type TravelRequestUncheckedUpdateManyWithoutApproverNestedInput = {
+    create?: XOR<TravelRequestCreateWithoutApproverInput, TravelRequestUncheckedCreateWithoutApproverInput> | TravelRequestCreateWithoutApproverInput[] | TravelRequestUncheckedCreateWithoutApproverInput[]
+    connectOrCreate?: TravelRequestCreateOrConnectWithoutApproverInput | TravelRequestCreateOrConnectWithoutApproverInput[]
+    upsert?: TravelRequestUpsertWithWhereUniqueWithoutApproverInput | TravelRequestUpsertWithWhereUniqueWithoutApproverInput[]
+    createMany?: TravelRequestCreateManyApproverInputEnvelope
+    set?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    disconnect?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    delete?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    connect?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    update?: TravelRequestUpdateWithWhereUniqueWithoutApproverInput | TravelRequestUpdateWithWhereUniqueWithoutApproverInput[]
+    updateMany?: TravelRequestUpdateManyWithWhereWithoutApproverInput | TravelRequestUpdateManyWithWhereWithoutApproverInput[]
+    deleteMany?: TravelRequestScalarWhereInput | TravelRequestScalarWhereInput[]
+  }
+
+  export type CompanyCreateNestedOneWithoutCardsInput = {
+    create?: XOR<CompanyCreateWithoutCardsInput, CompanyUncheckedCreateWithoutCardsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutCardsInput
+    connect?: CompanyWhereUniqueInput
+  }
+
+  export type CardAssignmentCreateNestedManyWithoutCardInput = {
+    create?: XOR<CardAssignmentCreateWithoutCardInput, CardAssignmentUncheckedCreateWithoutCardInput> | CardAssignmentCreateWithoutCardInput[] | CardAssignmentUncheckedCreateWithoutCardInput[]
+    connectOrCreate?: CardAssignmentCreateOrConnectWithoutCardInput | CardAssignmentCreateOrConnectWithoutCardInput[]
+    createMany?: CardAssignmentCreateManyCardInputEnvelope
+    connect?: CardAssignmentWhereUniqueInput | CardAssignmentWhereUniqueInput[]
+  }
+
+  export type TravelRequestCreateNestedManyWithoutCardInput = {
+    create?: XOR<TravelRequestCreateWithoutCardInput, TravelRequestUncheckedCreateWithoutCardInput> | TravelRequestCreateWithoutCardInput[] | TravelRequestUncheckedCreateWithoutCardInput[]
+    connectOrCreate?: TravelRequestCreateOrConnectWithoutCardInput | TravelRequestCreateOrConnectWithoutCardInput[]
+    createMany?: TravelRequestCreateManyCardInputEnvelope
+    connect?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+  }
+
+  export type CardAssignmentUncheckedCreateNestedManyWithoutCardInput = {
+    create?: XOR<CardAssignmentCreateWithoutCardInput, CardAssignmentUncheckedCreateWithoutCardInput> | CardAssignmentCreateWithoutCardInput[] | CardAssignmentUncheckedCreateWithoutCardInput[]
+    connectOrCreate?: CardAssignmentCreateOrConnectWithoutCardInput | CardAssignmentCreateOrConnectWithoutCardInput[]
+    createMany?: CardAssignmentCreateManyCardInputEnvelope
+    connect?: CardAssignmentWhereUniqueInput | CardAssignmentWhereUniqueInput[]
+  }
+
+  export type TravelRequestUncheckedCreateNestedManyWithoutCardInput = {
+    create?: XOR<TravelRequestCreateWithoutCardInput, TravelRequestUncheckedCreateWithoutCardInput> | TravelRequestCreateWithoutCardInput[] | TravelRequestUncheckedCreateWithoutCardInput[]
+    connectOrCreate?: TravelRequestCreateOrConnectWithoutCardInput | TravelRequestCreateOrConnectWithoutCardInput[]
+    createMany?: TravelRequestCreateManyCardInputEnvelope
+    connect?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+  }
+
+  export type CompanyUpdateOneRequiredWithoutCardsNestedInput = {
+    create?: XOR<CompanyCreateWithoutCardsInput, CompanyUncheckedCreateWithoutCardsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutCardsInput
+    upsert?: CompanyUpsertWithoutCardsInput
+    connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutCardsInput, CompanyUpdateWithoutCardsInput>, CompanyUncheckedUpdateWithoutCardsInput>
+  }
+
+  export type CardAssignmentUpdateManyWithoutCardNestedInput = {
+    create?: XOR<CardAssignmentCreateWithoutCardInput, CardAssignmentUncheckedCreateWithoutCardInput> | CardAssignmentCreateWithoutCardInput[] | CardAssignmentUncheckedCreateWithoutCardInput[]
+    connectOrCreate?: CardAssignmentCreateOrConnectWithoutCardInput | CardAssignmentCreateOrConnectWithoutCardInput[]
+    upsert?: CardAssignmentUpsertWithWhereUniqueWithoutCardInput | CardAssignmentUpsertWithWhereUniqueWithoutCardInput[]
+    createMany?: CardAssignmentCreateManyCardInputEnvelope
+    set?: CardAssignmentWhereUniqueInput | CardAssignmentWhereUniqueInput[]
+    disconnect?: CardAssignmentWhereUniqueInput | CardAssignmentWhereUniqueInput[]
+    delete?: CardAssignmentWhereUniqueInput | CardAssignmentWhereUniqueInput[]
+    connect?: CardAssignmentWhereUniqueInput | CardAssignmentWhereUniqueInput[]
+    update?: CardAssignmentUpdateWithWhereUniqueWithoutCardInput | CardAssignmentUpdateWithWhereUniqueWithoutCardInput[]
+    updateMany?: CardAssignmentUpdateManyWithWhereWithoutCardInput | CardAssignmentUpdateManyWithWhereWithoutCardInput[]
+    deleteMany?: CardAssignmentScalarWhereInput | CardAssignmentScalarWhereInput[]
+  }
+
+  export type TravelRequestUpdateManyWithoutCardNestedInput = {
+    create?: XOR<TravelRequestCreateWithoutCardInput, TravelRequestUncheckedCreateWithoutCardInput> | TravelRequestCreateWithoutCardInput[] | TravelRequestUncheckedCreateWithoutCardInput[]
+    connectOrCreate?: TravelRequestCreateOrConnectWithoutCardInput | TravelRequestCreateOrConnectWithoutCardInput[]
+    upsert?: TravelRequestUpsertWithWhereUniqueWithoutCardInput | TravelRequestUpsertWithWhereUniqueWithoutCardInput[]
+    createMany?: TravelRequestCreateManyCardInputEnvelope
+    set?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    disconnect?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    delete?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    connect?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    update?: TravelRequestUpdateWithWhereUniqueWithoutCardInput | TravelRequestUpdateWithWhereUniqueWithoutCardInput[]
+    updateMany?: TravelRequestUpdateManyWithWhereWithoutCardInput | TravelRequestUpdateManyWithWhereWithoutCardInput[]
+    deleteMany?: TravelRequestScalarWhereInput | TravelRequestScalarWhereInput[]
+  }
+
+  export type CardAssignmentUncheckedUpdateManyWithoutCardNestedInput = {
+    create?: XOR<CardAssignmentCreateWithoutCardInput, CardAssignmentUncheckedCreateWithoutCardInput> | CardAssignmentCreateWithoutCardInput[] | CardAssignmentUncheckedCreateWithoutCardInput[]
+    connectOrCreate?: CardAssignmentCreateOrConnectWithoutCardInput | CardAssignmentCreateOrConnectWithoutCardInput[]
+    upsert?: CardAssignmentUpsertWithWhereUniqueWithoutCardInput | CardAssignmentUpsertWithWhereUniqueWithoutCardInput[]
+    createMany?: CardAssignmentCreateManyCardInputEnvelope
+    set?: CardAssignmentWhereUniqueInput | CardAssignmentWhereUniqueInput[]
+    disconnect?: CardAssignmentWhereUniqueInput | CardAssignmentWhereUniqueInput[]
+    delete?: CardAssignmentWhereUniqueInput | CardAssignmentWhereUniqueInput[]
+    connect?: CardAssignmentWhereUniqueInput | CardAssignmentWhereUniqueInput[]
+    update?: CardAssignmentUpdateWithWhereUniqueWithoutCardInput | CardAssignmentUpdateWithWhereUniqueWithoutCardInput[]
+    updateMany?: CardAssignmentUpdateManyWithWhereWithoutCardInput | CardAssignmentUpdateManyWithWhereWithoutCardInput[]
+    deleteMany?: CardAssignmentScalarWhereInput | CardAssignmentScalarWhereInput[]
+  }
+
+  export type TravelRequestUncheckedUpdateManyWithoutCardNestedInput = {
+    create?: XOR<TravelRequestCreateWithoutCardInput, TravelRequestUncheckedCreateWithoutCardInput> | TravelRequestCreateWithoutCardInput[] | TravelRequestUncheckedCreateWithoutCardInput[]
+    connectOrCreate?: TravelRequestCreateOrConnectWithoutCardInput | TravelRequestCreateOrConnectWithoutCardInput[]
+    upsert?: TravelRequestUpsertWithWhereUniqueWithoutCardInput | TravelRequestUpsertWithWhereUniqueWithoutCardInput[]
+    createMany?: TravelRequestCreateManyCardInputEnvelope
+    set?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    disconnect?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    delete?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    connect?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    update?: TravelRequestUpdateWithWhereUniqueWithoutCardInput | TravelRequestUpdateWithWhereUniqueWithoutCardInput[]
+    updateMany?: TravelRequestUpdateManyWithWhereWithoutCardInput | TravelRequestUpdateManyWithWhereWithoutCardInput[]
+    deleteMany?: TravelRequestScalarWhereInput | TravelRequestScalarWhereInput[]
+  }
+
+  export type CardCreateNestedOneWithoutAssignmentsInput = {
+    create?: XOR<CardCreateWithoutAssignmentsInput, CardUncheckedCreateWithoutAssignmentsInput>
+    connectOrCreate?: CardCreateOrConnectWithoutAssignmentsInput
+    connect?: CardWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutCardsInput = {
+    create?: XOR<UserCreateWithoutCardsInput, UserUncheckedCreateWithoutCardsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCardsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
+  export type CardUpdateOneRequiredWithoutAssignmentsNestedInput = {
+    create?: XOR<CardCreateWithoutAssignmentsInput, CardUncheckedCreateWithoutAssignmentsInput>
+    connectOrCreate?: CardCreateOrConnectWithoutAssignmentsInput
+    upsert?: CardUpsertWithoutAssignmentsInput
+    connect?: CardWhereUniqueInput
+    update?: XOR<XOR<CardUpdateToOneWithWhereWithoutAssignmentsInput, CardUpdateWithoutAssignmentsInput>, CardUncheckedUpdateWithoutAssignmentsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutCardsNestedInput = {
+    create?: XOR<UserCreateWithoutCardsInput, UserUncheckedCreateWithoutCardsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCardsInput
+    upsert?: UserUpsertWithoutCardsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCardsInput, UserUpdateWithoutCardsInput>, UserUncheckedUpdateWithoutCardsInput>
+  }
+
+  export type TravelRequestCreateNestedManyWithoutStatusInput = {
+    create?: XOR<TravelRequestCreateWithoutStatusInput, TravelRequestUncheckedCreateWithoutStatusInput> | TravelRequestCreateWithoutStatusInput[] | TravelRequestUncheckedCreateWithoutStatusInput[]
+    connectOrCreate?: TravelRequestCreateOrConnectWithoutStatusInput | TravelRequestCreateOrConnectWithoutStatusInput[]
+    createMany?: TravelRequestCreateManyStatusInputEnvelope
+    connect?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+  }
+
+  export type TravelRequestUncheckedCreateNestedManyWithoutStatusInput = {
+    create?: XOR<TravelRequestCreateWithoutStatusInput, TravelRequestUncheckedCreateWithoutStatusInput> | TravelRequestCreateWithoutStatusInput[] | TravelRequestUncheckedCreateWithoutStatusInput[]
+    connectOrCreate?: TravelRequestCreateOrConnectWithoutStatusInput | TravelRequestCreateOrConnectWithoutStatusInput[]
+    createMany?: TravelRequestCreateManyStatusInputEnvelope
+    connect?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+  }
+
+  export type TravelRequestUpdateManyWithoutStatusNestedInput = {
+    create?: XOR<TravelRequestCreateWithoutStatusInput, TravelRequestUncheckedCreateWithoutStatusInput> | TravelRequestCreateWithoutStatusInput[] | TravelRequestUncheckedCreateWithoutStatusInput[]
+    connectOrCreate?: TravelRequestCreateOrConnectWithoutStatusInput | TravelRequestCreateOrConnectWithoutStatusInput[]
+    upsert?: TravelRequestUpsertWithWhereUniqueWithoutStatusInput | TravelRequestUpsertWithWhereUniqueWithoutStatusInput[]
+    createMany?: TravelRequestCreateManyStatusInputEnvelope
+    set?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    disconnect?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    delete?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    connect?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    update?: TravelRequestUpdateWithWhereUniqueWithoutStatusInput | TravelRequestUpdateWithWhereUniqueWithoutStatusInput[]
+    updateMany?: TravelRequestUpdateManyWithWhereWithoutStatusInput | TravelRequestUpdateManyWithWhereWithoutStatusInput[]
+    deleteMany?: TravelRequestScalarWhereInput | TravelRequestScalarWhereInput[]
+  }
+
+  export type TravelRequestUncheckedUpdateManyWithoutStatusNestedInput = {
+    create?: XOR<TravelRequestCreateWithoutStatusInput, TravelRequestUncheckedCreateWithoutStatusInput> | TravelRequestCreateWithoutStatusInput[] | TravelRequestUncheckedCreateWithoutStatusInput[]
+    connectOrCreate?: TravelRequestCreateOrConnectWithoutStatusInput | TravelRequestCreateOrConnectWithoutStatusInput[]
+    upsert?: TravelRequestUpsertWithWhereUniqueWithoutStatusInput | TravelRequestUpsertWithWhereUniqueWithoutStatusInput[]
+    createMany?: TravelRequestCreateManyStatusInputEnvelope
+    set?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    disconnect?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    delete?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    connect?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    update?: TravelRequestUpdateWithWhereUniqueWithoutStatusInput | TravelRequestUpdateWithWhereUniqueWithoutStatusInput[]
+    updateMany?: TravelRequestUpdateManyWithWhereWithoutStatusInput | TravelRequestUpdateManyWithWhereWithoutStatusInput[]
+    deleteMany?: TravelRequestScalarWhereInput | TravelRequestScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutTravelRequestsInput = {
+    create?: XOR<UserCreateWithoutTravelRequestsInput, UserUncheckedCreateWithoutTravelRequestsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTravelRequestsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type StatusTravelRequestCreateNestedOneWithoutTravelRequestsInput = {
+    create?: XOR<StatusTravelRequestCreateWithoutTravelRequestsInput, StatusTravelRequestUncheckedCreateWithoutTravelRequestsInput>
+    connectOrCreate?: StatusTravelRequestCreateOrConnectWithoutTravelRequestsInput
+    connect?: StatusTravelRequestWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutApprovedTravelRequestsInput = {
+    create?: XOR<UserCreateWithoutApprovedTravelRequestsInput, UserUncheckedCreateWithoutApprovedTravelRequestsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutApprovedTravelRequestsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type CardCreateNestedOneWithoutTravelRequestsInput = {
+    create?: XOR<CardCreateWithoutTravelRequestsInput, CardUncheckedCreateWithoutTravelRequestsInput>
+    connectOrCreate?: CardCreateOrConnectWithoutTravelRequestsInput
+    connect?: CardWhereUniqueInput
+  }
+
+  export type TravelDetailCreateNestedManyWithoutRequestInput = {
+    create?: XOR<TravelDetailCreateWithoutRequestInput, TravelDetailUncheckedCreateWithoutRequestInput> | TravelDetailCreateWithoutRequestInput[] | TravelDetailUncheckedCreateWithoutRequestInput[]
+    connectOrCreate?: TravelDetailCreateOrConnectWithoutRequestInput | TravelDetailCreateOrConnectWithoutRequestInput[]
+    createMany?: TravelDetailCreateManyRequestInputEnvelope
+    connect?: TravelDetailWhereUniqueInput | TravelDetailWhereUniqueInput[]
+  }
+
+  export type TravelDetailUncheckedCreateNestedManyWithoutRequestInput = {
+    create?: XOR<TravelDetailCreateWithoutRequestInput, TravelDetailUncheckedCreateWithoutRequestInput> | TravelDetailCreateWithoutRequestInput[] | TravelDetailUncheckedCreateWithoutRequestInput[]
+    connectOrCreate?: TravelDetailCreateOrConnectWithoutRequestInput | TravelDetailCreateOrConnectWithoutRequestInput[]
+    createMany?: TravelDetailCreateManyRequestInputEnvelope
+    connect?: TravelDetailWhereUniqueInput | TravelDetailWhereUniqueInput[]
+  }
+
+  export type DecimalFieldUpdateOperationsInput = {
+    set?: Decimal | DecimalJsLike | number | string
+    increment?: Decimal | DecimalJsLike | number | string
+    decrement?: Decimal | DecimalJsLike | number | string
+    multiply?: Decimal | DecimalJsLike | number | string
+    divide?: Decimal | DecimalJsLike | number | string
+  }
+
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
+  export type UserUpdateOneRequiredWithoutTravelRequestsNestedInput = {
+    create?: XOR<UserCreateWithoutTravelRequestsInput, UserUncheckedCreateWithoutTravelRequestsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTravelRequestsInput
+    upsert?: UserUpsertWithoutTravelRequestsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutTravelRequestsInput, UserUpdateWithoutTravelRequestsInput>, UserUncheckedUpdateWithoutTravelRequestsInput>
+  }
+
+  export type StatusTravelRequestUpdateOneRequiredWithoutTravelRequestsNestedInput = {
+    create?: XOR<StatusTravelRequestCreateWithoutTravelRequestsInput, StatusTravelRequestUncheckedCreateWithoutTravelRequestsInput>
+    connectOrCreate?: StatusTravelRequestCreateOrConnectWithoutTravelRequestsInput
+    upsert?: StatusTravelRequestUpsertWithoutTravelRequestsInput
+    connect?: StatusTravelRequestWhereUniqueInput
+    update?: XOR<XOR<StatusTravelRequestUpdateToOneWithWhereWithoutTravelRequestsInput, StatusTravelRequestUpdateWithoutTravelRequestsInput>, StatusTravelRequestUncheckedUpdateWithoutTravelRequestsInput>
+  }
+
+  export type UserUpdateOneWithoutApprovedTravelRequestsNestedInput = {
+    create?: XOR<UserCreateWithoutApprovedTravelRequestsInput, UserUncheckedCreateWithoutApprovedTravelRequestsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutApprovedTravelRequestsInput
+    upsert?: UserUpsertWithoutApprovedTravelRequestsInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutApprovedTravelRequestsInput, UserUpdateWithoutApprovedTravelRequestsInput>, UserUncheckedUpdateWithoutApprovedTravelRequestsInput>
+  }
+
+  export type CardUpdateOneWithoutTravelRequestsNestedInput = {
+    create?: XOR<CardCreateWithoutTravelRequestsInput, CardUncheckedCreateWithoutTravelRequestsInput>
+    connectOrCreate?: CardCreateOrConnectWithoutTravelRequestsInput
+    upsert?: CardUpsertWithoutTravelRequestsInput
+    disconnect?: CardWhereInput | boolean
+    delete?: CardWhereInput | boolean
+    connect?: CardWhereUniqueInput
+    update?: XOR<XOR<CardUpdateToOneWithWhereWithoutTravelRequestsInput, CardUpdateWithoutTravelRequestsInput>, CardUncheckedUpdateWithoutTravelRequestsInput>
+  }
+
+  export type TravelDetailUpdateManyWithoutRequestNestedInput = {
+    create?: XOR<TravelDetailCreateWithoutRequestInput, TravelDetailUncheckedCreateWithoutRequestInput> | TravelDetailCreateWithoutRequestInput[] | TravelDetailUncheckedCreateWithoutRequestInput[]
+    connectOrCreate?: TravelDetailCreateOrConnectWithoutRequestInput | TravelDetailCreateOrConnectWithoutRequestInput[]
+    upsert?: TravelDetailUpsertWithWhereUniqueWithoutRequestInput | TravelDetailUpsertWithWhereUniqueWithoutRequestInput[]
+    createMany?: TravelDetailCreateManyRequestInputEnvelope
+    set?: TravelDetailWhereUniqueInput | TravelDetailWhereUniqueInput[]
+    disconnect?: TravelDetailWhereUniqueInput | TravelDetailWhereUniqueInput[]
+    delete?: TravelDetailWhereUniqueInput | TravelDetailWhereUniqueInput[]
+    connect?: TravelDetailWhereUniqueInput | TravelDetailWhereUniqueInput[]
+    update?: TravelDetailUpdateWithWhereUniqueWithoutRequestInput | TravelDetailUpdateWithWhereUniqueWithoutRequestInput[]
+    updateMany?: TravelDetailUpdateManyWithWhereWithoutRequestInput | TravelDetailUpdateManyWithWhereWithoutRequestInput[]
+    deleteMany?: TravelDetailScalarWhereInput | TravelDetailScalarWhereInput[]
+  }
+
+  export type TravelDetailUncheckedUpdateManyWithoutRequestNestedInput = {
+    create?: XOR<TravelDetailCreateWithoutRequestInput, TravelDetailUncheckedCreateWithoutRequestInput> | TravelDetailCreateWithoutRequestInput[] | TravelDetailUncheckedCreateWithoutRequestInput[]
+    connectOrCreate?: TravelDetailCreateOrConnectWithoutRequestInput | TravelDetailCreateOrConnectWithoutRequestInput[]
+    upsert?: TravelDetailUpsertWithWhereUniqueWithoutRequestInput | TravelDetailUpsertWithWhereUniqueWithoutRequestInput[]
+    createMany?: TravelDetailCreateManyRequestInputEnvelope
+    set?: TravelDetailWhereUniqueInput | TravelDetailWhereUniqueInput[]
+    disconnect?: TravelDetailWhereUniqueInput | TravelDetailWhereUniqueInput[]
+    delete?: TravelDetailWhereUniqueInput | TravelDetailWhereUniqueInput[]
+    connect?: TravelDetailWhereUniqueInput | TravelDetailWhereUniqueInput[]
+    update?: TravelDetailUpdateWithWhereUniqueWithoutRequestInput | TravelDetailUpdateWithWhereUniqueWithoutRequestInput[]
+    updateMany?: TravelDetailUpdateManyWithWhereWithoutRequestInput | TravelDetailUpdateManyWithWhereWithoutRequestInput[]
+    deleteMany?: TravelDetailScalarWhereInput | TravelDetailScalarWhereInput[]
+  }
+
+  export type TravelRequestCreateNestedOneWithoutDetailsInput = {
+    create?: XOR<TravelRequestCreateWithoutDetailsInput, TravelRequestUncheckedCreateWithoutDetailsInput>
+    connectOrCreate?: TravelRequestCreateOrConnectWithoutDetailsInput
+    connect?: TravelRequestWhereUniqueInput
+  }
+
+  export type TravelRequestUpdateOneRequiredWithoutDetailsNestedInput = {
+    create?: XOR<TravelRequestCreateWithoutDetailsInput, TravelRequestUncheckedCreateWithoutDetailsInput>
+    connectOrCreate?: TravelRequestCreateOrConnectWithoutDetailsInput
+    upsert?: TravelRequestUpsertWithoutDetailsInput
+    connect?: TravelRequestWhereUniqueInput
+    update?: XOR<XOR<TravelRequestUpdateToOneWithWhereWithoutDetailsInput, TravelRequestUpdateWithoutDetailsInput>, TravelRequestUncheckedUpdateWithoutDetailsInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -8209,6 +15584,91 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type NestedDecimalFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[]
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[]
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+  }
+
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | null
+    notIn?: string[] | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[]
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[]
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedDecimalFilter<$PrismaModel>
+    _sum?: NestedDecimalFilter<$PrismaModel>
+    _min?: NestedDecimalFilter<$PrismaModel>
+    _max?: NestedDecimalFilter<$PrismaModel>
+  }
+
+  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | null
+    notIn?: string[] | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
   export type UserCreateWithoutCompanyInput = {
     name: string
     paternalSurname: string
@@ -8223,6 +15683,9 @@ export namespace Prisma {
     role: RoleCreateNestedOneWithoutUsersInput
     supervisor?: UserCreateNestedOneWithoutSubordinatesInput
     subordinates?: UserCreateNestedManyWithoutSupervisorInput
+    cards?: CardAssignmentCreateNestedManyWithoutUserInput
+    travelRequests?: TravelRequestCreateNestedManyWithoutUserInput
+    approvedTravelRequests?: TravelRequestCreateNestedManyWithoutApproverInput
   }
 
   export type UserUncheckedCreateWithoutCompanyInput = {
@@ -8240,6 +15703,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     subordinates?: UserUncheckedCreateNestedManyWithoutSupervisorInput
+    cards?: CardAssignmentUncheckedCreateNestedManyWithoutUserInput
+    travelRequests?: TravelRequestUncheckedCreateNestedManyWithoutUserInput
+    approvedTravelRequests?: TravelRequestUncheckedCreateNestedManyWithoutApproverInput
   }
 
   export type UserCreateOrConnectWithoutCompanyInput = {
@@ -8274,6 +15740,33 @@ export namespace Prisma {
 
   export type BranchCreateManyCompanyInputEnvelope = {
     data: BranchCreateManyCompanyInput | BranchCreateManyCompanyInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CardCreateWithoutCompanyInput = {
+    cardNumber: string
+    isActive?: boolean
+    createdAt?: Date | string
+    assignments?: CardAssignmentCreateNestedManyWithoutCardInput
+    travelRequests?: TravelRequestCreateNestedManyWithoutCardInput
+  }
+
+  export type CardUncheckedCreateWithoutCompanyInput = {
+    id?: number
+    cardNumber: string
+    isActive?: boolean
+    createdAt?: Date | string
+    assignments?: CardAssignmentUncheckedCreateNestedManyWithoutCardInput
+    travelRequests?: TravelRequestUncheckedCreateNestedManyWithoutCardInput
+  }
+
+  export type CardCreateOrConnectWithoutCompanyInput = {
+    where: CardWhereUniqueInput
+    create: XOR<CardCreateWithoutCompanyInput, CardUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type CardCreateManyCompanyInputEnvelope = {
+    data: CardCreateManyCompanyInput | CardCreateManyCompanyInput[]
     skipDuplicates?: boolean
   }
 
@@ -8340,11 +15833,39 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Branch"> | Date | string
   }
 
+  export type CardUpsertWithWhereUniqueWithoutCompanyInput = {
+    where: CardWhereUniqueInput
+    update: XOR<CardUpdateWithoutCompanyInput, CardUncheckedUpdateWithoutCompanyInput>
+    create: XOR<CardCreateWithoutCompanyInput, CardUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type CardUpdateWithWhereUniqueWithoutCompanyInput = {
+    where: CardWhereUniqueInput
+    data: XOR<CardUpdateWithoutCompanyInput, CardUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type CardUpdateManyWithWhereWithoutCompanyInput = {
+    where: CardScalarWhereInput
+    data: XOR<CardUpdateManyMutationInput, CardUncheckedUpdateManyWithoutCompanyInput>
+  }
+
+  export type CardScalarWhereInput = {
+    AND?: CardScalarWhereInput | CardScalarWhereInput[]
+    OR?: CardScalarWhereInput[]
+    NOT?: CardScalarWhereInput | CardScalarWhereInput[]
+    id?: IntFilter<"Card"> | number
+    cardNumber?: StringFilter<"Card"> | string
+    companyId?: IntFilter<"Card"> | number
+    isActive?: BoolFilter<"Card"> | boolean
+    createdAt?: DateTimeFilter<"Card"> | Date | string
+  }
+
   export type CompanyCreateWithoutBranchesInput = {
     name: string
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserCreateNestedManyWithoutCompanyInput
+    cards?: CardCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutBranchesInput = {
@@ -8353,6 +15874,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
+    cards?: CardUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutBranchesInput = {
@@ -8374,6 +15896,9 @@ export namespace Prisma {
     role: RoleCreateNestedOneWithoutUsersInput
     supervisor?: UserCreateNestedOneWithoutSubordinatesInput
     subordinates?: UserCreateNestedManyWithoutSupervisorInput
+    cards?: CardAssignmentCreateNestedManyWithoutUserInput
+    travelRequests?: TravelRequestCreateNestedManyWithoutUserInput
+    approvedTravelRequests?: TravelRequestCreateNestedManyWithoutApproverInput
   }
 
   export type UserUncheckedCreateWithoutBranchInput = {
@@ -8391,6 +15916,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     subordinates?: UserUncheckedCreateNestedManyWithoutSupervisorInput
+    cards?: CardAssignmentUncheckedCreateNestedManyWithoutUserInput
+    travelRequests?: TravelRequestUncheckedCreateNestedManyWithoutUserInput
+    approvedTravelRequests?: TravelRequestUncheckedCreateNestedManyWithoutApproverInput
   }
 
   export type UserCreateOrConnectWithoutBranchInput = {
@@ -8419,6 +15947,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutCompanyNestedInput
+    cards?: CardUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutBranchesInput = {
@@ -8427,6 +15956,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
+    cards?: CardUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type UserUpsertWithWhereUniqueWithoutBranchInput = {
@@ -8459,6 +15989,9 @@ export namespace Prisma {
     role: RoleCreateNestedOneWithoutUsersInput
     supervisor?: UserCreateNestedOneWithoutSubordinatesInput
     subordinates?: UserCreateNestedManyWithoutSupervisorInput
+    cards?: CardAssignmentCreateNestedManyWithoutUserInput
+    travelRequests?: TravelRequestCreateNestedManyWithoutUserInput
+    approvedTravelRequests?: TravelRequestCreateNestedManyWithoutApproverInput
   }
 
   export type UserUncheckedCreateWithoutAreaInput = {
@@ -8476,6 +16009,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     subordinates?: UserUncheckedCreateNestedManyWithoutSupervisorInput
+    cards?: CardAssignmentUncheckedCreateNestedManyWithoutUserInput
+    travelRequests?: TravelRequestUncheckedCreateNestedManyWithoutUserInput
+    approvedTravelRequests?: TravelRequestUncheckedCreateNestedManyWithoutApproverInput
   }
 
   export type UserCreateOrConnectWithoutAreaInput = {
@@ -8518,6 +16054,9 @@ export namespace Prisma {
     area: AreaCreateNestedOneWithoutUsersInput
     supervisor?: UserCreateNestedOneWithoutSubordinatesInput
     subordinates?: UserCreateNestedManyWithoutSupervisorInput
+    cards?: CardAssignmentCreateNestedManyWithoutUserInput
+    travelRequests?: TravelRequestCreateNestedManyWithoutUserInput
+    approvedTravelRequests?: TravelRequestCreateNestedManyWithoutApproverInput
   }
 
   export type UserUncheckedCreateWithoutRoleInput = {
@@ -8535,6 +16074,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     subordinates?: UserUncheckedCreateNestedManyWithoutSupervisorInput
+    cards?: CardAssignmentUncheckedCreateNestedManyWithoutUserInput
+    travelRequests?: TravelRequestUncheckedCreateNestedManyWithoutUserInput
+    approvedTravelRequests?: TravelRequestUncheckedCreateNestedManyWithoutApproverInput
   }
 
   export type UserCreateOrConnectWithoutRoleInput = {
@@ -8568,6 +16110,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     branches?: BranchCreateNestedManyWithoutCompanyInput
+    cards?: CardCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutUsersInput = {
@@ -8576,6 +16119,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     branches?: BranchUncheckedCreateNestedManyWithoutCompanyInput
+    cards?: CardUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutUsersInput = {
@@ -8653,6 +16197,9 @@ export namespace Prisma {
     area: AreaCreateNestedOneWithoutUsersInput
     role: RoleCreateNestedOneWithoutUsersInput
     supervisor?: UserCreateNestedOneWithoutSubordinatesInput
+    cards?: CardAssignmentCreateNestedManyWithoutUserInput
+    travelRequests?: TravelRequestCreateNestedManyWithoutUserInput
+    approvedTravelRequests?: TravelRequestCreateNestedManyWithoutApproverInput
   }
 
   export type UserUncheckedCreateWithoutSubordinatesInput = {
@@ -8670,6 +16217,9 @@ export namespace Prisma {
     supervisorId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    cards?: CardAssignmentUncheckedCreateNestedManyWithoutUserInput
+    travelRequests?: TravelRequestUncheckedCreateNestedManyWithoutUserInput
+    approvedTravelRequests?: TravelRequestUncheckedCreateNestedManyWithoutApproverInput
   }
 
   export type UserCreateOrConnectWithoutSubordinatesInput = {
@@ -8691,6 +16241,9 @@ export namespace Prisma {
     area: AreaCreateNestedOneWithoutUsersInput
     role: RoleCreateNestedOneWithoutUsersInput
     subordinates?: UserCreateNestedManyWithoutSupervisorInput
+    cards?: CardAssignmentCreateNestedManyWithoutUserInput
+    travelRequests?: TravelRequestCreateNestedManyWithoutUserInput
+    approvedTravelRequests?: TravelRequestCreateNestedManyWithoutApproverInput
   }
 
   export type UserUncheckedCreateWithoutSupervisorInput = {
@@ -8708,6 +16261,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     subordinates?: UserUncheckedCreateNestedManyWithoutSupervisorInput
+    cards?: CardAssignmentUncheckedCreateNestedManyWithoutUserInput
+    travelRequests?: TravelRequestUncheckedCreateNestedManyWithoutUserInput
+    approvedTravelRequests?: TravelRequestUncheckedCreateNestedManyWithoutApproverInput
   }
 
   export type UserCreateOrConnectWithoutSupervisorInput = {
@@ -8717,6 +16273,119 @@ export namespace Prisma {
 
   export type UserCreateManySupervisorInputEnvelope = {
     data: UserCreateManySupervisorInput | UserCreateManySupervisorInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CardAssignmentCreateWithoutUserInput = {
+    assignedAt?: Date | string
+    unassignedAt?: Date | string | null
+    card: CardCreateNestedOneWithoutAssignmentsInput
+  }
+
+  export type CardAssignmentUncheckedCreateWithoutUserInput = {
+    id?: number
+    cardId: number
+    assignedAt?: Date | string
+    unassignedAt?: Date | string | null
+  }
+
+  export type CardAssignmentCreateOrConnectWithoutUserInput = {
+    where: CardAssignmentWhereUniqueInput
+    create: XOR<CardAssignmentCreateWithoutUserInput, CardAssignmentUncheckedCreateWithoutUserInput>
+  }
+
+  export type CardAssignmentCreateManyUserInputEnvelope = {
+    data: CardAssignmentCreateManyUserInput | CardAssignmentCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TravelRequestCreateWithoutUserInput = {
+    totalAmount: Decimal | DecimalJsLike | number | string
+    travelReason: string
+    travelObjectives: string
+    departureDate: Date | string
+    returnDate: Date | string
+    disbursementDate?: Date | string | null
+    approvalDate?: Date | string | null
+    comment?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    status: StatusTravelRequestCreateNestedOneWithoutTravelRequestsInput
+    approver?: UserCreateNestedOneWithoutApprovedTravelRequestsInput
+    card?: CardCreateNestedOneWithoutTravelRequestsInput
+    details?: TravelDetailCreateNestedManyWithoutRequestInput
+  }
+
+  export type TravelRequestUncheckedCreateWithoutUserInput = {
+    id?: number
+    statusId: number
+    cardId?: number | null
+    totalAmount: Decimal | DecimalJsLike | number | string
+    travelReason: string
+    travelObjectives: string
+    departureDate: Date | string
+    returnDate: Date | string
+    disbursementDate?: Date | string | null
+    approvalDate?: Date | string | null
+    approverId?: number | null
+    comment?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    details?: TravelDetailUncheckedCreateNestedManyWithoutRequestInput
+  }
+
+  export type TravelRequestCreateOrConnectWithoutUserInput = {
+    where: TravelRequestWhereUniqueInput
+    create: XOR<TravelRequestCreateWithoutUserInput, TravelRequestUncheckedCreateWithoutUserInput>
+  }
+
+  export type TravelRequestCreateManyUserInputEnvelope = {
+    data: TravelRequestCreateManyUserInput | TravelRequestCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TravelRequestCreateWithoutApproverInput = {
+    totalAmount: Decimal | DecimalJsLike | number | string
+    travelReason: string
+    travelObjectives: string
+    departureDate: Date | string
+    returnDate: Date | string
+    disbursementDate?: Date | string | null
+    approvalDate?: Date | string | null
+    comment?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutTravelRequestsInput
+    status: StatusTravelRequestCreateNestedOneWithoutTravelRequestsInput
+    card?: CardCreateNestedOneWithoutTravelRequestsInput
+    details?: TravelDetailCreateNestedManyWithoutRequestInput
+  }
+
+  export type TravelRequestUncheckedCreateWithoutApproverInput = {
+    id?: number
+    userId: number
+    statusId: number
+    cardId?: number | null
+    totalAmount: Decimal | DecimalJsLike | number | string
+    travelReason: string
+    travelObjectives: string
+    departureDate: Date | string
+    returnDate: Date | string
+    disbursementDate?: Date | string | null
+    approvalDate?: Date | string | null
+    comment?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    details?: TravelDetailUncheckedCreateNestedManyWithoutRequestInput
+  }
+
+  export type TravelRequestCreateOrConnectWithoutApproverInput = {
+    where: TravelRequestWhereUniqueInput
+    create: XOR<TravelRequestCreateWithoutApproverInput, TravelRequestUncheckedCreateWithoutApproverInput>
+  }
+
+  export type TravelRequestCreateManyApproverInputEnvelope = {
+    data: TravelRequestCreateManyApproverInput | TravelRequestCreateManyApproverInput[]
     skipDuplicates?: boolean
   }
 
@@ -8736,6 +16405,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     branches?: BranchUpdateManyWithoutCompanyNestedInput
+    cards?: CardUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutUsersInput = {
@@ -8744,6 +16414,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     branches?: BranchUncheckedUpdateManyWithoutCompanyNestedInput
+    cards?: CardUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type BranchUpsertWithoutUsersInput = {
@@ -8845,6 +16516,9 @@ export namespace Prisma {
     area?: AreaUpdateOneRequiredWithoutUsersNestedInput
     role?: RoleUpdateOneRequiredWithoutUsersNestedInput
     supervisor?: UserUpdateOneWithoutSubordinatesNestedInput
+    cards?: CardAssignmentUpdateManyWithoutUserNestedInput
+    travelRequests?: TravelRequestUpdateManyWithoutUserNestedInput
+    approvedTravelRequests?: TravelRequestUpdateManyWithoutApproverNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSubordinatesInput = {
@@ -8862,6 +16536,9 @@ export namespace Prisma {
     supervisorId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cards?: CardAssignmentUncheckedUpdateManyWithoutUserNestedInput
+    travelRequests?: TravelRequestUncheckedUpdateManyWithoutUserNestedInput
+    approvedTravelRequests?: TravelRequestUncheckedUpdateManyWithoutApproverNestedInput
   }
 
   export type UserUpsertWithWhereUniqueWithoutSupervisorInput = {
@@ -8878,6 +16555,846 @@ export namespace Prisma {
   export type UserUpdateManyWithWhereWithoutSupervisorInput = {
     where: UserScalarWhereInput
     data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutSupervisorInput>
+  }
+
+  export type CardAssignmentUpsertWithWhereUniqueWithoutUserInput = {
+    where: CardAssignmentWhereUniqueInput
+    update: XOR<CardAssignmentUpdateWithoutUserInput, CardAssignmentUncheckedUpdateWithoutUserInput>
+    create: XOR<CardAssignmentCreateWithoutUserInput, CardAssignmentUncheckedCreateWithoutUserInput>
+  }
+
+  export type CardAssignmentUpdateWithWhereUniqueWithoutUserInput = {
+    where: CardAssignmentWhereUniqueInput
+    data: XOR<CardAssignmentUpdateWithoutUserInput, CardAssignmentUncheckedUpdateWithoutUserInput>
+  }
+
+  export type CardAssignmentUpdateManyWithWhereWithoutUserInput = {
+    where: CardAssignmentScalarWhereInput
+    data: XOR<CardAssignmentUpdateManyMutationInput, CardAssignmentUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type CardAssignmentScalarWhereInput = {
+    AND?: CardAssignmentScalarWhereInput | CardAssignmentScalarWhereInput[]
+    OR?: CardAssignmentScalarWhereInput[]
+    NOT?: CardAssignmentScalarWhereInput | CardAssignmentScalarWhereInput[]
+    id?: IntFilter<"CardAssignment"> | number
+    cardId?: IntFilter<"CardAssignment"> | number
+    userId?: IntFilter<"CardAssignment"> | number
+    assignedAt?: DateTimeFilter<"CardAssignment"> | Date | string
+    unassignedAt?: DateTimeNullableFilter<"CardAssignment"> | Date | string | null
+  }
+
+  export type TravelRequestUpsertWithWhereUniqueWithoutUserInput = {
+    where: TravelRequestWhereUniqueInput
+    update: XOR<TravelRequestUpdateWithoutUserInput, TravelRequestUncheckedUpdateWithoutUserInput>
+    create: XOR<TravelRequestCreateWithoutUserInput, TravelRequestUncheckedCreateWithoutUserInput>
+  }
+
+  export type TravelRequestUpdateWithWhereUniqueWithoutUserInput = {
+    where: TravelRequestWhereUniqueInput
+    data: XOR<TravelRequestUpdateWithoutUserInput, TravelRequestUncheckedUpdateWithoutUserInput>
+  }
+
+  export type TravelRequestUpdateManyWithWhereWithoutUserInput = {
+    where: TravelRequestScalarWhereInput
+    data: XOR<TravelRequestUpdateManyMutationInput, TravelRequestUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type TravelRequestScalarWhereInput = {
+    AND?: TravelRequestScalarWhereInput | TravelRequestScalarWhereInput[]
+    OR?: TravelRequestScalarWhereInput[]
+    NOT?: TravelRequestScalarWhereInput | TravelRequestScalarWhereInput[]
+    id?: IntFilter<"TravelRequest"> | number
+    userId?: IntFilter<"TravelRequest"> | number
+    statusId?: IntFilter<"TravelRequest"> | number
+    cardId?: IntNullableFilter<"TravelRequest"> | number | null
+    totalAmount?: DecimalFilter<"TravelRequest"> | Decimal | DecimalJsLike | number | string
+    travelReason?: StringFilter<"TravelRequest"> | string
+    travelObjectives?: StringFilter<"TravelRequest"> | string
+    departureDate?: DateTimeFilter<"TravelRequest"> | Date | string
+    returnDate?: DateTimeFilter<"TravelRequest"> | Date | string
+    disbursementDate?: DateTimeNullableFilter<"TravelRequest"> | Date | string | null
+    approvalDate?: DateTimeNullableFilter<"TravelRequest"> | Date | string | null
+    approverId?: IntNullableFilter<"TravelRequest"> | number | null
+    comment?: StringNullableFilter<"TravelRequest"> | string | null
+    createdAt?: DateTimeFilter<"TravelRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"TravelRequest"> | Date | string
+  }
+
+  export type TravelRequestUpsertWithWhereUniqueWithoutApproverInput = {
+    where: TravelRequestWhereUniqueInput
+    update: XOR<TravelRequestUpdateWithoutApproverInput, TravelRequestUncheckedUpdateWithoutApproverInput>
+    create: XOR<TravelRequestCreateWithoutApproverInput, TravelRequestUncheckedCreateWithoutApproverInput>
+  }
+
+  export type TravelRequestUpdateWithWhereUniqueWithoutApproverInput = {
+    where: TravelRequestWhereUniqueInput
+    data: XOR<TravelRequestUpdateWithoutApproverInput, TravelRequestUncheckedUpdateWithoutApproverInput>
+  }
+
+  export type TravelRequestUpdateManyWithWhereWithoutApproverInput = {
+    where: TravelRequestScalarWhereInput
+    data: XOR<TravelRequestUpdateManyMutationInput, TravelRequestUncheckedUpdateManyWithoutApproverInput>
+  }
+
+  export type CompanyCreateWithoutCardsInput = {
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserCreateNestedManyWithoutCompanyInput
+    branches?: BranchCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyUncheckedCreateWithoutCardsInput = {
+    id?: number
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserUncheckedCreateNestedManyWithoutCompanyInput
+    branches?: BranchUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyCreateOrConnectWithoutCardsInput = {
+    where: CompanyWhereUniqueInput
+    create: XOR<CompanyCreateWithoutCardsInput, CompanyUncheckedCreateWithoutCardsInput>
+  }
+
+  export type CardAssignmentCreateWithoutCardInput = {
+    assignedAt?: Date | string
+    unassignedAt?: Date | string | null
+    user: UserCreateNestedOneWithoutCardsInput
+  }
+
+  export type CardAssignmentUncheckedCreateWithoutCardInput = {
+    id?: number
+    userId: number
+    assignedAt?: Date | string
+    unassignedAt?: Date | string | null
+  }
+
+  export type CardAssignmentCreateOrConnectWithoutCardInput = {
+    where: CardAssignmentWhereUniqueInput
+    create: XOR<CardAssignmentCreateWithoutCardInput, CardAssignmentUncheckedCreateWithoutCardInput>
+  }
+
+  export type CardAssignmentCreateManyCardInputEnvelope = {
+    data: CardAssignmentCreateManyCardInput | CardAssignmentCreateManyCardInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TravelRequestCreateWithoutCardInput = {
+    totalAmount: Decimal | DecimalJsLike | number | string
+    travelReason: string
+    travelObjectives: string
+    departureDate: Date | string
+    returnDate: Date | string
+    disbursementDate?: Date | string | null
+    approvalDate?: Date | string | null
+    comment?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutTravelRequestsInput
+    status: StatusTravelRequestCreateNestedOneWithoutTravelRequestsInput
+    approver?: UserCreateNestedOneWithoutApprovedTravelRequestsInput
+    details?: TravelDetailCreateNestedManyWithoutRequestInput
+  }
+
+  export type TravelRequestUncheckedCreateWithoutCardInput = {
+    id?: number
+    userId: number
+    statusId: number
+    totalAmount: Decimal | DecimalJsLike | number | string
+    travelReason: string
+    travelObjectives: string
+    departureDate: Date | string
+    returnDate: Date | string
+    disbursementDate?: Date | string | null
+    approvalDate?: Date | string | null
+    approverId?: number | null
+    comment?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    details?: TravelDetailUncheckedCreateNestedManyWithoutRequestInput
+  }
+
+  export type TravelRequestCreateOrConnectWithoutCardInput = {
+    where: TravelRequestWhereUniqueInput
+    create: XOR<TravelRequestCreateWithoutCardInput, TravelRequestUncheckedCreateWithoutCardInput>
+  }
+
+  export type TravelRequestCreateManyCardInputEnvelope = {
+    data: TravelRequestCreateManyCardInput | TravelRequestCreateManyCardInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CompanyUpsertWithoutCardsInput = {
+    update: XOR<CompanyUpdateWithoutCardsInput, CompanyUncheckedUpdateWithoutCardsInput>
+    create: XOR<CompanyCreateWithoutCardsInput, CompanyUncheckedCreateWithoutCardsInput>
+    where?: CompanyWhereInput
+  }
+
+  export type CompanyUpdateToOneWithWhereWithoutCardsInput = {
+    where?: CompanyWhereInput
+    data: XOR<CompanyUpdateWithoutCardsInput, CompanyUncheckedUpdateWithoutCardsInput>
+  }
+
+  export type CompanyUpdateWithoutCardsInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUpdateManyWithoutCompanyNestedInput
+    branches?: BranchUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateWithoutCardsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
+    branches?: BranchUncheckedUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CardAssignmentUpsertWithWhereUniqueWithoutCardInput = {
+    where: CardAssignmentWhereUniqueInput
+    update: XOR<CardAssignmentUpdateWithoutCardInput, CardAssignmentUncheckedUpdateWithoutCardInput>
+    create: XOR<CardAssignmentCreateWithoutCardInput, CardAssignmentUncheckedCreateWithoutCardInput>
+  }
+
+  export type CardAssignmentUpdateWithWhereUniqueWithoutCardInput = {
+    where: CardAssignmentWhereUniqueInput
+    data: XOR<CardAssignmentUpdateWithoutCardInput, CardAssignmentUncheckedUpdateWithoutCardInput>
+  }
+
+  export type CardAssignmentUpdateManyWithWhereWithoutCardInput = {
+    where: CardAssignmentScalarWhereInput
+    data: XOR<CardAssignmentUpdateManyMutationInput, CardAssignmentUncheckedUpdateManyWithoutCardInput>
+  }
+
+  export type TravelRequestUpsertWithWhereUniqueWithoutCardInput = {
+    where: TravelRequestWhereUniqueInput
+    update: XOR<TravelRequestUpdateWithoutCardInput, TravelRequestUncheckedUpdateWithoutCardInput>
+    create: XOR<TravelRequestCreateWithoutCardInput, TravelRequestUncheckedCreateWithoutCardInput>
+  }
+
+  export type TravelRequestUpdateWithWhereUniqueWithoutCardInput = {
+    where: TravelRequestWhereUniqueInput
+    data: XOR<TravelRequestUpdateWithoutCardInput, TravelRequestUncheckedUpdateWithoutCardInput>
+  }
+
+  export type TravelRequestUpdateManyWithWhereWithoutCardInput = {
+    where: TravelRequestScalarWhereInput
+    data: XOR<TravelRequestUpdateManyMutationInput, TravelRequestUncheckedUpdateManyWithoutCardInput>
+  }
+
+  export type CardCreateWithoutAssignmentsInput = {
+    cardNumber: string
+    isActive?: boolean
+    createdAt?: Date | string
+    company: CompanyCreateNestedOneWithoutCardsInput
+    travelRequests?: TravelRequestCreateNestedManyWithoutCardInput
+  }
+
+  export type CardUncheckedCreateWithoutAssignmentsInput = {
+    id?: number
+    cardNumber: string
+    companyId: number
+    isActive?: boolean
+    createdAt?: Date | string
+    travelRequests?: TravelRequestUncheckedCreateNestedManyWithoutCardInput
+  }
+
+  export type CardCreateOrConnectWithoutAssignmentsInput = {
+    where: CardWhereUniqueInput
+    create: XOR<CardCreateWithoutAssignmentsInput, CardUncheckedCreateWithoutAssignmentsInput>
+  }
+
+  export type UserCreateWithoutCardsInput = {
+    name: string
+    paternalSurname: string
+    maternalSurname: string
+    email: string
+    password: string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    company: CompanyCreateNestedOneWithoutUsersInput
+    branch: BranchCreateNestedOneWithoutUsersInput
+    area: AreaCreateNestedOneWithoutUsersInput
+    role: RoleCreateNestedOneWithoutUsersInput
+    supervisor?: UserCreateNestedOneWithoutSubordinatesInput
+    subordinates?: UserCreateNestedManyWithoutSupervisorInput
+    travelRequests?: TravelRequestCreateNestedManyWithoutUserInput
+    approvedTravelRequests?: TravelRequestCreateNestedManyWithoutApproverInput
+  }
+
+  export type UserUncheckedCreateWithoutCardsInput = {
+    id?: number
+    name: string
+    paternalSurname: string
+    maternalSurname: string
+    email: string
+    password: string
+    isActive?: boolean
+    companyId: number
+    branchId: number
+    areaId: number
+    roleId: number
+    supervisorId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subordinates?: UserUncheckedCreateNestedManyWithoutSupervisorInput
+    travelRequests?: TravelRequestUncheckedCreateNestedManyWithoutUserInput
+    approvedTravelRequests?: TravelRequestUncheckedCreateNestedManyWithoutApproverInput
+  }
+
+  export type UserCreateOrConnectWithoutCardsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutCardsInput, UserUncheckedCreateWithoutCardsInput>
+  }
+
+  export type CardUpsertWithoutAssignmentsInput = {
+    update: XOR<CardUpdateWithoutAssignmentsInput, CardUncheckedUpdateWithoutAssignmentsInput>
+    create: XOR<CardCreateWithoutAssignmentsInput, CardUncheckedCreateWithoutAssignmentsInput>
+    where?: CardWhereInput
+  }
+
+  export type CardUpdateToOneWithWhereWithoutAssignmentsInput = {
+    where?: CardWhereInput
+    data: XOR<CardUpdateWithoutAssignmentsInput, CardUncheckedUpdateWithoutAssignmentsInput>
+  }
+
+  export type CardUpdateWithoutAssignmentsInput = {
+    cardNumber?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    company?: CompanyUpdateOneRequiredWithoutCardsNestedInput
+    travelRequests?: TravelRequestUpdateManyWithoutCardNestedInput
+  }
+
+  export type CardUncheckedUpdateWithoutAssignmentsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cardNumber?: StringFieldUpdateOperationsInput | string
+    companyId?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    travelRequests?: TravelRequestUncheckedUpdateManyWithoutCardNestedInput
+  }
+
+  export type UserUpsertWithoutCardsInput = {
+    update: XOR<UserUpdateWithoutCardsInput, UserUncheckedUpdateWithoutCardsInput>
+    create: XOR<UserCreateWithoutCardsInput, UserUncheckedCreateWithoutCardsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutCardsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutCardsInput, UserUncheckedUpdateWithoutCardsInput>
+  }
+
+  export type UserUpdateWithoutCardsInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    paternalSurname?: StringFieldUpdateOperationsInput | string
+    maternalSurname?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    company?: CompanyUpdateOneRequiredWithoutUsersNestedInput
+    branch?: BranchUpdateOneRequiredWithoutUsersNestedInput
+    area?: AreaUpdateOneRequiredWithoutUsersNestedInput
+    role?: RoleUpdateOneRequiredWithoutUsersNestedInput
+    supervisor?: UserUpdateOneWithoutSubordinatesNestedInput
+    subordinates?: UserUpdateManyWithoutSupervisorNestedInput
+    travelRequests?: TravelRequestUpdateManyWithoutUserNestedInput
+    approvedTravelRequests?: TravelRequestUpdateManyWithoutApproverNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutCardsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    paternalSurname?: StringFieldUpdateOperationsInput | string
+    maternalSurname?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    companyId?: IntFieldUpdateOperationsInput | number
+    branchId?: IntFieldUpdateOperationsInput | number
+    areaId?: IntFieldUpdateOperationsInput | number
+    roleId?: IntFieldUpdateOperationsInput | number
+    supervisorId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subordinates?: UserUncheckedUpdateManyWithoutSupervisorNestedInput
+    travelRequests?: TravelRequestUncheckedUpdateManyWithoutUserNestedInput
+    approvedTravelRequests?: TravelRequestUncheckedUpdateManyWithoutApproverNestedInput
+  }
+
+  export type TravelRequestCreateWithoutStatusInput = {
+    totalAmount: Decimal | DecimalJsLike | number | string
+    travelReason: string
+    travelObjectives: string
+    departureDate: Date | string
+    returnDate: Date | string
+    disbursementDate?: Date | string | null
+    approvalDate?: Date | string | null
+    comment?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutTravelRequestsInput
+    approver?: UserCreateNestedOneWithoutApprovedTravelRequestsInput
+    card?: CardCreateNestedOneWithoutTravelRequestsInput
+    details?: TravelDetailCreateNestedManyWithoutRequestInput
+  }
+
+  export type TravelRequestUncheckedCreateWithoutStatusInput = {
+    id?: number
+    userId: number
+    cardId?: number | null
+    totalAmount: Decimal | DecimalJsLike | number | string
+    travelReason: string
+    travelObjectives: string
+    departureDate: Date | string
+    returnDate: Date | string
+    disbursementDate?: Date | string | null
+    approvalDate?: Date | string | null
+    approverId?: number | null
+    comment?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    details?: TravelDetailUncheckedCreateNestedManyWithoutRequestInput
+  }
+
+  export type TravelRequestCreateOrConnectWithoutStatusInput = {
+    where: TravelRequestWhereUniqueInput
+    create: XOR<TravelRequestCreateWithoutStatusInput, TravelRequestUncheckedCreateWithoutStatusInput>
+  }
+
+  export type TravelRequestCreateManyStatusInputEnvelope = {
+    data: TravelRequestCreateManyStatusInput | TravelRequestCreateManyStatusInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TravelRequestUpsertWithWhereUniqueWithoutStatusInput = {
+    where: TravelRequestWhereUniqueInput
+    update: XOR<TravelRequestUpdateWithoutStatusInput, TravelRequestUncheckedUpdateWithoutStatusInput>
+    create: XOR<TravelRequestCreateWithoutStatusInput, TravelRequestUncheckedCreateWithoutStatusInput>
+  }
+
+  export type TravelRequestUpdateWithWhereUniqueWithoutStatusInput = {
+    where: TravelRequestWhereUniqueInput
+    data: XOR<TravelRequestUpdateWithoutStatusInput, TravelRequestUncheckedUpdateWithoutStatusInput>
+  }
+
+  export type TravelRequestUpdateManyWithWhereWithoutStatusInput = {
+    where: TravelRequestScalarWhereInput
+    data: XOR<TravelRequestUpdateManyMutationInput, TravelRequestUncheckedUpdateManyWithoutStatusInput>
+  }
+
+  export type UserCreateWithoutTravelRequestsInput = {
+    name: string
+    paternalSurname: string
+    maternalSurname: string
+    email: string
+    password: string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    company: CompanyCreateNestedOneWithoutUsersInput
+    branch: BranchCreateNestedOneWithoutUsersInput
+    area: AreaCreateNestedOneWithoutUsersInput
+    role: RoleCreateNestedOneWithoutUsersInput
+    supervisor?: UserCreateNestedOneWithoutSubordinatesInput
+    subordinates?: UserCreateNestedManyWithoutSupervisorInput
+    cards?: CardAssignmentCreateNestedManyWithoutUserInput
+    approvedTravelRequests?: TravelRequestCreateNestedManyWithoutApproverInput
+  }
+
+  export type UserUncheckedCreateWithoutTravelRequestsInput = {
+    id?: number
+    name: string
+    paternalSurname: string
+    maternalSurname: string
+    email: string
+    password: string
+    isActive?: boolean
+    companyId: number
+    branchId: number
+    areaId: number
+    roleId: number
+    supervisorId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subordinates?: UserUncheckedCreateNestedManyWithoutSupervisorInput
+    cards?: CardAssignmentUncheckedCreateNestedManyWithoutUserInput
+    approvedTravelRequests?: TravelRequestUncheckedCreateNestedManyWithoutApproverInput
+  }
+
+  export type UserCreateOrConnectWithoutTravelRequestsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutTravelRequestsInput, UserUncheckedCreateWithoutTravelRequestsInput>
+  }
+
+  export type StatusTravelRequestCreateWithoutTravelRequestsInput = {
+    name: string
+  }
+
+  export type StatusTravelRequestUncheckedCreateWithoutTravelRequestsInput = {
+    id?: number
+    name: string
+  }
+
+  export type StatusTravelRequestCreateOrConnectWithoutTravelRequestsInput = {
+    where: StatusTravelRequestWhereUniqueInput
+    create: XOR<StatusTravelRequestCreateWithoutTravelRequestsInput, StatusTravelRequestUncheckedCreateWithoutTravelRequestsInput>
+  }
+
+  export type UserCreateWithoutApprovedTravelRequestsInput = {
+    name: string
+    paternalSurname: string
+    maternalSurname: string
+    email: string
+    password: string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    company: CompanyCreateNestedOneWithoutUsersInput
+    branch: BranchCreateNestedOneWithoutUsersInput
+    area: AreaCreateNestedOneWithoutUsersInput
+    role: RoleCreateNestedOneWithoutUsersInput
+    supervisor?: UserCreateNestedOneWithoutSubordinatesInput
+    subordinates?: UserCreateNestedManyWithoutSupervisorInput
+    cards?: CardAssignmentCreateNestedManyWithoutUserInput
+    travelRequests?: TravelRequestCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutApprovedTravelRequestsInput = {
+    id?: number
+    name: string
+    paternalSurname: string
+    maternalSurname: string
+    email: string
+    password: string
+    isActive?: boolean
+    companyId: number
+    branchId: number
+    areaId: number
+    roleId: number
+    supervisorId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subordinates?: UserUncheckedCreateNestedManyWithoutSupervisorInput
+    cards?: CardAssignmentUncheckedCreateNestedManyWithoutUserInput
+    travelRequests?: TravelRequestUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutApprovedTravelRequestsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutApprovedTravelRequestsInput, UserUncheckedCreateWithoutApprovedTravelRequestsInput>
+  }
+
+  export type CardCreateWithoutTravelRequestsInput = {
+    cardNumber: string
+    isActive?: boolean
+    createdAt?: Date | string
+    company: CompanyCreateNestedOneWithoutCardsInput
+    assignments?: CardAssignmentCreateNestedManyWithoutCardInput
+  }
+
+  export type CardUncheckedCreateWithoutTravelRequestsInput = {
+    id?: number
+    cardNumber: string
+    companyId: number
+    isActive?: boolean
+    createdAt?: Date | string
+    assignments?: CardAssignmentUncheckedCreateNestedManyWithoutCardInput
+  }
+
+  export type CardCreateOrConnectWithoutTravelRequestsInput = {
+    where: CardWhereUniqueInput
+    create: XOR<CardCreateWithoutTravelRequestsInput, CardUncheckedCreateWithoutTravelRequestsInput>
+  }
+
+  export type TravelDetailCreateWithoutRequestInput = {
+    concept: string
+    amount: Decimal | DecimalJsLike | number | string
+  }
+
+  export type TravelDetailUncheckedCreateWithoutRequestInput = {
+    id?: number
+    concept: string
+    amount: Decimal | DecimalJsLike | number | string
+  }
+
+  export type TravelDetailCreateOrConnectWithoutRequestInput = {
+    where: TravelDetailWhereUniqueInput
+    create: XOR<TravelDetailCreateWithoutRequestInput, TravelDetailUncheckedCreateWithoutRequestInput>
+  }
+
+  export type TravelDetailCreateManyRequestInputEnvelope = {
+    data: TravelDetailCreateManyRequestInput | TravelDetailCreateManyRequestInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutTravelRequestsInput = {
+    update: XOR<UserUpdateWithoutTravelRequestsInput, UserUncheckedUpdateWithoutTravelRequestsInput>
+    create: XOR<UserCreateWithoutTravelRequestsInput, UserUncheckedCreateWithoutTravelRequestsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutTravelRequestsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutTravelRequestsInput, UserUncheckedUpdateWithoutTravelRequestsInput>
+  }
+
+  export type UserUpdateWithoutTravelRequestsInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    paternalSurname?: StringFieldUpdateOperationsInput | string
+    maternalSurname?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    company?: CompanyUpdateOneRequiredWithoutUsersNestedInput
+    branch?: BranchUpdateOneRequiredWithoutUsersNestedInput
+    area?: AreaUpdateOneRequiredWithoutUsersNestedInput
+    role?: RoleUpdateOneRequiredWithoutUsersNestedInput
+    supervisor?: UserUpdateOneWithoutSubordinatesNestedInput
+    subordinates?: UserUpdateManyWithoutSupervisorNestedInput
+    cards?: CardAssignmentUpdateManyWithoutUserNestedInput
+    approvedTravelRequests?: TravelRequestUpdateManyWithoutApproverNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutTravelRequestsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    paternalSurname?: StringFieldUpdateOperationsInput | string
+    maternalSurname?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    companyId?: IntFieldUpdateOperationsInput | number
+    branchId?: IntFieldUpdateOperationsInput | number
+    areaId?: IntFieldUpdateOperationsInput | number
+    roleId?: IntFieldUpdateOperationsInput | number
+    supervisorId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subordinates?: UserUncheckedUpdateManyWithoutSupervisorNestedInput
+    cards?: CardAssignmentUncheckedUpdateManyWithoutUserNestedInput
+    approvedTravelRequests?: TravelRequestUncheckedUpdateManyWithoutApproverNestedInput
+  }
+
+  export type StatusTravelRequestUpsertWithoutTravelRequestsInput = {
+    update: XOR<StatusTravelRequestUpdateWithoutTravelRequestsInput, StatusTravelRequestUncheckedUpdateWithoutTravelRequestsInput>
+    create: XOR<StatusTravelRequestCreateWithoutTravelRequestsInput, StatusTravelRequestUncheckedCreateWithoutTravelRequestsInput>
+    where?: StatusTravelRequestWhereInput
+  }
+
+  export type StatusTravelRequestUpdateToOneWithWhereWithoutTravelRequestsInput = {
+    where?: StatusTravelRequestWhereInput
+    data: XOR<StatusTravelRequestUpdateWithoutTravelRequestsInput, StatusTravelRequestUncheckedUpdateWithoutTravelRequestsInput>
+  }
+
+  export type StatusTravelRequestUpdateWithoutTravelRequestsInput = {
+    name?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type StatusTravelRequestUncheckedUpdateWithoutTravelRequestsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type UserUpsertWithoutApprovedTravelRequestsInput = {
+    update: XOR<UserUpdateWithoutApprovedTravelRequestsInput, UserUncheckedUpdateWithoutApprovedTravelRequestsInput>
+    create: XOR<UserCreateWithoutApprovedTravelRequestsInput, UserUncheckedCreateWithoutApprovedTravelRequestsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutApprovedTravelRequestsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutApprovedTravelRequestsInput, UserUncheckedUpdateWithoutApprovedTravelRequestsInput>
+  }
+
+  export type UserUpdateWithoutApprovedTravelRequestsInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    paternalSurname?: StringFieldUpdateOperationsInput | string
+    maternalSurname?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    company?: CompanyUpdateOneRequiredWithoutUsersNestedInput
+    branch?: BranchUpdateOneRequiredWithoutUsersNestedInput
+    area?: AreaUpdateOneRequiredWithoutUsersNestedInput
+    role?: RoleUpdateOneRequiredWithoutUsersNestedInput
+    supervisor?: UserUpdateOneWithoutSubordinatesNestedInput
+    subordinates?: UserUpdateManyWithoutSupervisorNestedInput
+    cards?: CardAssignmentUpdateManyWithoutUserNestedInput
+    travelRequests?: TravelRequestUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutApprovedTravelRequestsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    paternalSurname?: StringFieldUpdateOperationsInput | string
+    maternalSurname?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    companyId?: IntFieldUpdateOperationsInput | number
+    branchId?: IntFieldUpdateOperationsInput | number
+    areaId?: IntFieldUpdateOperationsInput | number
+    roleId?: IntFieldUpdateOperationsInput | number
+    supervisorId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subordinates?: UserUncheckedUpdateManyWithoutSupervisorNestedInput
+    cards?: CardAssignmentUncheckedUpdateManyWithoutUserNestedInput
+    travelRequests?: TravelRequestUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type CardUpsertWithoutTravelRequestsInput = {
+    update: XOR<CardUpdateWithoutTravelRequestsInput, CardUncheckedUpdateWithoutTravelRequestsInput>
+    create: XOR<CardCreateWithoutTravelRequestsInput, CardUncheckedCreateWithoutTravelRequestsInput>
+    where?: CardWhereInput
+  }
+
+  export type CardUpdateToOneWithWhereWithoutTravelRequestsInput = {
+    where?: CardWhereInput
+    data: XOR<CardUpdateWithoutTravelRequestsInput, CardUncheckedUpdateWithoutTravelRequestsInput>
+  }
+
+  export type CardUpdateWithoutTravelRequestsInput = {
+    cardNumber?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    company?: CompanyUpdateOneRequiredWithoutCardsNestedInput
+    assignments?: CardAssignmentUpdateManyWithoutCardNestedInput
+  }
+
+  export type CardUncheckedUpdateWithoutTravelRequestsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cardNumber?: StringFieldUpdateOperationsInput | string
+    companyId?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignments?: CardAssignmentUncheckedUpdateManyWithoutCardNestedInput
+  }
+
+  export type TravelDetailUpsertWithWhereUniqueWithoutRequestInput = {
+    where: TravelDetailWhereUniqueInput
+    update: XOR<TravelDetailUpdateWithoutRequestInput, TravelDetailUncheckedUpdateWithoutRequestInput>
+    create: XOR<TravelDetailCreateWithoutRequestInput, TravelDetailUncheckedCreateWithoutRequestInput>
+  }
+
+  export type TravelDetailUpdateWithWhereUniqueWithoutRequestInput = {
+    where: TravelDetailWhereUniqueInput
+    data: XOR<TravelDetailUpdateWithoutRequestInput, TravelDetailUncheckedUpdateWithoutRequestInput>
+  }
+
+  export type TravelDetailUpdateManyWithWhereWithoutRequestInput = {
+    where: TravelDetailScalarWhereInput
+    data: XOR<TravelDetailUpdateManyMutationInput, TravelDetailUncheckedUpdateManyWithoutRequestInput>
+  }
+
+  export type TravelDetailScalarWhereInput = {
+    AND?: TravelDetailScalarWhereInput | TravelDetailScalarWhereInput[]
+    OR?: TravelDetailScalarWhereInput[]
+    NOT?: TravelDetailScalarWhereInput | TravelDetailScalarWhereInput[]
+    id?: IntFilter<"TravelDetail"> | number
+    travelRequestId?: IntFilter<"TravelDetail"> | number
+    concept?: StringFilter<"TravelDetail"> | string
+    amount?: DecimalFilter<"TravelDetail"> | Decimal | DecimalJsLike | number | string
+  }
+
+  export type TravelRequestCreateWithoutDetailsInput = {
+    totalAmount: Decimal | DecimalJsLike | number | string
+    travelReason: string
+    travelObjectives: string
+    departureDate: Date | string
+    returnDate: Date | string
+    disbursementDate?: Date | string | null
+    approvalDate?: Date | string | null
+    comment?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutTravelRequestsInput
+    status: StatusTravelRequestCreateNestedOneWithoutTravelRequestsInput
+    approver?: UserCreateNestedOneWithoutApprovedTravelRequestsInput
+    card?: CardCreateNestedOneWithoutTravelRequestsInput
+  }
+
+  export type TravelRequestUncheckedCreateWithoutDetailsInput = {
+    id?: number
+    userId: number
+    statusId: number
+    cardId?: number | null
+    totalAmount: Decimal | DecimalJsLike | number | string
+    travelReason: string
+    travelObjectives: string
+    departureDate: Date | string
+    returnDate: Date | string
+    disbursementDate?: Date | string | null
+    approvalDate?: Date | string | null
+    approverId?: number | null
+    comment?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TravelRequestCreateOrConnectWithoutDetailsInput = {
+    where: TravelRequestWhereUniqueInput
+    create: XOR<TravelRequestCreateWithoutDetailsInput, TravelRequestUncheckedCreateWithoutDetailsInput>
+  }
+
+  export type TravelRequestUpsertWithoutDetailsInput = {
+    update: XOR<TravelRequestUpdateWithoutDetailsInput, TravelRequestUncheckedUpdateWithoutDetailsInput>
+    create: XOR<TravelRequestCreateWithoutDetailsInput, TravelRequestUncheckedCreateWithoutDetailsInput>
+    where?: TravelRequestWhereInput
+  }
+
+  export type TravelRequestUpdateToOneWithWhereWithoutDetailsInput = {
+    where?: TravelRequestWhereInput
+    data: XOR<TravelRequestUpdateWithoutDetailsInput, TravelRequestUncheckedUpdateWithoutDetailsInput>
+  }
+
+  export type TravelRequestUpdateWithoutDetailsInput = {
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    travelReason?: StringFieldUpdateOperationsInput | string
+    travelObjectives?: StringFieldUpdateOperationsInput | string
+    departureDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    returnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    disbursementDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutTravelRequestsNestedInput
+    status?: StatusTravelRequestUpdateOneRequiredWithoutTravelRequestsNestedInput
+    approver?: UserUpdateOneWithoutApprovedTravelRequestsNestedInput
+    card?: CardUpdateOneWithoutTravelRequestsNestedInput
+  }
+
+  export type TravelRequestUncheckedUpdateWithoutDetailsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    statusId?: IntFieldUpdateOperationsInput | number
+    cardId?: NullableIntFieldUpdateOperationsInput | number | null
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    travelReason?: StringFieldUpdateOperationsInput | string
+    travelObjectives?: StringFieldUpdateOperationsInput | string
+    departureDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    returnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    disbursementDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approverId?: NullableIntFieldUpdateOperationsInput | number | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserCreateManyCompanyInput = {
@@ -8903,6 +17420,13 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type CardCreateManyCompanyInput = {
+    id?: number
+    cardNumber: string
+    isActive?: boolean
+    createdAt?: Date | string
+  }
+
   export type UserUpdateWithoutCompanyInput = {
     name?: StringFieldUpdateOperationsInput | string
     paternalSurname?: StringFieldUpdateOperationsInput | string
@@ -8917,6 +17441,9 @@ export namespace Prisma {
     role?: RoleUpdateOneRequiredWithoutUsersNestedInput
     supervisor?: UserUpdateOneWithoutSubordinatesNestedInput
     subordinates?: UserUpdateManyWithoutSupervisorNestedInput
+    cards?: CardAssignmentUpdateManyWithoutUserNestedInput
+    travelRequests?: TravelRequestUpdateManyWithoutUserNestedInput
+    approvedTravelRequests?: TravelRequestUpdateManyWithoutApproverNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCompanyInput = {
@@ -8934,6 +17461,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subordinates?: UserUncheckedUpdateManyWithoutSupervisorNestedInput
+    cards?: CardAssignmentUncheckedUpdateManyWithoutUserNestedInput
+    travelRequests?: TravelRequestUncheckedUpdateManyWithoutUserNestedInput
+    approvedTravelRequests?: TravelRequestUncheckedUpdateManyWithoutApproverNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutCompanyInput = {
@@ -8974,6 +17504,30 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type CardUpdateWithoutCompanyInput = {
+    cardNumber?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignments?: CardAssignmentUpdateManyWithoutCardNestedInput
+    travelRequests?: TravelRequestUpdateManyWithoutCardNestedInput
+  }
+
+  export type CardUncheckedUpdateWithoutCompanyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cardNumber?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignments?: CardAssignmentUncheckedUpdateManyWithoutCardNestedInput
+    travelRequests?: TravelRequestUncheckedUpdateManyWithoutCardNestedInput
+  }
+
+  export type CardUncheckedUpdateManyWithoutCompanyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cardNumber?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type UserCreateManyBranchInput = {
     id?: number
     name: string
@@ -9004,6 +17558,9 @@ export namespace Prisma {
     role?: RoleUpdateOneRequiredWithoutUsersNestedInput
     supervisor?: UserUpdateOneWithoutSubordinatesNestedInput
     subordinates?: UserUpdateManyWithoutSupervisorNestedInput
+    cards?: CardAssignmentUpdateManyWithoutUserNestedInput
+    travelRequests?: TravelRequestUpdateManyWithoutUserNestedInput
+    approvedTravelRequests?: TravelRequestUpdateManyWithoutApproverNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBranchInput = {
@@ -9021,6 +17578,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subordinates?: UserUncheckedUpdateManyWithoutSupervisorNestedInput
+    cards?: CardAssignmentUncheckedUpdateManyWithoutUserNestedInput
+    travelRequests?: TravelRequestUncheckedUpdateManyWithoutUserNestedInput
+    approvedTravelRequests?: TravelRequestUncheckedUpdateManyWithoutApproverNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutBranchInput = {
@@ -9069,6 +17629,9 @@ export namespace Prisma {
     role?: RoleUpdateOneRequiredWithoutUsersNestedInput
     supervisor?: UserUpdateOneWithoutSubordinatesNestedInput
     subordinates?: UserUpdateManyWithoutSupervisorNestedInput
+    cards?: CardAssignmentUpdateManyWithoutUserNestedInput
+    travelRequests?: TravelRequestUpdateManyWithoutUserNestedInput
+    approvedTravelRequests?: TravelRequestUpdateManyWithoutApproverNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAreaInput = {
@@ -9086,6 +17649,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subordinates?: UserUncheckedUpdateManyWithoutSupervisorNestedInput
+    cards?: CardAssignmentUncheckedUpdateManyWithoutUserNestedInput
+    travelRequests?: TravelRequestUncheckedUpdateManyWithoutUserNestedInput
+    approvedTravelRequests?: TravelRequestUncheckedUpdateManyWithoutApproverNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutAreaInput = {
@@ -9134,6 +17700,9 @@ export namespace Prisma {
     area?: AreaUpdateOneRequiredWithoutUsersNestedInput
     supervisor?: UserUpdateOneWithoutSubordinatesNestedInput
     subordinates?: UserUpdateManyWithoutSupervisorNestedInput
+    cards?: CardAssignmentUpdateManyWithoutUserNestedInput
+    travelRequests?: TravelRequestUpdateManyWithoutUserNestedInput
+    approvedTravelRequests?: TravelRequestUpdateManyWithoutApproverNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRoleInput = {
@@ -9151,6 +17720,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subordinates?: UserUncheckedUpdateManyWithoutSupervisorNestedInput
+    cards?: CardAssignmentUncheckedUpdateManyWithoutUserNestedInput
+    travelRequests?: TravelRequestUncheckedUpdateManyWithoutUserNestedInput
+    approvedTravelRequests?: TravelRequestUncheckedUpdateManyWithoutApproverNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutRoleInput = {
@@ -9185,6 +17757,47 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type CardAssignmentCreateManyUserInput = {
+    id?: number
+    cardId: number
+    assignedAt?: Date | string
+    unassignedAt?: Date | string | null
+  }
+
+  export type TravelRequestCreateManyUserInput = {
+    id?: number
+    statusId: number
+    cardId?: number | null
+    totalAmount: Decimal | DecimalJsLike | number | string
+    travelReason: string
+    travelObjectives: string
+    departureDate: Date | string
+    returnDate: Date | string
+    disbursementDate?: Date | string | null
+    approvalDate?: Date | string | null
+    approverId?: number | null
+    comment?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TravelRequestCreateManyApproverInput = {
+    id?: number
+    userId: number
+    statusId: number
+    cardId?: number | null
+    totalAmount: Decimal | DecimalJsLike | number | string
+    travelReason: string
+    travelObjectives: string
+    departureDate: Date | string
+    returnDate: Date | string
+    disbursementDate?: Date | string | null
+    approvalDate?: Date | string | null
+    comment?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type UserUpdateWithoutSupervisorInput = {
     name?: StringFieldUpdateOperationsInput | string
     paternalSurname?: StringFieldUpdateOperationsInput | string
@@ -9199,6 +17812,9 @@ export namespace Prisma {
     area?: AreaUpdateOneRequiredWithoutUsersNestedInput
     role?: RoleUpdateOneRequiredWithoutUsersNestedInput
     subordinates?: UserUpdateManyWithoutSupervisorNestedInput
+    cards?: CardAssignmentUpdateManyWithoutUserNestedInput
+    travelRequests?: TravelRequestUpdateManyWithoutUserNestedInput
+    approvedTravelRequests?: TravelRequestUpdateManyWithoutApproverNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSupervisorInput = {
@@ -9216,6 +17832,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subordinates?: UserUncheckedUpdateManyWithoutSupervisorNestedInput
+    cards?: CardAssignmentUncheckedUpdateManyWithoutUserNestedInput
+    travelRequests?: TravelRequestUncheckedUpdateManyWithoutUserNestedInput
+    approvedTravelRequests?: TravelRequestUncheckedUpdateManyWithoutApproverNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutSupervisorInput = {
@@ -9232,6 +17851,318 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CardAssignmentUpdateWithoutUserInput = {
+    assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    unassignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    card?: CardUpdateOneRequiredWithoutAssignmentsNestedInput
+  }
+
+  export type CardAssignmentUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cardId?: IntFieldUpdateOperationsInput | number
+    assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    unassignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type CardAssignmentUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cardId?: IntFieldUpdateOperationsInput | number
+    assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    unassignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type TravelRequestUpdateWithoutUserInput = {
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    travelReason?: StringFieldUpdateOperationsInput | string
+    travelObjectives?: StringFieldUpdateOperationsInput | string
+    departureDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    returnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    disbursementDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StatusTravelRequestUpdateOneRequiredWithoutTravelRequestsNestedInput
+    approver?: UserUpdateOneWithoutApprovedTravelRequestsNestedInput
+    card?: CardUpdateOneWithoutTravelRequestsNestedInput
+    details?: TravelDetailUpdateManyWithoutRequestNestedInput
+  }
+
+  export type TravelRequestUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    statusId?: IntFieldUpdateOperationsInput | number
+    cardId?: NullableIntFieldUpdateOperationsInput | number | null
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    travelReason?: StringFieldUpdateOperationsInput | string
+    travelObjectives?: StringFieldUpdateOperationsInput | string
+    departureDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    returnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    disbursementDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approverId?: NullableIntFieldUpdateOperationsInput | number | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: TravelDetailUncheckedUpdateManyWithoutRequestNestedInput
+  }
+
+  export type TravelRequestUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    statusId?: IntFieldUpdateOperationsInput | number
+    cardId?: NullableIntFieldUpdateOperationsInput | number | null
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    travelReason?: StringFieldUpdateOperationsInput | string
+    travelObjectives?: StringFieldUpdateOperationsInput | string
+    departureDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    returnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    disbursementDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approverId?: NullableIntFieldUpdateOperationsInput | number | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TravelRequestUpdateWithoutApproverInput = {
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    travelReason?: StringFieldUpdateOperationsInput | string
+    travelObjectives?: StringFieldUpdateOperationsInput | string
+    departureDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    returnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    disbursementDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutTravelRequestsNestedInput
+    status?: StatusTravelRequestUpdateOneRequiredWithoutTravelRequestsNestedInput
+    card?: CardUpdateOneWithoutTravelRequestsNestedInput
+    details?: TravelDetailUpdateManyWithoutRequestNestedInput
+  }
+
+  export type TravelRequestUncheckedUpdateWithoutApproverInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    statusId?: IntFieldUpdateOperationsInput | number
+    cardId?: NullableIntFieldUpdateOperationsInput | number | null
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    travelReason?: StringFieldUpdateOperationsInput | string
+    travelObjectives?: StringFieldUpdateOperationsInput | string
+    departureDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    returnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    disbursementDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: TravelDetailUncheckedUpdateManyWithoutRequestNestedInput
+  }
+
+  export type TravelRequestUncheckedUpdateManyWithoutApproverInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    statusId?: IntFieldUpdateOperationsInput | number
+    cardId?: NullableIntFieldUpdateOperationsInput | number | null
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    travelReason?: StringFieldUpdateOperationsInput | string
+    travelObjectives?: StringFieldUpdateOperationsInput | string
+    departureDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    returnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    disbursementDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CardAssignmentCreateManyCardInput = {
+    id?: number
+    userId: number
+    assignedAt?: Date | string
+    unassignedAt?: Date | string | null
+  }
+
+  export type TravelRequestCreateManyCardInput = {
+    id?: number
+    userId: number
+    statusId: number
+    totalAmount: Decimal | DecimalJsLike | number | string
+    travelReason: string
+    travelObjectives: string
+    departureDate: Date | string
+    returnDate: Date | string
+    disbursementDate?: Date | string | null
+    approvalDate?: Date | string | null
+    approverId?: number | null
+    comment?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CardAssignmentUpdateWithoutCardInput = {
+    assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    unassignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user?: UserUpdateOneRequiredWithoutCardsNestedInput
+  }
+
+  export type CardAssignmentUncheckedUpdateWithoutCardInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    unassignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type CardAssignmentUncheckedUpdateManyWithoutCardInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    unassignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type TravelRequestUpdateWithoutCardInput = {
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    travelReason?: StringFieldUpdateOperationsInput | string
+    travelObjectives?: StringFieldUpdateOperationsInput | string
+    departureDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    returnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    disbursementDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutTravelRequestsNestedInput
+    status?: StatusTravelRequestUpdateOneRequiredWithoutTravelRequestsNestedInput
+    approver?: UserUpdateOneWithoutApprovedTravelRequestsNestedInput
+    details?: TravelDetailUpdateManyWithoutRequestNestedInput
+  }
+
+  export type TravelRequestUncheckedUpdateWithoutCardInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    statusId?: IntFieldUpdateOperationsInput | number
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    travelReason?: StringFieldUpdateOperationsInput | string
+    travelObjectives?: StringFieldUpdateOperationsInput | string
+    departureDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    returnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    disbursementDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approverId?: NullableIntFieldUpdateOperationsInput | number | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: TravelDetailUncheckedUpdateManyWithoutRequestNestedInput
+  }
+
+  export type TravelRequestUncheckedUpdateManyWithoutCardInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    statusId?: IntFieldUpdateOperationsInput | number
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    travelReason?: StringFieldUpdateOperationsInput | string
+    travelObjectives?: StringFieldUpdateOperationsInput | string
+    departureDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    returnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    disbursementDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approverId?: NullableIntFieldUpdateOperationsInput | number | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TravelRequestCreateManyStatusInput = {
+    id?: number
+    userId: number
+    cardId?: number | null
+    totalAmount: Decimal | DecimalJsLike | number | string
+    travelReason: string
+    travelObjectives: string
+    departureDate: Date | string
+    returnDate: Date | string
+    disbursementDate?: Date | string | null
+    approvalDate?: Date | string | null
+    approverId?: number | null
+    comment?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TravelRequestUpdateWithoutStatusInput = {
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    travelReason?: StringFieldUpdateOperationsInput | string
+    travelObjectives?: StringFieldUpdateOperationsInput | string
+    departureDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    returnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    disbursementDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutTravelRequestsNestedInput
+    approver?: UserUpdateOneWithoutApprovedTravelRequestsNestedInput
+    card?: CardUpdateOneWithoutTravelRequestsNestedInput
+    details?: TravelDetailUpdateManyWithoutRequestNestedInput
+  }
+
+  export type TravelRequestUncheckedUpdateWithoutStatusInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    cardId?: NullableIntFieldUpdateOperationsInput | number | null
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    travelReason?: StringFieldUpdateOperationsInput | string
+    travelObjectives?: StringFieldUpdateOperationsInput | string
+    departureDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    returnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    disbursementDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approverId?: NullableIntFieldUpdateOperationsInput | number | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: TravelDetailUncheckedUpdateManyWithoutRequestNestedInput
+  }
+
+  export type TravelRequestUncheckedUpdateManyWithoutStatusInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    cardId?: NullableIntFieldUpdateOperationsInput | number | null
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    travelReason?: StringFieldUpdateOperationsInput | string
+    travelObjectives?: StringFieldUpdateOperationsInput | string
+    departureDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    returnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    disbursementDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approverId?: NullableIntFieldUpdateOperationsInput | number | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TravelDetailCreateManyRequestInput = {
+    id?: number
+    concept: string
+    amount: Decimal | DecimalJsLike | number | string
+  }
+
+  export type TravelDetailUpdateWithoutRequestInput = {
+    concept?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+  }
+
+  export type TravelDetailUncheckedUpdateWithoutRequestInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    concept?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+  }
+
+  export type TravelDetailUncheckedUpdateManyWithoutRequestInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    concept?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
 

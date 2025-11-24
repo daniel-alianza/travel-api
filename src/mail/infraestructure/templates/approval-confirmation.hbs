@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Confirmación de Solicitud de Viáticos</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f5f7fa;
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            padding: 30px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h2 {
+            margin: 0;
+            color: #3498db;
+        }
+        .content {
+            font-size: 18px;
+            text-align: center;
+        }
+        .status {
+            font-weight: bold;
+            color: #2ecc71;
+        }
+        .status.rejected {
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Confirmación de Solicitud de Viáticos</h2>
+        </div>
+        <div class="content">
+            <p>La solicitud de viáticos de tu colaborador <strong>{{colaborador}}</strong> ha sido <span class="status {{#if esRechazo}}rejected{{/if}}">{{resultado}}</span> exitosamente.</p>
+        </div>
+    </div>
+</body>
+</html>
+

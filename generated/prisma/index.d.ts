@@ -10332,7 +10332,7 @@ export namespace Prisma {
     id: number
     userId: number
     statusId: number
-    cardId: number | null
+    cardId: number
     totalAmount: Decimal
     travelReason: string
     travelObjectives: string
@@ -10384,7 +10384,7 @@ export namespace Prisma {
     user?: boolean | UserDefaultArgs<ExtArgs>
     status?: boolean | StatusTravelRequestDefaultArgs<ExtArgs>
     approver?: boolean | TravelRequest$approverArgs<ExtArgs>
-    card?: boolean | TravelRequest$cardArgs<ExtArgs>
+    card?: boolean | CardDefaultArgs<ExtArgs>
     details?: boolean | TravelRequest$detailsArgs<ExtArgs>
     _count?: boolean | TravelRequestCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["travelRequest"]>
@@ -10414,7 +10414,7 @@ export namespace Prisma {
     user?: boolean | UserDefaultArgs<ExtArgs>
     status?: boolean | StatusTravelRequestDefaultArgs<ExtArgs>
     approver?: boolean | TravelRequest$approverArgs<ExtArgs>
-    card?: boolean | TravelRequest$cardArgs<ExtArgs>
+    card?: boolean | CardDefaultArgs<ExtArgs>
     details?: boolean | TravelRequest$detailsArgs<ExtArgs>
     _count?: boolean | TravelRequestCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -10425,14 +10425,14 @@ export namespace Prisma {
       user: Prisma.$UserPayload<ExtArgs>
       status: Prisma.$StatusTravelRequestPayload<ExtArgs>
       approver: Prisma.$UserPayload<ExtArgs> | null
-      card: Prisma.$CardPayload<ExtArgs> | null
+      card: Prisma.$CardPayload<ExtArgs>
       details: Prisma.$TravelDetailPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       userId: number
       statusId: number
-      cardId: number | null
+      cardId: number
       totalAmount: Prisma.Decimal
       travelReason: string
       travelObjectives: string
@@ -10787,7 +10787,7 @@ export namespace Prisma {
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     status<T extends StatusTravelRequestDefaultArgs<ExtArgs> = {}>(args?: Subset<T, StatusTravelRequestDefaultArgs<ExtArgs>>): Prisma__StatusTravelRequestClient<$Result.GetResult<Prisma.$StatusTravelRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     approver<T extends TravelRequest$approverArgs<ExtArgs> = {}>(args?: Subset<T, TravelRequest$approverArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    card<T extends TravelRequest$cardArgs<ExtArgs> = {}>(args?: Subset<T, TravelRequest$cardArgs<ExtArgs>>): Prisma__CardClient<$Result.GetResult<Prisma.$CardPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    card<T extends CardDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CardDefaultArgs<ExtArgs>>): Prisma__CardClient<$Result.GetResult<Prisma.$CardPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     details<T extends TravelRequest$detailsArgs<ExtArgs> = {}>(args?: Subset<T, TravelRequest$detailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TravelDetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -11192,25 +11192,6 @@ export namespace Prisma {
      */
     include?: UserInclude<ExtArgs> | null
     where?: UserWhereInput
-  }
-
-  /**
-   * TravelRequest.card
-   */
-  export type TravelRequest$cardArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Card
-     */
-    select?: CardSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Card
-     */
-    omit?: CardOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CardInclude<ExtArgs> | null
-    where?: CardWhereInput
   }
 
   /**
@@ -13014,7 +12995,7 @@ export namespace Prisma {
     id?: IntFilter<"TravelRequest"> | number
     userId?: IntFilter<"TravelRequest"> | number
     statusId?: IntFilter<"TravelRequest"> | number
-    cardId?: IntNullableFilter<"TravelRequest"> | number | null
+    cardId?: IntFilter<"TravelRequest"> | number
     totalAmount?: DecimalFilter<"TravelRequest"> | Decimal | DecimalJsLike | number | string
     travelReason?: StringFilter<"TravelRequest"> | string
     travelObjectives?: StringFilter<"TravelRequest"> | string
@@ -13029,7 +13010,7 @@ export namespace Prisma {
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     status?: XOR<StatusTravelRequestScalarRelationFilter, StatusTravelRequestWhereInput>
     approver?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
-    card?: XOR<CardNullableScalarRelationFilter, CardWhereInput> | null
+    card?: XOR<CardScalarRelationFilter, CardWhereInput>
     details?: TravelDetailListRelationFilter
   }
 
@@ -13037,7 +13018,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     statusId?: SortOrder
-    cardId?: SortOrderInput | SortOrder
+    cardId?: SortOrder
     totalAmount?: SortOrder
     travelReason?: SortOrder
     travelObjectives?: SortOrder
@@ -13064,7 +13045,7 @@ export namespace Prisma {
     NOT?: TravelRequestWhereInput | TravelRequestWhereInput[]
     userId?: IntFilter<"TravelRequest"> | number
     statusId?: IntFilter<"TravelRequest"> | number
-    cardId?: IntNullableFilter<"TravelRequest"> | number | null
+    cardId?: IntFilter<"TravelRequest"> | number
     totalAmount?: DecimalFilter<"TravelRequest"> | Decimal | DecimalJsLike | number | string
     travelReason?: StringFilter<"TravelRequest"> | string
     travelObjectives?: StringFilter<"TravelRequest"> | string
@@ -13079,7 +13060,7 @@ export namespace Prisma {
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     status?: XOR<StatusTravelRequestScalarRelationFilter, StatusTravelRequestWhereInput>
     approver?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
-    card?: XOR<CardNullableScalarRelationFilter, CardWhereInput> | null
+    card?: XOR<CardScalarRelationFilter, CardWhereInput>
     details?: TravelDetailListRelationFilter
   }, "id">
 
@@ -13087,7 +13068,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     statusId?: SortOrder
-    cardId?: SortOrderInput | SortOrder
+    cardId?: SortOrder
     totalAmount?: SortOrder
     travelReason?: SortOrder
     travelObjectives?: SortOrder
@@ -13113,7 +13094,7 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"TravelRequest"> | number
     userId?: IntWithAggregatesFilter<"TravelRequest"> | number
     statusId?: IntWithAggregatesFilter<"TravelRequest"> | number
-    cardId?: IntNullableWithAggregatesFilter<"TravelRequest"> | number | null
+    cardId?: IntWithAggregatesFilter<"TravelRequest"> | number
     totalAmount?: DecimalWithAggregatesFilter<"TravelRequest"> | Decimal | DecimalJsLike | number | string
     travelReason?: StringWithAggregatesFilter<"TravelRequest"> | string
     travelObjectives?: StringWithAggregatesFilter<"TravelRequest"> | string
@@ -13682,7 +13663,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutTravelRequestsInput
     status: StatusTravelRequestCreateNestedOneWithoutTravelRequestsInput
     approver?: UserCreateNestedOneWithoutApprovedTravelRequestsInput
-    card?: CardCreateNestedOneWithoutTravelRequestsInput
+    card: CardCreateNestedOneWithoutTravelRequestsInput
     details?: TravelDetailCreateNestedManyWithoutRequestInput
   }
 
@@ -13690,7 +13671,7 @@ export namespace Prisma {
     id?: number
     userId: number
     statusId: number
-    cardId?: number | null
+    cardId: number
     totalAmount: Decimal | DecimalJsLike | number | string
     travelReason: string
     travelObjectives: string
@@ -13719,7 +13700,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutTravelRequestsNestedInput
     status?: StatusTravelRequestUpdateOneRequiredWithoutTravelRequestsNestedInput
     approver?: UserUpdateOneWithoutApprovedTravelRequestsNestedInput
-    card?: CardUpdateOneWithoutTravelRequestsNestedInput
+    card?: CardUpdateOneRequiredWithoutTravelRequestsNestedInput
     details?: TravelDetailUpdateManyWithoutRequestNestedInput
   }
 
@@ -13727,7 +13708,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
     statusId?: IntFieldUpdateOperationsInput | number
-    cardId?: NullableIntFieldUpdateOperationsInput | number | null
+    cardId?: IntFieldUpdateOperationsInput | number
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     travelReason?: StringFieldUpdateOperationsInput | string
     travelObjectives?: StringFieldUpdateOperationsInput | string
@@ -13746,7 +13727,7 @@ export namespace Prisma {
     id?: number
     userId: number
     statusId: number
-    cardId?: number | null
+    cardId: number
     totalAmount: Decimal | DecimalJsLike | number | string
     travelReason: string
     travelObjectives: string
@@ -13777,7 +13758,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
     statusId?: IntFieldUpdateOperationsInput | number
-    cardId?: NullableIntFieldUpdateOperationsInput | number | null
+    cardId?: IntFieldUpdateOperationsInput | number
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     travelReason?: StringFieldUpdateOperationsInput | string
     travelObjectives?: StringFieldUpdateOperationsInput | string
@@ -14430,11 +14411,6 @@ export namespace Prisma {
   export type StatusTravelRequestScalarRelationFilter = {
     is?: StatusTravelRequestWhereInput
     isNot?: StatusTravelRequestWhereInput
-  }
-
-  export type CardNullableScalarRelationFilter = {
-    is?: CardWhereInput | null
-    isNot?: CardWhereInput | null
   }
 
   export type TravelDetailListRelationFilter = {
@@ -15385,12 +15361,10 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutApprovedTravelRequestsInput, UserUpdateWithoutApprovedTravelRequestsInput>, UserUncheckedUpdateWithoutApprovedTravelRequestsInput>
   }
 
-  export type CardUpdateOneWithoutTravelRequestsNestedInput = {
+  export type CardUpdateOneRequiredWithoutTravelRequestsNestedInput = {
     create?: XOR<CardCreateWithoutTravelRequestsInput, CardUncheckedCreateWithoutTravelRequestsInput>
     connectOrCreate?: CardCreateOrConnectWithoutTravelRequestsInput
     upsert?: CardUpsertWithoutTravelRequestsInput
-    disconnect?: CardWhereInput | boolean
-    delete?: CardWhereInput | boolean
     connect?: CardWhereUniqueInput
     update?: XOR<XOR<CardUpdateToOneWithWhereWithoutTravelRequestsInput, CardUpdateWithoutTravelRequestsInput>, CardUncheckedUpdateWithoutTravelRequestsInput>
   }
@@ -16312,14 +16286,14 @@ export namespace Prisma {
     updatedAt?: Date | string
     status: StatusTravelRequestCreateNestedOneWithoutTravelRequestsInput
     approver?: UserCreateNestedOneWithoutApprovedTravelRequestsInput
-    card?: CardCreateNestedOneWithoutTravelRequestsInput
+    card: CardCreateNestedOneWithoutTravelRequestsInput
     details?: TravelDetailCreateNestedManyWithoutRequestInput
   }
 
   export type TravelRequestUncheckedCreateWithoutUserInput = {
     id?: number
     statusId: number
-    cardId?: number | null
+    cardId: number
     totalAmount: Decimal | DecimalJsLike | number | string
     travelReason: string
     travelObjectives: string
@@ -16357,7 +16331,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutTravelRequestsInput
     status: StatusTravelRequestCreateNestedOneWithoutTravelRequestsInput
-    card?: CardCreateNestedOneWithoutTravelRequestsInput
+    card: CardCreateNestedOneWithoutTravelRequestsInput
     details?: TravelDetailCreateNestedManyWithoutRequestInput
   }
 
@@ -16365,7 +16339,7 @@ export namespace Prisma {
     id?: number
     userId: number
     statusId: number
-    cardId?: number | null
+    cardId: number
     totalAmount: Decimal | DecimalJsLike | number | string
     travelReason: string
     travelObjectives: string
@@ -16607,7 +16581,7 @@ export namespace Prisma {
     id?: IntFilter<"TravelRequest"> | number
     userId?: IntFilter<"TravelRequest"> | number
     statusId?: IntFilter<"TravelRequest"> | number
-    cardId?: IntNullableFilter<"TravelRequest"> | number | null
+    cardId?: IntFilter<"TravelRequest"> | number
     totalAmount?: DecimalFilter<"TravelRequest"> | Decimal | DecimalJsLike | number | string
     travelReason?: StringFilter<"TravelRequest"> | string
     travelObjectives?: StringFilter<"TravelRequest"> | string
@@ -16944,14 +16918,14 @@ export namespace Prisma {
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutTravelRequestsInput
     approver?: UserCreateNestedOneWithoutApprovedTravelRequestsInput
-    card?: CardCreateNestedOneWithoutTravelRequestsInput
+    card: CardCreateNestedOneWithoutTravelRequestsInput
     details?: TravelDetailCreateNestedManyWithoutRequestInput
   }
 
   export type TravelRequestUncheckedCreateWithoutStatusInput = {
     id?: number
     userId: number
-    cardId?: number | null
+    cardId: number
     totalAmount: Decimal | DecimalJsLike | number | string
     travelReason: string
     travelObjectives: string
@@ -17325,14 +17299,14 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutTravelRequestsInput
     status: StatusTravelRequestCreateNestedOneWithoutTravelRequestsInput
     approver?: UserCreateNestedOneWithoutApprovedTravelRequestsInput
-    card?: CardCreateNestedOneWithoutTravelRequestsInput
+    card: CardCreateNestedOneWithoutTravelRequestsInput
   }
 
   export type TravelRequestUncheckedCreateWithoutDetailsInput = {
     id?: number
     userId: number
     statusId: number
-    cardId?: number | null
+    cardId: number
     totalAmount: Decimal | DecimalJsLike | number | string
     travelReason: string
     travelObjectives: string
@@ -17376,14 +17350,14 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutTravelRequestsNestedInput
     status?: StatusTravelRequestUpdateOneRequiredWithoutTravelRequestsNestedInput
     approver?: UserUpdateOneWithoutApprovedTravelRequestsNestedInput
-    card?: CardUpdateOneWithoutTravelRequestsNestedInput
+    card?: CardUpdateOneRequiredWithoutTravelRequestsNestedInput
   }
 
   export type TravelRequestUncheckedUpdateWithoutDetailsInput = {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
     statusId?: IntFieldUpdateOperationsInput | number
-    cardId?: NullableIntFieldUpdateOperationsInput | number | null
+    cardId?: IntFieldUpdateOperationsInput | number
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     travelReason?: StringFieldUpdateOperationsInput | string
     travelObjectives?: StringFieldUpdateOperationsInput | string
@@ -17767,7 +17741,7 @@ export namespace Prisma {
   export type TravelRequestCreateManyUserInput = {
     id?: number
     statusId: number
-    cardId?: number | null
+    cardId: number
     totalAmount: Decimal | DecimalJsLike | number | string
     travelReason: string
     travelObjectives: string
@@ -17785,7 +17759,7 @@ export namespace Prisma {
     id?: number
     userId: number
     statusId: number
-    cardId?: number | null
+    cardId: number
     totalAmount: Decimal | DecimalJsLike | number | string
     travelReason: string
     travelObjectives: string
@@ -17886,14 +17860,14 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StatusTravelRequestUpdateOneRequiredWithoutTravelRequestsNestedInput
     approver?: UserUpdateOneWithoutApprovedTravelRequestsNestedInput
-    card?: CardUpdateOneWithoutTravelRequestsNestedInput
+    card?: CardUpdateOneRequiredWithoutTravelRequestsNestedInput
     details?: TravelDetailUpdateManyWithoutRequestNestedInput
   }
 
   export type TravelRequestUncheckedUpdateWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
     statusId?: IntFieldUpdateOperationsInput | number
-    cardId?: NullableIntFieldUpdateOperationsInput | number | null
+    cardId?: IntFieldUpdateOperationsInput | number
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     travelReason?: StringFieldUpdateOperationsInput | string
     travelObjectives?: StringFieldUpdateOperationsInput | string
@@ -17911,7 +17885,7 @@ export namespace Prisma {
   export type TravelRequestUncheckedUpdateManyWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
     statusId?: IntFieldUpdateOperationsInput | number
-    cardId?: NullableIntFieldUpdateOperationsInput | number | null
+    cardId?: IntFieldUpdateOperationsInput | number
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     travelReason?: StringFieldUpdateOperationsInput | string
     travelObjectives?: StringFieldUpdateOperationsInput | string
@@ -17938,7 +17912,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutTravelRequestsNestedInput
     status?: StatusTravelRequestUpdateOneRequiredWithoutTravelRequestsNestedInput
-    card?: CardUpdateOneWithoutTravelRequestsNestedInput
+    card?: CardUpdateOneRequiredWithoutTravelRequestsNestedInput
     details?: TravelDetailUpdateManyWithoutRequestNestedInput
   }
 
@@ -17946,7 +17920,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
     statusId?: IntFieldUpdateOperationsInput | number
-    cardId?: NullableIntFieldUpdateOperationsInput | number | null
+    cardId?: IntFieldUpdateOperationsInput | number
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     travelReason?: StringFieldUpdateOperationsInput | string
     travelObjectives?: StringFieldUpdateOperationsInput | string
@@ -17964,7 +17938,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
     statusId?: IntFieldUpdateOperationsInput | number
-    cardId?: NullableIntFieldUpdateOperationsInput | number | null
+    cardId?: IntFieldUpdateOperationsInput | number
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     travelReason?: StringFieldUpdateOperationsInput | string
     travelObjectives?: StringFieldUpdateOperationsInput | string
@@ -18076,7 +18050,7 @@ export namespace Prisma {
   export type TravelRequestCreateManyStatusInput = {
     id?: number
     userId: number
-    cardId?: number | null
+    cardId: number
     totalAmount: Decimal | DecimalJsLike | number | string
     travelReason: string
     travelObjectives: string
@@ -18103,14 +18077,14 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutTravelRequestsNestedInput
     approver?: UserUpdateOneWithoutApprovedTravelRequestsNestedInput
-    card?: CardUpdateOneWithoutTravelRequestsNestedInput
+    card?: CardUpdateOneRequiredWithoutTravelRequestsNestedInput
     details?: TravelDetailUpdateManyWithoutRequestNestedInput
   }
 
   export type TravelRequestUncheckedUpdateWithoutStatusInput = {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
-    cardId?: NullableIntFieldUpdateOperationsInput | number | null
+    cardId?: IntFieldUpdateOperationsInput | number
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     travelReason?: StringFieldUpdateOperationsInput | string
     travelObjectives?: StringFieldUpdateOperationsInput | string
@@ -18128,7 +18102,7 @@ export namespace Prisma {
   export type TravelRequestUncheckedUpdateManyWithoutStatusInput = {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
-    cardId?: NullableIntFieldUpdateOperationsInput | number | null
+    cardId?: IntFieldUpdateOperationsInput | number
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     travelReason?: StringFieldUpdateOperationsInput | string
     travelObjectives?: StringFieldUpdateOperationsInput | string

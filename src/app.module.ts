@@ -6,6 +6,7 @@ import { CompaniesModule } from './companies/companies.module';
 import { BranchesModule } from './branches/branches.module';
 import { AreaModule } from './area/area.module';
 import { TravelCardManagementModule } from './travel-card-management/travel-card-management.module';
+import { TravelRequestModule } from './travel-request/travel-request.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { TravelCardManagementModule } from './travel-card-management/travel-card
     BranchesModule,
     AreaModule,
     TravelCardManagementModule,
+    TravelRequestModule,
   ],
 
   controllers: [],

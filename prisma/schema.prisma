@@ -120,7 +120,7 @@ model TravelRequest {
   id               Int      @id @default(autoincrement())
   userId           Int
   statusId         Int
-  cardId           Int?
+  cardId           Int
   totalAmount      Decimal  @db.Decimal(10, 2)
   travelReason     String   @db.VarChar(255)
   travelObjectives String   @db.VarChar(255)
@@ -136,7 +136,7 @@ model TravelRequest {
   user     User                @relation("UserRequests", fields: [userId], references: [id])
   status   StatusTravelRequest @relation(fields: [statusId], references: [id])
   approver User?               @relation("UserApprovals", fields: [approverId], references: [id])
-  card     Card?               @relation(fields: [cardId], references: [id])
+  card     Card                @relation(fields: [cardId], references: [id])
 
   details TravelDetail[]
 

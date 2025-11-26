@@ -7,4 +7,3 @@ export interface CompanyRepository {
   findAll(): Promise<CompanySeedInput[]>;
   upsertMany(input: CompanySeedInput[]): Promise<void>;
 }
-

@@ -23,4 +23,3 @@ export class PrismaAreaRepository implements AreaRepository {
     }
   }
 }
-

@@ -9,11 +9,7 @@ export class GetCardsByCompanyIdUseCase {
     @Inject('CardRepository') private readonly cardRepo: CardRepository,
   ) {}
 
-  async execute(
-    companyId: number,
-    input?: PaginationInput,
-  ): Promise<Card[]> {
+  async execute(companyId: number, input?: PaginationInput): Promise<Card[]> {
     return this.cardRepo.findByCompanyId(companyId, input);
   }
 }
-

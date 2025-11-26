@@ -63,6 +63,6 @@ export interface CreateTravelRequestInput {
   details: CreateTravelDetailInput[];
 }
 export interface TravelRequestRepository {
-  findAll(input?: PaginationInput): Promise<TravelRequest[]>;
+  findAll(input: PaginationInput): Promise<TravelRequest[]>;
   create(input: CreateTravelRequestInput): Promise<TravelRequest>;
 }

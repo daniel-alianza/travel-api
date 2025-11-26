@@ -17,4 +17,3 @@ export class BulkAssignmentsQueryDto extends PaginationDto {
   @IsNumber({}, { each: true })
   userIds: number[];
 }
-

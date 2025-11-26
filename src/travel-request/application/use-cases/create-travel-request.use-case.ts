@@ -4,10 +4,7 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import type { TravelRequestRepository } from '../interfaces/travel-request.repository';
-import {
-  CreateTravelRequestInput,
-  TravelRequest,
-} from '../interfaces';
+import { CreateTravelRequestInput, TravelRequest } from '../interfaces';
 
 @Injectable()
 export class CreateTravelRequestUseCase {
@@ -19,11 +16,12 @@ export class CreateTravelRequestUseCase {
   async execute(input: CreateTravelRequestInput): Promise<TravelRequest> {
     try {
       return await this.travelRequestRepo.create(input);
-    } catch (error: any) {
-      throw new InternalServerErrorException(
-        error.message || 'Error al crear la solicitud de viaje',
-      );
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : 'Error al crear la solicitud de viaje';
+      throw new InternalServerErrorException(message);
     }
   }
 }
-

@@ -46,4 +46,3 @@ export class PowerAutomateEmailAdapter implements EmailProviderPort {
     }
   }
 }
-

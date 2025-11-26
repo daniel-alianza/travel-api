@@ -1,7 +1,4 @@
-import {
-  IsNumber,
-  Min,
-} from 'class-validator';
+import { IsNumber, Min } from 'class-validator';
 
 export class AssignCardDto {
   @IsNumber()
@@ -12,4 +9,3 @@ export class AssignCardDto {
   @Min(1)
   userId: number;
 }
-

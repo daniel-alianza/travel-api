@@ -33,4 +33,3 @@ export class SendTreasurerTeamsNotificationUseCase {
     return this.sendTeamsNotificationUseCase.execute(message);
   }
 }
-

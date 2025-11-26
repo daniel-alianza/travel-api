@@ -6,4 +6,3 @@ export interface JwtAuthPort {
   signRefreshToken(payload: JwtPayload): Promise<string>;
   verifyRefreshToken(token: string): Promise<JwtPayload>;
 }
-

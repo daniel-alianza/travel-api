@@ -33,4 +33,3 @@ export class SendSentTeamsNotificationUseCase {
     return this.sendTeamsNotificationUseCase.execute(message);
   }
 }
-

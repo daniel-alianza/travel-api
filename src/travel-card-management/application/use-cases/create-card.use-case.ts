@@ -23,11 +23,10 @@ export class CreateCardUseCase {
 
     try {
       return await this.cardRepo.create(input);
-    } catch (error: any) {
-      throw new InternalServerErrorException(
-        error.message || 'Error al crear la tarjeta',
-      );
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : 'Error al crear la tarjeta';
+      throw new InternalServerErrorException(message);
     }
   }
 }
-

@@ -14,8 +14,6 @@ async function bootstrap() {
   });
 
   const app = await NestFactory.create(AppModule);
-
-  // Configurar cookie-parser antes de otras configuraciones
   app.use(cookieParser());
 
   app.useGlobalPipes(

@@ -13,4 +13,3 @@ export interface TemplateRendererPort {
     context: Record<string, unknown>,
   ): Promise<string>;
 }
-

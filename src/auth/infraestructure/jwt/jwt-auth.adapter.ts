@@ -1,9 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from 'fg-portal-auth';
-import {
-  JwtAuthPort,
-} from '../../application/interfaces/jwt-auth.port';
+import { JwtAuthPort } from '../../application/interfaces/jwt-auth.port';
 
 @Injectable()
 export class JwtAuthAdapter implements JwtAuthPort {
@@ -25,4 +23,3 @@ export class JwtAuthAdapter implements JwtAuthPort {
     return this.jwt.verifyAsync(token);
   }
 }
-

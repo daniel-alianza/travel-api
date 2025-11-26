@@ -9,16 +9,10 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import {
-  CreateTravelRequestInput,
-  PaginationInput,
-} from '../application/interfaces';
+import { CreateTravelRequestInput } from '../application/interfaces';
 import { GetAllTravelRequestsUseCase } from '../application/use-cases/get-all-travel-requests.use-case';
 import { CreateTravelRequestUseCase } from '../application/use-cases/create-travel-request.use-case';
-import {
-  CreateTravelRequestDto,
-  PaginationDto,
-} from './dtos';
+import { CreateTravelRequestDto, PaginationDto } from './dtos';
 
 @Controller('travel-requests')
 export class TravelRequestController {
@@ -30,8 +24,7 @@ export class TravelRequestController {
   @Get()
   @UseGuards(AuthGuard('jwt'))
   async getAll(@Query() dto: PaginationDto) {
-    const input: PaginationInput = { ...dto };
-    const travelRequests = await this.getAllTravelRequests.execute(input);
+    const travelRequests = await this.getAllTravelRequests.execute(dto);
 
     return {
       data: travelRequests,

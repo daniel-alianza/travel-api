@@ -6,12 +6,8 @@ import type { TemplateRendererPort } from '../../../domain/ports/template-render
 import type { EmailTemplate } from '../../../domain/ports/template-renderer.port';
 
 @Injectable()
-export class HandlebarsTemplateRendererAdapter
-  implements TemplateRendererPort
-{
-  private readonly logger = new Logger(
-    HandlebarsTemplateRendererAdapter.name,
-  );
+export class HandlebarsTemplateRendererAdapter implements TemplateRendererPort {
+  private readonly logger = new Logger(HandlebarsTemplateRendererAdapter.name);
   private readonly templates: Map<EmailTemplate, HandlebarsTemplateDelegate>;
 
   constructor() {
@@ -69,10 +65,7 @@ export class HandlebarsTemplateRendererAdapter
         const templatePath = path.join(templatesPath, fileName);
         const templateContent = fs.readFileSync(templatePath, 'utf-8');
         const compiledTemplate = Handlebars.compile(templateContent);
-        this.templates.set(
-          templateName as EmailTemplate,
-          compiledTemplate,
-        );
+        this.templates.set(templateName as EmailTemplate, compiledTemplate);
         this.logger.debug(`Template cargado: ${templateName}`);
       } catch (error: unknown) {
         const errorMessage =
@@ -84,7 +77,7 @@ export class HandlebarsTemplateRendererAdapter
     }
   }
 
-  async render(
+  render(
     templateName: EmailTemplate,
     context: Record<string, unknown>,
   ): Promise<string> {
@@ -96,7 +89,7 @@ export class HandlebarsTemplateRendererAdapter
     }
 
     try {
-      return template(context);
+      return Promise.resolve(template(context));
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error ? error.message : 'Error desconocido';
@@ -107,4 +100,3 @@ export class HandlebarsTemplateRendererAdapter
     }
   }
 }
-

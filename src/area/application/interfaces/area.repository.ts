@@ -7,4 +7,3 @@ export interface AreaRepository {
   findAll(): Promise<AreaSeedInput[]>;
   upsertMany(input: AreaSeedInput[]): Promise<void>;
 }
-

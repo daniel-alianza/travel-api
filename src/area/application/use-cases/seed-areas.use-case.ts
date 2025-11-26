@@ -32,4 +32,3 @@ export class SeedAreasUseCase {
     await this.areaRepo.upsertMany(areas);
   }
 }
-

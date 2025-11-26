@@ -25,4 +25,3 @@ export class UpdateUserUseCase {
     return this.userRepo.update(id, updateData);
   }
 }
-

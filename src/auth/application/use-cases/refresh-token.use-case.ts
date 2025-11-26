@@ -30,7 +30,9 @@ export class RefreshTokenUseCase {
         await this.userRepo.findUserWithAppPermissions(userId);
 
       if (!userWithPermissions) {
-        throw new UnauthorizedException('Error al obtener permisos del usuario');
+        throw new UnauthorizedException(
+          'Error al obtener permisos del usuario',
+        );
       }
 
       const newPayload: JwtPayload = {
@@ -52,4 +54,3 @@ export class RefreshTokenUseCase {
     }
   }
 }
-

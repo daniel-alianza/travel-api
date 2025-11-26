@@ -13,4 +13,3 @@ export class GetAllCardsUseCase {
     return this.cardRepo.findAll(input);
   }
 }
-

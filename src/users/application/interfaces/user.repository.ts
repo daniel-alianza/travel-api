@@ -67,4 +67,3 @@ export interface UserRepository {
   deleteById(id: number): Promise<void>;
   existsByEmail(email: string): Promise<boolean>;
 }
-

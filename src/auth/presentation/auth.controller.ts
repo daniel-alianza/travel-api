@@ -55,13 +55,17 @@ export class AuthController {
   async refreshJwtToken(@Req() req: Request, @Res() res: Response) {
     // Debug: verificar cookies recibidas
     const allCookies = req.cookies || {};
-    const refreshToken = allCookies.refreshToken || '';
+    const refreshToken: string =
+      typeof allCookies.refreshToken === 'string'
+        ? allCookies.refreshToken
+        : '';
 
     if (!refreshToken) {
       throw new UnauthorizedException('No hay refresh token');
     }
 
-    const { accessToken } = await this.refreshTokenUseCase.execute(refreshToken);
+    const { accessToken } =
+      await this.refreshTokenUseCase.execute(refreshToken);
     const isProd = process.env.NODE_ENV === 'production';
 
     // Actualizar la cookie del access_token también
@@ -82,7 +86,7 @@ export class AuthController {
 
   @Post('logout')
   @HttpCode(HttpStatus.OK)
-  async logout(@Res() res: Response) {
+  logout(@Res() res: Response) {
     const isProd = process.env.NODE_ENV === 'production';
     res.clearCookie('access_token', {
       httpOnly: true,

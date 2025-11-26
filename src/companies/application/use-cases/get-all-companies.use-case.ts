@@ -13,4 +13,3 @@ export class GetAllCompaniesUseCase {
     return this.companyRepo.findAll();
   }
 }
-

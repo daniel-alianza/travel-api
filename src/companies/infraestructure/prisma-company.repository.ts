@@ -23,4 +23,3 @@ export class PrismaCompanyRepository implements CompanyRepository {
     }
   }
 }
-

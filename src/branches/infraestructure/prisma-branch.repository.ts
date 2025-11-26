@@ -30,4 +30,3 @@ export class PrismaBranchRepository implements BranchRepository {
     }
   }
 }
-

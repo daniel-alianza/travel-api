@@ -14,4 +14,3 @@ export class PaginationDto {
   @Min(0)
   offset?: number;
 }
-

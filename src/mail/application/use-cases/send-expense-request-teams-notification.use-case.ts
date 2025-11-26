@@ -35,4 +35,3 @@ export class SendExpenseRequestTeamsNotificationUseCase {
     return this.sendTeamsNotificationUseCase.execute(message);
   }
 }
-

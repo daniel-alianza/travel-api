@@ -20,4 +20,3 @@ import { GetAllAreasUseCase } from './application/use-cases/get-all-areas.use-ca
   exports: [SeedAreasUseCase],
 })
 export class AreaModule {}
-

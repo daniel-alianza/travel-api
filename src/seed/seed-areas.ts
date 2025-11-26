@@ -14,4 +14,3 @@ bootstrap().catch((err) => {
   console.error('❌ Error al ejecutar el seeder:', err);
   process.exit(1);
 });
-

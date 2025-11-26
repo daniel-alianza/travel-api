@@ -45,4 +45,3 @@ export interface CardRepository {
     input?: PaginationInput,
   ): Promise<CardAssignment[]>;
 }
-

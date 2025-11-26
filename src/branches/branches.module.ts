@@ -20,4 +20,3 @@ import { GetAllBranchesUseCase } from './application/use-cases/get-all-branches.
   exports: [SeedBranchesUseCase],
 })
 export class BranchesModule {}
-

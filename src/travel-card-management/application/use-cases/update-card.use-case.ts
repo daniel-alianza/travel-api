@@ -32,11 +32,12 @@ export class UpdateCardUseCase {
 
     try {
       return await this.cardRepo.update(id, input);
-    } catch (error: any) {
-      throw new InternalServerErrorException(
-        error.message || 'Error al actualizar la tarjeta',
-      );
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : 'Error al actualizar la tarjeta';
+      throw new InternalServerErrorException(message);
     }
   }
 }
-

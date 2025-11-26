@@ -9,4 +9,3 @@ export interface Card {
   };
   createdAt: Date;
 }
-

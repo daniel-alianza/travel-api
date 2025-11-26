@@ -28,11 +28,10 @@ export class CreateUserUseCase {
         ...input,
         password: hashedPassword,
       });
-    } catch (error: any) {
-      throw new InternalServerErrorException(
-        error.message || 'Error al crear el usuario',
-      );
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : 'Error al crear el usuario';
+      throw new InternalServerErrorException(message);
     }
   }
 }
-

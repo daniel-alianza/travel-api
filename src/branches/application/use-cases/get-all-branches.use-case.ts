@@ -12,4 +12,3 @@ export class GetAllBranchesUseCase {
     return this.branchRepo.findAll();
   }
 }
-

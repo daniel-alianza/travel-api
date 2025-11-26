@@ -20,33 +20,22 @@ export class TeamsNotificationAdapter implements NotificationProviderPort {
     }
   }
 
-  async sendNotification(
-    message: TeamsNotificationMessage,
-  ): Promise<boolean> {
+  async sendNotification(message: TeamsNotificationMessage): Promise<boolean> {
     try {
-      this.logger.debug(
-        `Enviando notificación Teams - Tipo: ${message.type}`,
-      );
+      this.logger.debug(`Enviando notificación Teams - Tipo: ${message.type}`);
 
-      await axios.post(
-        this.powerAutomateTeamsUrl,
-        message.toPlainObject(),
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
+      await axios.post(this.powerAutomateTeamsUrl, message.toPlainObject(), {
+        headers: {
+          'Content-Type': 'application/json',
         },
-      );
+      });
 
       return true;
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error ? error.message : 'Error desconocido';
-      this.logger.error(
-        `Error al enviar notificación Teams: ${errorMessage}`,
-      );
+      this.logger.error(`Error al enviar notificación Teams: ${errorMessage}`);
       return false;
     }
   }
 }
-

@@ -14,4 +14,3 @@ export interface CardAssignment {
     email: string;
   };
 }
-

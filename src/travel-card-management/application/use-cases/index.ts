@@ -7,4 +7,3 @@ export * from './unassign-card.use-case';
 export * from './get-assignments-by-card-id.use-case';
 export * from './get-assignments-by-user-id.use-case';
 export * from './get-cards-by-company-id.use-case';
-

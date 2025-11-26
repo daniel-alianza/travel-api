@@ -20,4 +20,3 @@ import { GetAllCompaniesUseCase } from './application/use-cases/get-all-companie
   exports: [SeedCompaniesUseCase],
 })
 export class CompaniesModule {}
-

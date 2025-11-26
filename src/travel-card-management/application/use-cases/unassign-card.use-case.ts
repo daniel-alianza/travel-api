@@ -13,9 +13,8 @@ export class UnassignCardUseCase {
   ) {}
 
   async execute(cardId: number, userId: number): Promise<void> {
-    const activeAssignment = await this.cardRepo.getActiveAssignmentByCardId(
-      cardId,
-    );
+    const activeAssignment =
+      await this.cardRepo.getActiveAssignmentByCardId(cardId);
 
     if (!activeAssignment) {
       throw new NotFoundException(
@@ -31,11 +30,12 @@ export class UnassignCardUseCase {
 
     try {
       await this.cardRepo.unassignCard(cardId, userId);
-    } catch (error: any) {
-      throw new InternalServerErrorException(
-        error.message || 'Error al desasignar la tarjeta',
-      );
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : 'Error al desasignar la tarjeta';
+      throw new InternalServerErrorException(message);
     }
   }
 }
-

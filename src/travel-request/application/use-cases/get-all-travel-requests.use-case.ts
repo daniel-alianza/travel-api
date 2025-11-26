@@ -9,7 +9,14 @@ export class GetAllTravelRequestsUseCase {
     private readonly travelRequestRepo: TravelRequestRepository,
   ) {}
 
-  async execute(input?: PaginationInput): Promise<TravelRequest[]> {
-    return this.travelRequestRepo.findAll(input);
+  async execute(input?: Partial<PaginationInput>): Promise<TravelRequest[]> {
+    const paginationInput: PaginationInput = {
+      limit: input?.limit ?? 20,
+      offset: input?.offset ?? 0,
+      statusId: input?.statusId,
+      userId: input?.userId,
+    };
+
+    return this.travelRequestRepo.findAll(paginationInput);
   }
 }

@@ -4,7 +4,7 @@ export function maskCardNumber(cardNumber: string): string {
   }
 
   const trimmed = cardNumber.trim();
-  
+
   if (trimmed.length <= 4) {
     return trimmed;
   }
@@ -15,4 +15,3 @@ export function maskCardNumber(cardNumber: string): string {
 
   return masked + lastFour;
 }
-

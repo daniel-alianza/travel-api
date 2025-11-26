@@ -6,4 +6,3 @@ export { SendRejectionTeamsNotificationUseCase } from './send-rejection-teams-no
 export { SendDispersalTeamsNotificationUseCase } from './send-dispersal-teams-notification.use-case';
 export { SendTreasurerTeamsNotificationUseCase } from './send-treasurer-teams-notification.use-case';
 export { SendSentTeamsNotificationUseCase } from './send-sent-teams-notification.use-case';
-

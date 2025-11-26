@@ -15,4 +15,3 @@ export class DeleteUserByIdUseCase {
     await this.userRepo.deleteById(id);
   }
 }
-

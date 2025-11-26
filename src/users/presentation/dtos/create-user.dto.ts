@@ -51,4 +51,3 @@ export class CreateUserDto {
   @Min(1)
   supervisorId?: number;
 }
-

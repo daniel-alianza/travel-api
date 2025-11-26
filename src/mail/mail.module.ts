@@ -53,4 +53,3 @@ import { SendSentTeamsNotificationUseCase } from './application/use-cases/send-s
   ],
 })
 export class MailModule {}
-

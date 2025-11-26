@@ -3,7 +3,6 @@ import {
   IsString,
   IsNotEmpty,
   IsDateString,
-  IsOptional,
   Min,
   IsArray,
   ValidateNested,
@@ -47,4 +46,3 @@ export class CreateTravelRequestDto {
   @Type(() => CreateTravelDetailDto)
   details: CreateTravelDetailDto[];
 }
-

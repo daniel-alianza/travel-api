@@ -7,4 +7,3 @@ export type {
   SendTreasurerTeamsNotificationInput,
   SendSentTeamsNotificationInput,
 } from './teams-notification-options.interface';
-

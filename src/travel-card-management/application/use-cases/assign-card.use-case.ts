@@ -33,9 +33,7 @@ export class AssignCardUseCase {
     );
 
     if (activeAssignment) {
-      throw new ConflictException(
-        'La tarjeta ya está asignada a otro usuario',
-      );
+      throw new ConflictException('La tarjeta ya está asignada a otro usuario');
     }
 
     const activeAssignmentsCount =
@@ -49,11 +47,10 @@ export class AssignCardUseCase {
 
     try {
       return await this.cardRepo.assignCard(input);
-    } catch (error: any) {
-      throw new InternalServerErrorException(
-        error.message || 'Error al asignar la tarjeta',
-      );
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Error al asignar la tarjeta';
+      throw new InternalServerErrorException(errorMessage);
     }
   }
 }
-

@@ -1,8 +1,4 @@
-import {
-  Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import type { CardRepository } from '../interfaces/card.repository';
 import { Card } from '../../domain/entities/card.entity';
 
@@ -22,4 +18,3 @@ export class GetCardByIdUseCase {
     return card;
   }
 }
-

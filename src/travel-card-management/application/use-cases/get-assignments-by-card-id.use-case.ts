@@ -16,4 +16,3 @@ export class GetAssignmentsByCardIdUseCase {
     return this.cardRepo.getAssignmentsByCardId(cardId, input);
   }
 }
-

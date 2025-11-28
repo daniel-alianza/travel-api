@@ -22,8 +22,11 @@ export class UpdateCardUseCase {
       throw new NotFoundException(`Tarjeta con ID ${id} no encontrada`);
     }
 
-    if (input.cardNumber && input.cardNumber !== card.cardNumber) {
-      const exists = await this.cardRepo.existsByCardNumber(input.cardNumber);
+    if (input.cardNumber) {
+      const exists = await this.cardRepo.existsByCardNumber(
+        input.cardNumber,
+        id,
+      );
 
       if (exists) {
         throw new ConflictException('El número de tarjeta ya está registrado');

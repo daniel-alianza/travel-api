@@ -200,6 +200,7 @@ exports.Prisma.TravelRequestScalarFieldEnum = {
   disbursementDate: 'disbursementDate',
   approvalDate: 'approvalDate',
   approverId: 'approverId',
+  disburserId: 'disburserId',
   comment: 'comment',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

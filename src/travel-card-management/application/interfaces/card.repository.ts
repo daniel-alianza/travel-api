@@ -26,7 +26,7 @@ export interface CardRepository {
   findByCompanyId(companyId: number, input?: PaginationInput): Promise<Card[]>;
   create(input: CreateCardInput): Promise<Card>;
   update(id: number, input: UpdateCardInput): Promise<Card>;
-  existsByCardNumber(cardNumber: string): Promise<boolean>;
+  existsByCardNumber(cardNumber: string, excludeId?: number): Promise<boolean>;
   assignCard(input: AssignCardInput): Promise<CardAssignment>;
   unassignCard(cardId: number, userId: number): Promise<void>;
   getActiveAssignmentByCardId(cardId: number): Promise<CardAssignment | null>;

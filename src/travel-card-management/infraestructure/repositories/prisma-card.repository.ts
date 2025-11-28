@@ -9,7 +9,10 @@ import {
 import { Card } from '../../domain/entities/card.entity';
 import { CardAssignment } from '../../domain/entities/card-assignment.entity';
 import { PaginationInput } from '../../application/interfaces/pagination.input';
-import { maskCardNumber } from '../utils/mask-card-number.util';
+import {
+  maskCardNumber,
+  normalizeCardNumber,
+} from '../utils/mask-card-number.util';
 
 @Injectable()
 export class PrismaCardRepository implements CardRepository {
@@ -66,8 +69,9 @@ export class PrismaCardRepository implements CardRepository {
   }
 
   async findByCardNumber(cardNumber: string): Promise<Card | null> {
+    const normalizedCardNumber = normalizeCardNumber(cardNumber);
     const card = await this.prisma.card.findUnique({
-      where: { cardNumber },
+      where: { cardNumber: normalizedCardNumber },
       include: {
         company: true,
       },
@@ -120,9 +124,10 @@ export class PrismaCardRepository implements CardRepository {
   }
 
   async create(input: CreateCardInput): Promise<Card> {
+    const normalizedCardNumber = normalizeCardNumber(input.cardNumber);
     const created = await this.prisma.card.create({
       data: {
-        cardNumber: input.cardNumber,
+        cardNumber: normalizedCardNumber,
         companyId: input.companyId,
         isActive: true,
       },
@@ -151,7 +156,7 @@ export class PrismaCardRepository implements CardRepository {
     } = {};
 
     if (input.cardNumber !== undefined) {
-      updateData.cardNumber = input.cardNumber;
+      updateData.cardNumber = normalizeCardNumber(input.cardNumber);
     }
     if (input.isActive !== undefined) {
       updateData.isActive = input.isActive;
@@ -178,10 +183,18 @@ export class PrismaCardRepository implements CardRepository {
     };
   }
 
-  async existsByCardNumber(cardNumber: string): Promise<boolean> {
-    const count = await this.prisma.card.count({
-      where: { cardNumber },
-    });
+  async existsByCardNumber(
+    cardNumber: string,
+    excludeId?: number,
+  ): Promise<boolean> {
+    const normalizedCardNumber = normalizeCardNumber(cardNumber);
+    const where: { cardNumber: string; id?: { not: number } } = {
+      cardNumber: normalizedCardNumber,
+    };
+    if (excludeId !== undefined) {
+      where.id = { not: excludeId };
+    }
+    const count = await this.prisma.card.count({ where });
     return count > 0;
   }
 

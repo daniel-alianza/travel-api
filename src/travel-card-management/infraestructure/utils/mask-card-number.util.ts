@@ -15,3 +15,10 @@ export function maskCardNumber(cardNumber: string): string {
 
   return masked + lastFour;
 }
+
+export function normalizeCardNumber(cardNumber: string): string {
+  if (!cardNumber || typeof cardNumber !== 'string') {
+    return '';
+  }
+  return cardNumber.replace(/[-\s]/g, '');
+}

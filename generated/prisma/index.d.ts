@@ -1754,6 +1754,7 @@ export namespace Prisma {
     cards: number
     travelRequests: number
     approvedTravelRequests: number
+    disbursedTravelRequests: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1761,6 +1762,7 @@ export namespace Prisma {
     cards?: boolean | UserCountOutputTypeCountCardsArgs
     travelRequests?: boolean | UserCountOutputTypeCountTravelRequestsArgs
     approvedTravelRequests?: boolean | UserCountOutputTypeCountApprovedTravelRequestsArgs
+    disbursedTravelRequests?: boolean | UserCountOutputTypeCountDisbursedTravelRequestsArgs
   }
 
   // Custom InputTypes
@@ -1799,6 +1801,13 @@ export namespace Prisma {
    * UserCountOutputType without action
    */
   export type UserCountOutputTypeCountApprovedTravelRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TravelRequestWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountDisbursedTravelRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TravelRequestWhereInput
   }
 
@@ -6195,6 +6204,7 @@ export namespace Prisma {
     cards?: boolean | User$cardsArgs<ExtArgs>
     travelRequests?: boolean | User$travelRequestsArgs<ExtArgs>
     approvedTravelRequests?: boolean | User$approvedTravelRequestsArgs<ExtArgs>
+    disbursedTravelRequests?: boolean | User$disbursedTravelRequestsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -6228,6 +6238,7 @@ export namespace Prisma {
     cards?: boolean | User$cardsArgs<ExtArgs>
     travelRequests?: boolean | User$travelRequestsArgs<ExtArgs>
     approvedTravelRequests?: boolean | User$approvedTravelRequestsArgs<ExtArgs>
+    disbursedTravelRequests?: boolean | User$disbursedTravelRequestsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -6243,6 +6254,7 @@ export namespace Prisma {
       cards: Prisma.$CardAssignmentPayload<ExtArgs>[]
       travelRequests: Prisma.$TravelRequestPayload<ExtArgs>[]
       approvedTravelRequests: Prisma.$TravelRequestPayload<ExtArgs>[]
+      disbursedTravelRequests: Prisma.$TravelRequestPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -6608,6 +6620,7 @@ export namespace Prisma {
     cards<T extends User$cardsArgs<ExtArgs> = {}>(args?: Subset<T, User$cardsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CardAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     travelRequests<T extends User$travelRequestsArgs<ExtArgs> = {}>(args?: Subset<T, User$travelRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TravelRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     approvedTravelRequests<T extends User$approvedTravelRequestsArgs<ExtArgs> = {}>(args?: Subset<T, User$approvedTravelRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TravelRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    disbursedTravelRequests<T extends User$disbursedTravelRequestsArgs<ExtArgs> = {}>(args?: Subset<T, User$disbursedTravelRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TravelRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7088,6 +7101,30 @@ export namespace Prisma {
    * User.approvedTravelRequests
    */
   export type User$approvedTravelRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TravelRequest
+     */
+    select?: TravelRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TravelRequest
+     */
+    omit?: TravelRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TravelRequestInclude<ExtArgs> | null
+    where?: TravelRequestWhereInput
+    orderBy?: TravelRequestOrderByWithRelationInput | TravelRequestOrderByWithRelationInput[]
+    cursor?: TravelRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TravelRequestScalarFieldEnum | TravelRequestScalarFieldEnum[]
+  }
+
+  /**
+   * User.disbursedTravelRequests
+   */
+  export type User$disbursedTravelRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the TravelRequest
      */
@@ -10102,6 +10139,7 @@ export namespace Prisma {
     cardId: number | null
     totalAmount: Decimal | null
     approverId: number | null
+    disburserId: number | null
   }
 
   export type TravelRequestSumAggregateOutputType = {
@@ -10111,6 +10149,7 @@ export namespace Prisma {
     cardId: number | null
     totalAmount: Decimal | null
     approverId: number | null
+    disburserId: number | null
   }
 
   export type TravelRequestMinAggregateOutputType = {
@@ -10126,6 +10165,7 @@ export namespace Prisma {
     disbursementDate: Date | null
     approvalDate: Date | null
     approverId: number | null
+    disburserId: number | null
     comment: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -10144,6 +10184,7 @@ export namespace Prisma {
     disbursementDate: Date | null
     approvalDate: Date | null
     approverId: number | null
+    disburserId: number | null
     comment: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -10162,6 +10203,7 @@ export namespace Prisma {
     disbursementDate: number
     approvalDate: number
     approverId: number
+    disburserId: number
     comment: number
     createdAt: number
     updatedAt: number
@@ -10176,6 +10218,7 @@ export namespace Prisma {
     cardId?: true
     totalAmount?: true
     approverId?: true
+    disburserId?: true
   }
 
   export type TravelRequestSumAggregateInputType = {
@@ -10185,6 +10228,7 @@ export namespace Prisma {
     cardId?: true
     totalAmount?: true
     approverId?: true
+    disburserId?: true
   }
 
   export type TravelRequestMinAggregateInputType = {
@@ -10200,6 +10244,7 @@ export namespace Prisma {
     disbursementDate?: true
     approvalDate?: true
     approverId?: true
+    disburserId?: true
     comment?: true
     createdAt?: true
     updatedAt?: true
@@ -10218,6 +10263,7 @@ export namespace Prisma {
     disbursementDate?: true
     approvalDate?: true
     approverId?: true
+    disburserId?: true
     comment?: true
     createdAt?: true
     updatedAt?: true
@@ -10236,6 +10282,7 @@ export namespace Prisma {
     disbursementDate?: true
     approvalDate?: true
     approverId?: true
+    disburserId?: true
     comment?: true
     createdAt?: true
     updatedAt?: true
@@ -10341,6 +10388,7 @@ export namespace Prisma {
     disbursementDate: Date | null
     approvalDate: Date | null
     approverId: number | null
+    disburserId: number | null
     comment: string | null
     createdAt: Date
     updatedAt: Date
@@ -10378,12 +10426,14 @@ export namespace Prisma {
     disbursementDate?: boolean
     approvalDate?: boolean
     approverId?: boolean
+    disburserId?: boolean
     comment?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     status?: boolean | StatusTravelRequestDefaultArgs<ExtArgs>
     approver?: boolean | TravelRequest$approverArgs<ExtArgs>
+    disburser?: boolean | TravelRequest$disburserArgs<ExtArgs>
     card?: boolean | CardDefaultArgs<ExtArgs>
     details?: boolean | TravelRequest$detailsArgs<ExtArgs>
     _count?: boolean | TravelRequestCountOutputTypeDefaultArgs<ExtArgs>
@@ -10404,16 +10454,18 @@ export namespace Prisma {
     disbursementDate?: boolean
     approvalDate?: boolean
     approverId?: boolean
+    disburserId?: boolean
     comment?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type TravelRequestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "statusId" | "cardId" | "totalAmount" | "travelReason" | "travelObjectives" | "departureDate" | "returnDate" | "disbursementDate" | "approvalDate" | "approverId" | "comment" | "createdAt" | "updatedAt", ExtArgs["result"]["travelRequest"]>
+  export type TravelRequestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "statusId" | "cardId" | "totalAmount" | "travelReason" | "travelObjectives" | "departureDate" | "returnDate" | "disbursementDate" | "approvalDate" | "approverId" | "disburserId" | "comment" | "createdAt" | "updatedAt", ExtArgs["result"]["travelRequest"]>
   export type TravelRequestInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     status?: boolean | StatusTravelRequestDefaultArgs<ExtArgs>
     approver?: boolean | TravelRequest$approverArgs<ExtArgs>
+    disburser?: boolean | TravelRequest$disburserArgs<ExtArgs>
     card?: boolean | CardDefaultArgs<ExtArgs>
     details?: boolean | TravelRequest$detailsArgs<ExtArgs>
     _count?: boolean | TravelRequestCountOutputTypeDefaultArgs<ExtArgs>
@@ -10425,6 +10477,7 @@ export namespace Prisma {
       user: Prisma.$UserPayload<ExtArgs>
       status: Prisma.$StatusTravelRequestPayload<ExtArgs>
       approver: Prisma.$UserPayload<ExtArgs> | null
+      disburser: Prisma.$UserPayload<ExtArgs> | null
       card: Prisma.$CardPayload<ExtArgs>
       details: Prisma.$TravelDetailPayload<ExtArgs>[]
     }
@@ -10441,6 +10494,7 @@ export namespace Prisma {
       disbursementDate: Date | null
       approvalDate: Date | null
       approverId: number | null
+      disburserId: number | null
       comment: string | null
       createdAt: Date
       updatedAt: Date
@@ -10787,6 +10841,7 @@ export namespace Prisma {
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     status<T extends StatusTravelRequestDefaultArgs<ExtArgs> = {}>(args?: Subset<T, StatusTravelRequestDefaultArgs<ExtArgs>>): Prisma__StatusTravelRequestClient<$Result.GetResult<Prisma.$StatusTravelRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     approver<T extends TravelRequest$approverArgs<ExtArgs> = {}>(args?: Subset<T, TravelRequest$approverArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    disburser<T extends TravelRequest$disburserArgs<ExtArgs> = {}>(args?: Subset<T, TravelRequest$disburserArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     card<T extends CardDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CardDefaultArgs<ExtArgs>>): Prisma__CardClient<$Result.GetResult<Prisma.$CardPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     details<T extends TravelRequest$detailsArgs<ExtArgs> = {}>(args?: Subset<T, TravelRequest$detailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TravelDetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -10830,6 +10885,7 @@ export namespace Prisma {
     readonly disbursementDate: FieldRef<"TravelRequest", 'DateTime'>
     readonly approvalDate: FieldRef<"TravelRequest", 'DateTime'>
     readonly approverId: FieldRef<"TravelRequest", 'Int'>
+    readonly disburserId: FieldRef<"TravelRequest", 'Int'>
     readonly comment: FieldRef<"TravelRequest", 'String'>
     readonly createdAt: FieldRef<"TravelRequest", 'DateTime'>
     readonly updatedAt: FieldRef<"TravelRequest", 'DateTime'>
@@ -11179,6 +11235,25 @@ export namespace Prisma {
    * TravelRequest.approver
    */
   export type TravelRequest$approverArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * TravelRequest.disburser
+   */
+  export type TravelRequest$disburserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the User
      */
@@ -12315,6 +12390,7 @@ export namespace Prisma {
     disbursementDate: 'disbursementDate',
     approvalDate: 'approvalDate',
     approverId: 'approverId',
+    disburserId: 'disburserId',
     comment: 'comment',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -12721,6 +12797,7 @@ export namespace Prisma {
     cards?: CardAssignmentListRelationFilter
     travelRequests?: TravelRequestListRelationFilter
     approvedTravelRequests?: TravelRequestListRelationFilter
+    disbursedTravelRequests?: TravelRequestListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -12747,6 +12824,7 @@ export namespace Prisma {
     cards?: CardAssignmentOrderByRelationAggregateInput
     travelRequests?: TravelRequestOrderByRelationAggregateInput
     approvedTravelRequests?: TravelRequestOrderByRelationAggregateInput
+    disbursedTravelRequests?: TravelRequestOrderByRelationAggregateInput
     _relevance?: UserOrderByRelevanceInput
   }
 
@@ -12777,6 +12855,7 @@ export namespace Prisma {
     cards?: CardAssignmentListRelationFilter
     travelRequests?: TravelRequestListRelationFilter
     approvedTravelRequests?: TravelRequestListRelationFilter
+    disbursedTravelRequests?: TravelRequestListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -13004,12 +13083,14 @@ export namespace Prisma {
     disbursementDate?: DateTimeNullableFilter<"TravelRequest"> | Date | string | null
     approvalDate?: DateTimeNullableFilter<"TravelRequest"> | Date | string | null
     approverId?: IntNullableFilter<"TravelRequest"> | number | null
+    disburserId?: IntNullableFilter<"TravelRequest"> | number | null
     comment?: StringNullableFilter<"TravelRequest"> | string | null
     createdAt?: DateTimeFilter<"TravelRequest"> | Date | string
     updatedAt?: DateTimeFilter<"TravelRequest"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     status?: XOR<StatusTravelRequestScalarRelationFilter, StatusTravelRequestWhereInput>
     approver?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    disburser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     card?: XOR<CardScalarRelationFilter, CardWhereInput>
     details?: TravelDetailListRelationFilter
   }
@@ -13027,12 +13108,14 @@ export namespace Prisma {
     disbursementDate?: SortOrderInput | SortOrder
     approvalDate?: SortOrderInput | SortOrder
     approverId?: SortOrderInput | SortOrder
+    disburserId?: SortOrderInput | SortOrder
     comment?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
     status?: StatusTravelRequestOrderByWithRelationInput
     approver?: UserOrderByWithRelationInput
+    disburser?: UserOrderByWithRelationInput
     card?: CardOrderByWithRelationInput
     details?: TravelDetailOrderByRelationAggregateInput
     _relevance?: TravelRequestOrderByRelevanceInput
@@ -13054,12 +13137,14 @@ export namespace Prisma {
     disbursementDate?: DateTimeNullableFilter<"TravelRequest"> | Date | string | null
     approvalDate?: DateTimeNullableFilter<"TravelRequest"> | Date | string | null
     approverId?: IntNullableFilter<"TravelRequest"> | number | null
+    disburserId?: IntNullableFilter<"TravelRequest"> | number | null
     comment?: StringNullableFilter<"TravelRequest"> | string | null
     createdAt?: DateTimeFilter<"TravelRequest"> | Date | string
     updatedAt?: DateTimeFilter<"TravelRequest"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     status?: XOR<StatusTravelRequestScalarRelationFilter, StatusTravelRequestWhereInput>
     approver?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    disburser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     card?: XOR<CardScalarRelationFilter, CardWhereInput>
     details?: TravelDetailListRelationFilter
   }, "id">
@@ -13077,6 +13162,7 @@ export namespace Prisma {
     disbursementDate?: SortOrderInput | SortOrder
     approvalDate?: SortOrderInput | SortOrder
     approverId?: SortOrderInput | SortOrder
+    disburserId?: SortOrderInput | SortOrder
     comment?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -13103,6 +13189,7 @@ export namespace Prisma {
     disbursementDate?: DateTimeNullableWithAggregatesFilter<"TravelRequest"> | Date | string | null
     approvalDate?: DateTimeNullableWithAggregatesFilter<"TravelRequest"> | Date | string | null
     approverId?: IntNullableWithAggregatesFilter<"TravelRequest"> | number | null
+    disburserId?: IntNullableWithAggregatesFilter<"TravelRequest"> | number | null
     comment?: StringNullableWithAggregatesFilter<"TravelRequest"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"TravelRequest"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"TravelRequest"> | Date | string
@@ -13393,6 +13480,7 @@ export namespace Prisma {
     cards?: CardAssignmentCreateNestedManyWithoutUserInput
     travelRequests?: TravelRequestCreateNestedManyWithoutUserInput
     approvedTravelRequests?: TravelRequestCreateNestedManyWithoutApproverInput
+    disbursedTravelRequests?: TravelRequestCreateNestedManyWithoutDisburserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -13414,6 +13502,7 @@ export namespace Prisma {
     cards?: CardAssignmentUncheckedCreateNestedManyWithoutUserInput
     travelRequests?: TravelRequestUncheckedCreateNestedManyWithoutUserInput
     approvedTravelRequests?: TravelRequestUncheckedCreateNestedManyWithoutApproverInput
+    disbursedTravelRequests?: TravelRequestUncheckedCreateNestedManyWithoutDisburserInput
   }
 
   export type UserUpdateInput = {
@@ -13434,6 +13523,7 @@ export namespace Prisma {
     cards?: CardAssignmentUpdateManyWithoutUserNestedInput
     travelRequests?: TravelRequestUpdateManyWithoutUserNestedInput
     approvedTravelRequests?: TravelRequestUpdateManyWithoutApproverNestedInput
+    disbursedTravelRequests?: TravelRequestUpdateManyWithoutDisburserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -13455,6 +13545,7 @@ export namespace Prisma {
     cards?: CardAssignmentUncheckedUpdateManyWithoutUserNestedInput
     travelRequests?: TravelRequestUncheckedUpdateManyWithoutUserNestedInput
     approvedTravelRequests?: TravelRequestUncheckedUpdateManyWithoutApproverNestedInput
+    disbursedTravelRequests?: TravelRequestUncheckedUpdateManyWithoutDisburserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -13663,6 +13754,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutTravelRequestsInput
     status: StatusTravelRequestCreateNestedOneWithoutTravelRequestsInput
     approver?: UserCreateNestedOneWithoutApprovedTravelRequestsInput
+    disburser?: UserCreateNestedOneWithoutDisbursedTravelRequestsInput
     card: CardCreateNestedOneWithoutTravelRequestsInput
     details?: TravelDetailCreateNestedManyWithoutRequestInput
   }
@@ -13680,6 +13772,7 @@ export namespace Prisma {
     disbursementDate?: Date | string | null
     approvalDate?: Date | string | null
     approverId?: number | null
+    disburserId?: number | null
     comment?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -13700,6 +13793,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutTravelRequestsNestedInput
     status?: StatusTravelRequestUpdateOneRequiredWithoutTravelRequestsNestedInput
     approver?: UserUpdateOneWithoutApprovedTravelRequestsNestedInput
+    disburser?: UserUpdateOneWithoutDisbursedTravelRequestsNestedInput
     card?: CardUpdateOneRequiredWithoutTravelRequestsNestedInput
     details?: TravelDetailUpdateManyWithoutRequestNestedInput
   }
@@ -13717,6 +13811,7 @@ export namespace Prisma {
     disbursementDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approvalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approverId?: NullableIntFieldUpdateOperationsInput | number | null
+    disburserId?: NullableIntFieldUpdateOperationsInput | number | null
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -13736,6 +13831,7 @@ export namespace Prisma {
     disbursementDate?: Date | string | null
     approvalDate?: Date | string | null
     approverId?: number | null
+    disburserId?: number | null
     comment?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -13767,6 +13863,7 @@ export namespace Prisma {
     disbursementDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approvalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approverId?: NullableIntFieldUpdateOperationsInput | number | null
+    disburserId?: NullableIntFieldUpdateOperationsInput | number | null
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14442,6 +14539,7 @@ export namespace Prisma {
     disbursementDate?: SortOrder
     approvalDate?: SortOrder
     approverId?: SortOrder
+    disburserId?: SortOrder
     comment?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -14454,6 +14552,7 @@ export namespace Prisma {
     cardId?: SortOrder
     totalAmount?: SortOrder
     approverId?: SortOrder
+    disburserId?: SortOrder
   }
 
   export type TravelRequestMaxOrderByAggregateInput = {
@@ -14469,6 +14568,7 @@ export namespace Prisma {
     disbursementDate?: SortOrder
     approvalDate?: SortOrder
     approverId?: SortOrder
+    disburserId?: SortOrder
     comment?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -14487,6 +14587,7 @@ export namespace Prisma {
     disbursementDate?: SortOrder
     approvalDate?: SortOrder
     approverId?: SortOrder
+    disburserId?: SortOrder
     comment?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -14499,6 +14600,7 @@ export namespace Prisma {
     cardId?: SortOrder
     totalAmount?: SortOrder
     approverId?: SortOrder
+    disburserId?: SortOrder
   }
 
   export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
@@ -14919,6 +15021,13 @@ export namespace Prisma {
     connect?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
   }
 
+  export type TravelRequestCreateNestedManyWithoutDisburserInput = {
+    create?: XOR<TravelRequestCreateWithoutDisburserInput, TravelRequestUncheckedCreateWithoutDisburserInput> | TravelRequestCreateWithoutDisburserInput[] | TravelRequestUncheckedCreateWithoutDisburserInput[]
+    connectOrCreate?: TravelRequestCreateOrConnectWithoutDisburserInput | TravelRequestCreateOrConnectWithoutDisburserInput[]
+    createMany?: TravelRequestCreateManyDisburserInputEnvelope
+    connect?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+  }
+
   export type UserUncheckedCreateNestedManyWithoutSupervisorInput = {
     create?: XOR<UserCreateWithoutSupervisorInput, UserUncheckedCreateWithoutSupervisorInput> | UserCreateWithoutSupervisorInput[] | UserUncheckedCreateWithoutSupervisorInput[]
     connectOrCreate?: UserCreateOrConnectWithoutSupervisorInput | UserCreateOrConnectWithoutSupervisorInput[]
@@ -14944,6 +15053,13 @@ export namespace Prisma {
     create?: XOR<TravelRequestCreateWithoutApproverInput, TravelRequestUncheckedCreateWithoutApproverInput> | TravelRequestCreateWithoutApproverInput[] | TravelRequestUncheckedCreateWithoutApproverInput[]
     connectOrCreate?: TravelRequestCreateOrConnectWithoutApproverInput | TravelRequestCreateOrConnectWithoutApproverInput[]
     createMany?: TravelRequestCreateManyApproverInputEnvelope
+    connect?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+  }
+
+  export type TravelRequestUncheckedCreateNestedManyWithoutDisburserInput = {
+    create?: XOR<TravelRequestCreateWithoutDisburserInput, TravelRequestUncheckedCreateWithoutDisburserInput> | TravelRequestCreateWithoutDisburserInput[] | TravelRequestUncheckedCreateWithoutDisburserInput[]
+    connectOrCreate?: TravelRequestCreateOrConnectWithoutDisburserInput | TravelRequestCreateOrConnectWithoutDisburserInput[]
+    createMany?: TravelRequestCreateManyDisburserInputEnvelope
     connect?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
   }
 
@@ -15049,6 +15165,20 @@ export namespace Prisma {
     deleteMany?: TravelRequestScalarWhereInput | TravelRequestScalarWhereInput[]
   }
 
+  export type TravelRequestUpdateManyWithoutDisburserNestedInput = {
+    create?: XOR<TravelRequestCreateWithoutDisburserInput, TravelRequestUncheckedCreateWithoutDisburserInput> | TravelRequestCreateWithoutDisburserInput[] | TravelRequestUncheckedCreateWithoutDisburserInput[]
+    connectOrCreate?: TravelRequestCreateOrConnectWithoutDisburserInput | TravelRequestCreateOrConnectWithoutDisburserInput[]
+    upsert?: TravelRequestUpsertWithWhereUniqueWithoutDisburserInput | TravelRequestUpsertWithWhereUniqueWithoutDisburserInput[]
+    createMany?: TravelRequestCreateManyDisburserInputEnvelope
+    set?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    disconnect?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    delete?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    connect?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    update?: TravelRequestUpdateWithWhereUniqueWithoutDisburserInput | TravelRequestUpdateWithWhereUniqueWithoutDisburserInput[]
+    updateMany?: TravelRequestUpdateManyWithWhereWithoutDisburserInput | TravelRequestUpdateManyWithWhereWithoutDisburserInput[]
+    deleteMany?: TravelRequestScalarWhereInput | TravelRequestScalarWhereInput[]
+  }
+
   export type NullableIntFieldUpdateOperationsInput = {
     set?: number | null
     increment?: number
@@ -15110,6 +15240,20 @@ export namespace Prisma {
     connect?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
     update?: TravelRequestUpdateWithWhereUniqueWithoutApproverInput | TravelRequestUpdateWithWhereUniqueWithoutApproverInput[]
     updateMany?: TravelRequestUpdateManyWithWhereWithoutApproverInput | TravelRequestUpdateManyWithWhereWithoutApproverInput[]
+    deleteMany?: TravelRequestScalarWhereInput | TravelRequestScalarWhereInput[]
+  }
+
+  export type TravelRequestUncheckedUpdateManyWithoutDisburserNestedInput = {
+    create?: XOR<TravelRequestCreateWithoutDisburserInput, TravelRequestUncheckedCreateWithoutDisburserInput> | TravelRequestCreateWithoutDisburserInput[] | TravelRequestUncheckedCreateWithoutDisburserInput[]
+    connectOrCreate?: TravelRequestCreateOrConnectWithoutDisburserInput | TravelRequestCreateOrConnectWithoutDisburserInput[]
+    upsert?: TravelRequestUpsertWithWhereUniqueWithoutDisburserInput | TravelRequestUpsertWithWhereUniqueWithoutDisburserInput[]
+    createMany?: TravelRequestCreateManyDisburserInputEnvelope
+    set?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    disconnect?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    delete?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    connect?: TravelRequestWhereUniqueInput | TravelRequestWhereUniqueInput[]
+    update?: TravelRequestUpdateWithWhereUniqueWithoutDisburserInput | TravelRequestUpdateWithWhereUniqueWithoutDisburserInput[]
+    updateMany?: TravelRequestUpdateManyWithWhereWithoutDisburserInput | TravelRequestUpdateManyWithWhereWithoutDisburserInput[]
     deleteMany?: TravelRequestScalarWhereInput | TravelRequestScalarWhereInput[]
   }
 
@@ -15303,6 +15447,12 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type UserCreateNestedOneWithoutDisbursedTravelRequestsInput = {
+    create?: XOR<UserCreateWithoutDisbursedTravelRequestsInput, UserUncheckedCreateWithoutDisbursedTravelRequestsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDisbursedTravelRequestsInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type CardCreateNestedOneWithoutTravelRequestsInput = {
     create?: XOR<CardCreateWithoutTravelRequestsInput, CardUncheckedCreateWithoutTravelRequestsInput>
     connectOrCreate?: CardCreateOrConnectWithoutTravelRequestsInput
@@ -15359,6 +15509,16 @@ export namespace Prisma {
     delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutApprovedTravelRequestsInput, UserUpdateWithoutApprovedTravelRequestsInput>, UserUncheckedUpdateWithoutApprovedTravelRequestsInput>
+  }
+
+  export type UserUpdateOneWithoutDisbursedTravelRequestsNestedInput = {
+    create?: XOR<UserCreateWithoutDisbursedTravelRequestsInput, UserUncheckedCreateWithoutDisbursedTravelRequestsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDisbursedTravelRequestsInput
+    upsert?: UserUpsertWithoutDisbursedTravelRequestsInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutDisbursedTravelRequestsInput, UserUpdateWithoutDisbursedTravelRequestsInput>, UserUncheckedUpdateWithoutDisbursedTravelRequestsInput>
   }
 
   export type CardUpdateOneRequiredWithoutTravelRequestsNestedInput = {
@@ -15660,6 +15820,7 @@ export namespace Prisma {
     cards?: CardAssignmentCreateNestedManyWithoutUserInput
     travelRequests?: TravelRequestCreateNestedManyWithoutUserInput
     approvedTravelRequests?: TravelRequestCreateNestedManyWithoutApproverInput
+    disbursedTravelRequests?: TravelRequestCreateNestedManyWithoutDisburserInput
   }
 
   export type UserUncheckedCreateWithoutCompanyInput = {
@@ -15680,6 +15841,7 @@ export namespace Prisma {
     cards?: CardAssignmentUncheckedCreateNestedManyWithoutUserInput
     travelRequests?: TravelRequestUncheckedCreateNestedManyWithoutUserInput
     approvedTravelRequests?: TravelRequestUncheckedCreateNestedManyWithoutApproverInput
+    disbursedTravelRequests?: TravelRequestUncheckedCreateNestedManyWithoutDisburserInput
   }
 
   export type UserCreateOrConnectWithoutCompanyInput = {
@@ -15873,6 +16035,7 @@ export namespace Prisma {
     cards?: CardAssignmentCreateNestedManyWithoutUserInput
     travelRequests?: TravelRequestCreateNestedManyWithoutUserInput
     approvedTravelRequests?: TravelRequestCreateNestedManyWithoutApproverInput
+    disbursedTravelRequests?: TravelRequestCreateNestedManyWithoutDisburserInput
   }
 
   export type UserUncheckedCreateWithoutBranchInput = {
@@ -15893,6 +16056,7 @@ export namespace Prisma {
     cards?: CardAssignmentUncheckedCreateNestedManyWithoutUserInput
     travelRequests?: TravelRequestUncheckedCreateNestedManyWithoutUserInput
     approvedTravelRequests?: TravelRequestUncheckedCreateNestedManyWithoutApproverInput
+    disbursedTravelRequests?: TravelRequestUncheckedCreateNestedManyWithoutDisburserInput
   }
 
   export type UserCreateOrConnectWithoutBranchInput = {
@@ -15966,6 +16130,7 @@ export namespace Prisma {
     cards?: CardAssignmentCreateNestedManyWithoutUserInput
     travelRequests?: TravelRequestCreateNestedManyWithoutUserInput
     approvedTravelRequests?: TravelRequestCreateNestedManyWithoutApproverInput
+    disbursedTravelRequests?: TravelRequestCreateNestedManyWithoutDisburserInput
   }
 
   export type UserUncheckedCreateWithoutAreaInput = {
@@ -15986,6 +16151,7 @@ export namespace Prisma {
     cards?: CardAssignmentUncheckedCreateNestedManyWithoutUserInput
     travelRequests?: TravelRequestUncheckedCreateNestedManyWithoutUserInput
     approvedTravelRequests?: TravelRequestUncheckedCreateNestedManyWithoutApproverInput
+    disbursedTravelRequests?: TravelRequestUncheckedCreateNestedManyWithoutDisburserInput
   }
 
   export type UserCreateOrConnectWithoutAreaInput = {
@@ -16031,6 +16197,7 @@ export namespace Prisma {
     cards?: CardAssignmentCreateNestedManyWithoutUserInput
     travelRequests?: TravelRequestCreateNestedManyWithoutUserInput
     approvedTravelRequests?: TravelRequestCreateNestedManyWithoutApproverInput
+    disbursedTravelRequests?: TravelRequestCreateNestedManyWithoutDisburserInput
   }
 
   export type UserUncheckedCreateWithoutRoleInput = {
@@ -16051,6 +16218,7 @@ export namespace Prisma {
     cards?: CardAssignmentUncheckedCreateNestedManyWithoutUserInput
     travelRequests?: TravelRequestUncheckedCreateNestedManyWithoutUserInput
     approvedTravelRequests?: TravelRequestUncheckedCreateNestedManyWithoutApproverInput
+    disbursedTravelRequests?: TravelRequestUncheckedCreateNestedManyWithoutDisburserInput
   }
 
   export type UserCreateOrConnectWithoutRoleInput = {
@@ -16174,6 +16342,7 @@ export namespace Prisma {
     cards?: CardAssignmentCreateNestedManyWithoutUserInput
     travelRequests?: TravelRequestCreateNestedManyWithoutUserInput
     approvedTravelRequests?: TravelRequestCreateNestedManyWithoutApproverInput
+    disbursedTravelRequests?: TravelRequestCreateNestedManyWithoutDisburserInput
   }
 
   export type UserUncheckedCreateWithoutSubordinatesInput = {
@@ -16194,6 +16363,7 @@ export namespace Prisma {
     cards?: CardAssignmentUncheckedCreateNestedManyWithoutUserInput
     travelRequests?: TravelRequestUncheckedCreateNestedManyWithoutUserInput
     approvedTravelRequests?: TravelRequestUncheckedCreateNestedManyWithoutApproverInput
+    disbursedTravelRequests?: TravelRequestUncheckedCreateNestedManyWithoutDisburserInput
   }
 
   export type UserCreateOrConnectWithoutSubordinatesInput = {
@@ -16218,6 +16388,7 @@ export namespace Prisma {
     cards?: CardAssignmentCreateNestedManyWithoutUserInput
     travelRequests?: TravelRequestCreateNestedManyWithoutUserInput
     approvedTravelRequests?: TravelRequestCreateNestedManyWithoutApproverInput
+    disbursedTravelRequests?: TravelRequestCreateNestedManyWithoutDisburserInput
   }
 
   export type UserUncheckedCreateWithoutSupervisorInput = {
@@ -16238,6 +16409,7 @@ export namespace Prisma {
     cards?: CardAssignmentUncheckedCreateNestedManyWithoutUserInput
     travelRequests?: TravelRequestUncheckedCreateNestedManyWithoutUserInput
     approvedTravelRequests?: TravelRequestUncheckedCreateNestedManyWithoutApproverInput
+    disbursedTravelRequests?: TravelRequestUncheckedCreateNestedManyWithoutDisburserInput
   }
 
   export type UserCreateOrConnectWithoutSupervisorInput = {
@@ -16286,6 +16458,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     status: StatusTravelRequestCreateNestedOneWithoutTravelRequestsInput
     approver?: UserCreateNestedOneWithoutApprovedTravelRequestsInput
+    disburser?: UserCreateNestedOneWithoutDisbursedTravelRequestsInput
     card: CardCreateNestedOneWithoutTravelRequestsInput
     details?: TravelDetailCreateNestedManyWithoutRequestInput
   }
@@ -16302,6 +16475,7 @@ export namespace Prisma {
     disbursementDate?: Date | string | null
     approvalDate?: Date | string | null
     approverId?: number | null
+    disburserId?: number | null
     comment?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -16331,6 +16505,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutTravelRequestsInput
     status: StatusTravelRequestCreateNestedOneWithoutTravelRequestsInput
+    disburser?: UserCreateNestedOneWithoutDisbursedTravelRequestsInput
     card: CardCreateNestedOneWithoutTravelRequestsInput
     details?: TravelDetailCreateNestedManyWithoutRequestInput
   }
@@ -16347,6 +16522,7 @@ export namespace Prisma {
     returnDate: Date | string
     disbursementDate?: Date | string | null
     approvalDate?: Date | string | null
+    disburserId?: number | null
     comment?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -16360,6 +16536,53 @@ export namespace Prisma {
 
   export type TravelRequestCreateManyApproverInputEnvelope = {
     data: TravelRequestCreateManyApproverInput | TravelRequestCreateManyApproverInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TravelRequestCreateWithoutDisburserInput = {
+    totalAmount: Decimal | DecimalJsLike | number | string
+    travelReason: string
+    travelObjectives: string
+    departureDate: Date | string
+    returnDate: Date | string
+    disbursementDate?: Date | string | null
+    approvalDate?: Date | string | null
+    comment?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutTravelRequestsInput
+    status: StatusTravelRequestCreateNestedOneWithoutTravelRequestsInput
+    approver?: UserCreateNestedOneWithoutApprovedTravelRequestsInput
+    card: CardCreateNestedOneWithoutTravelRequestsInput
+    details?: TravelDetailCreateNestedManyWithoutRequestInput
+  }
+
+  export type TravelRequestUncheckedCreateWithoutDisburserInput = {
+    id?: number
+    userId: number
+    statusId: number
+    cardId: number
+    totalAmount: Decimal | DecimalJsLike | number | string
+    travelReason: string
+    travelObjectives: string
+    departureDate: Date | string
+    returnDate: Date | string
+    disbursementDate?: Date | string | null
+    approvalDate?: Date | string | null
+    approverId?: number | null
+    comment?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    details?: TravelDetailUncheckedCreateNestedManyWithoutRequestInput
+  }
+
+  export type TravelRequestCreateOrConnectWithoutDisburserInput = {
+    where: TravelRequestWhereUniqueInput
+    create: XOR<TravelRequestCreateWithoutDisburserInput, TravelRequestUncheckedCreateWithoutDisburserInput>
+  }
+
+  export type TravelRequestCreateManyDisburserInputEnvelope = {
+    data: TravelRequestCreateManyDisburserInput | TravelRequestCreateManyDisburserInput[]
     skipDuplicates?: boolean
   }
 
@@ -16493,6 +16716,7 @@ export namespace Prisma {
     cards?: CardAssignmentUpdateManyWithoutUserNestedInput
     travelRequests?: TravelRequestUpdateManyWithoutUserNestedInput
     approvedTravelRequests?: TravelRequestUpdateManyWithoutApproverNestedInput
+    disbursedTravelRequests?: TravelRequestUpdateManyWithoutDisburserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSubordinatesInput = {
@@ -16513,6 +16737,7 @@ export namespace Prisma {
     cards?: CardAssignmentUncheckedUpdateManyWithoutUserNestedInput
     travelRequests?: TravelRequestUncheckedUpdateManyWithoutUserNestedInput
     approvedTravelRequests?: TravelRequestUncheckedUpdateManyWithoutApproverNestedInput
+    disbursedTravelRequests?: TravelRequestUncheckedUpdateManyWithoutDisburserNestedInput
   }
 
   export type UserUpsertWithWhereUniqueWithoutSupervisorInput = {
@@ -16590,6 +16815,7 @@ export namespace Prisma {
     disbursementDate?: DateTimeNullableFilter<"TravelRequest"> | Date | string | null
     approvalDate?: DateTimeNullableFilter<"TravelRequest"> | Date | string | null
     approverId?: IntNullableFilter<"TravelRequest"> | number | null
+    disburserId?: IntNullableFilter<"TravelRequest"> | number | null
     comment?: StringNullableFilter<"TravelRequest"> | string | null
     createdAt?: DateTimeFilter<"TravelRequest"> | Date | string
     updatedAt?: DateTimeFilter<"TravelRequest"> | Date | string
@@ -16609,6 +16835,22 @@ export namespace Prisma {
   export type TravelRequestUpdateManyWithWhereWithoutApproverInput = {
     where: TravelRequestScalarWhereInput
     data: XOR<TravelRequestUpdateManyMutationInput, TravelRequestUncheckedUpdateManyWithoutApproverInput>
+  }
+
+  export type TravelRequestUpsertWithWhereUniqueWithoutDisburserInput = {
+    where: TravelRequestWhereUniqueInput
+    update: XOR<TravelRequestUpdateWithoutDisburserInput, TravelRequestUncheckedUpdateWithoutDisburserInput>
+    create: XOR<TravelRequestCreateWithoutDisburserInput, TravelRequestUncheckedCreateWithoutDisburserInput>
+  }
+
+  export type TravelRequestUpdateWithWhereUniqueWithoutDisburserInput = {
+    where: TravelRequestWhereUniqueInput
+    data: XOR<TravelRequestUpdateWithoutDisburserInput, TravelRequestUncheckedUpdateWithoutDisburserInput>
+  }
+
+  export type TravelRequestUpdateManyWithWhereWithoutDisburserInput = {
+    where: TravelRequestScalarWhereInput
+    data: XOR<TravelRequestUpdateManyMutationInput, TravelRequestUncheckedUpdateManyWithoutDisburserInput>
   }
 
   export type CompanyCreateWithoutCardsInput = {
@@ -16670,6 +16912,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutTravelRequestsInput
     status: StatusTravelRequestCreateNestedOneWithoutTravelRequestsInput
     approver?: UserCreateNestedOneWithoutApprovedTravelRequestsInput
+    disburser?: UserCreateNestedOneWithoutDisbursedTravelRequestsInput
     details?: TravelDetailCreateNestedManyWithoutRequestInput
   }
 
@@ -16685,6 +16928,7 @@ export namespace Prisma {
     disbursementDate?: Date | string | null
     approvalDate?: Date | string | null
     approverId?: number | null
+    disburserId?: number | null
     comment?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -16800,6 +17044,7 @@ export namespace Prisma {
     subordinates?: UserCreateNestedManyWithoutSupervisorInput
     travelRequests?: TravelRequestCreateNestedManyWithoutUserInput
     approvedTravelRequests?: TravelRequestCreateNestedManyWithoutApproverInput
+    disbursedTravelRequests?: TravelRequestCreateNestedManyWithoutDisburserInput
   }
 
   export type UserUncheckedCreateWithoutCardsInput = {
@@ -16820,6 +17065,7 @@ export namespace Prisma {
     subordinates?: UserUncheckedCreateNestedManyWithoutSupervisorInput
     travelRequests?: TravelRequestUncheckedCreateNestedManyWithoutUserInput
     approvedTravelRequests?: TravelRequestUncheckedCreateNestedManyWithoutApproverInput
+    disbursedTravelRequests?: TravelRequestUncheckedCreateNestedManyWithoutDisburserInput
   }
 
   export type UserCreateOrConnectWithoutCardsInput = {
@@ -16883,6 +17129,7 @@ export namespace Prisma {
     subordinates?: UserUpdateManyWithoutSupervisorNestedInput
     travelRequests?: TravelRequestUpdateManyWithoutUserNestedInput
     approvedTravelRequests?: TravelRequestUpdateManyWithoutApproverNestedInput
+    disbursedTravelRequests?: TravelRequestUpdateManyWithoutDisburserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCardsInput = {
@@ -16903,6 +17150,7 @@ export namespace Prisma {
     subordinates?: UserUncheckedUpdateManyWithoutSupervisorNestedInput
     travelRequests?: TravelRequestUncheckedUpdateManyWithoutUserNestedInput
     approvedTravelRequests?: TravelRequestUncheckedUpdateManyWithoutApproverNestedInput
+    disbursedTravelRequests?: TravelRequestUncheckedUpdateManyWithoutDisburserNestedInput
   }
 
   export type TravelRequestCreateWithoutStatusInput = {
@@ -16918,6 +17166,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutTravelRequestsInput
     approver?: UserCreateNestedOneWithoutApprovedTravelRequestsInput
+    disburser?: UserCreateNestedOneWithoutDisbursedTravelRequestsInput
     card: CardCreateNestedOneWithoutTravelRequestsInput
     details?: TravelDetailCreateNestedManyWithoutRequestInput
   }
@@ -16934,6 +17183,7 @@ export namespace Prisma {
     disbursementDate?: Date | string | null
     approvalDate?: Date | string | null
     approverId?: number | null
+    disburserId?: number | null
     comment?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -16983,6 +17233,7 @@ export namespace Prisma {
     subordinates?: UserCreateNestedManyWithoutSupervisorInput
     cards?: CardAssignmentCreateNestedManyWithoutUserInput
     approvedTravelRequests?: TravelRequestCreateNestedManyWithoutApproverInput
+    disbursedTravelRequests?: TravelRequestCreateNestedManyWithoutDisburserInput
   }
 
   export type UserUncheckedCreateWithoutTravelRequestsInput = {
@@ -17003,6 +17254,7 @@ export namespace Prisma {
     subordinates?: UserUncheckedCreateNestedManyWithoutSupervisorInput
     cards?: CardAssignmentUncheckedCreateNestedManyWithoutUserInput
     approvedTravelRequests?: TravelRequestUncheckedCreateNestedManyWithoutApproverInput
+    disbursedTravelRequests?: TravelRequestUncheckedCreateNestedManyWithoutDisburserInput
   }
 
   export type UserCreateOrConnectWithoutTravelRequestsInput = {
@@ -17041,6 +17293,7 @@ export namespace Prisma {
     subordinates?: UserCreateNestedManyWithoutSupervisorInput
     cards?: CardAssignmentCreateNestedManyWithoutUserInput
     travelRequests?: TravelRequestCreateNestedManyWithoutUserInput
+    disbursedTravelRequests?: TravelRequestCreateNestedManyWithoutDisburserInput
   }
 
   export type UserUncheckedCreateWithoutApprovedTravelRequestsInput = {
@@ -17061,11 +17314,58 @@ export namespace Prisma {
     subordinates?: UserUncheckedCreateNestedManyWithoutSupervisorInput
     cards?: CardAssignmentUncheckedCreateNestedManyWithoutUserInput
     travelRequests?: TravelRequestUncheckedCreateNestedManyWithoutUserInput
+    disbursedTravelRequests?: TravelRequestUncheckedCreateNestedManyWithoutDisburserInput
   }
 
   export type UserCreateOrConnectWithoutApprovedTravelRequestsInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutApprovedTravelRequestsInput, UserUncheckedCreateWithoutApprovedTravelRequestsInput>
+  }
+
+  export type UserCreateWithoutDisbursedTravelRequestsInput = {
+    name: string
+    paternalSurname: string
+    maternalSurname: string
+    email: string
+    password: string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    company: CompanyCreateNestedOneWithoutUsersInput
+    branch: BranchCreateNestedOneWithoutUsersInput
+    area: AreaCreateNestedOneWithoutUsersInput
+    role: RoleCreateNestedOneWithoutUsersInput
+    supervisor?: UserCreateNestedOneWithoutSubordinatesInput
+    subordinates?: UserCreateNestedManyWithoutSupervisorInput
+    cards?: CardAssignmentCreateNestedManyWithoutUserInput
+    travelRequests?: TravelRequestCreateNestedManyWithoutUserInput
+    approvedTravelRequests?: TravelRequestCreateNestedManyWithoutApproverInput
+  }
+
+  export type UserUncheckedCreateWithoutDisbursedTravelRequestsInput = {
+    id?: number
+    name: string
+    paternalSurname: string
+    maternalSurname: string
+    email: string
+    password: string
+    isActive?: boolean
+    companyId: number
+    branchId: number
+    areaId: number
+    roleId: number
+    supervisorId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subordinates?: UserUncheckedCreateNestedManyWithoutSupervisorInput
+    cards?: CardAssignmentUncheckedCreateNestedManyWithoutUserInput
+    travelRequests?: TravelRequestUncheckedCreateNestedManyWithoutUserInput
+    approvedTravelRequests?: TravelRequestUncheckedCreateNestedManyWithoutApproverInput
+  }
+
+  export type UserCreateOrConnectWithoutDisbursedTravelRequestsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutDisbursedTravelRequestsInput, UserUncheckedCreateWithoutDisbursedTravelRequestsInput>
   }
 
   export type CardCreateWithoutTravelRequestsInput = {
@@ -17139,6 +17439,7 @@ export namespace Prisma {
     subordinates?: UserUpdateManyWithoutSupervisorNestedInput
     cards?: CardAssignmentUpdateManyWithoutUserNestedInput
     approvedTravelRequests?: TravelRequestUpdateManyWithoutApproverNestedInput
+    disbursedTravelRequests?: TravelRequestUpdateManyWithoutDisburserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTravelRequestsInput = {
@@ -17159,6 +17460,7 @@ export namespace Prisma {
     subordinates?: UserUncheckedUpdateManyWithoutSupervisorNestedInput
     cards?: CardAssignmentUncheckedUpdateManyWithoutUserNestedInput
     approvedTravelRequests?: TravelRequestUncheckedUpdateManyWithoutApproverNestedInput
+    disbursedTravelRequests?: TravelRequestUncheckedUpdateManyWithoutDisburserNestedInput
   }
 
   export type StatusTravelRequestUpsertWithoutTravelRequestsInput = {
@@ -17209,6 +17511,7 @@ export namespace Prisma {
     subordinates?: UserUpdateManyWithoutSupervisorNestedInput
     cards?: CardAssignmentUpdateManyWithoutUserNestedInput
     travelRequests?: TravelRequestUpdateManyWithoutUserNestedInput
+    disbursedTravelRequests?: TravelRequestUpdateManyWithoutDisburserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutApprovedTravelRequestsInput = {
@@ -17229,6 +17532,59 @@ export namespace Prisma {
     subordinates?: UserUncheckedUpdateManyWithoutSupervisorNestedInput
     cards?: CardAssignmentUncheckedUpdateManyWithoutUserNestedInput
     travelRequests?: TravelRequestUncheckedUpdateManyWithoutUserNestedInput
+    disbursedTravelRequests?: TravelRequestUncheckedUpdateManyWithoutDisburserNestedInput
+  }
+
+  export type UserUpsertWithoutDisbursedTravelRequestsInput = {
+    update: XOR<UserUpdateWithoutDisbursedTravelRequestsInput, UserUncheckedUpdateWithoutDisbursedTravelRequestsInput>
+    create: XOR<UserCreateWithoutDisbursedTravelRequestsInput, UserUncheckedCreateWithoutDisbursedTravelRequestsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutDisbursedTravelRequestsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutDisbursedTravelRequestsInput, UserUncheckedUpdateWithoutDisbursedTravelRequestsInput>
+  }
+
+  export type UserUpdateWithoutDisbursedTravelRequestsInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    paternalSurname?: StringFieldUpdateOperationsInput | string
+    maternalSurname?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    company?: CompanyUpdateOneRequiredWithoutUsersNestedInput
+    branch?: BranchUpdateOneRequiredWithoutUsersNestedInput
+    area?: AreaUpdateOneRequiredWithoutUsersNestedInput
+    role?: RoleUpdateOneRequiredWithoutUsersNestedInput
+    supervisor?: UserUpdateOneWithoutSubordinatesNestedInput
+    subordinates?: UserUpdateManyWithoutSupervisorNestedInput
+    cards?: CardAssignmentUpdateManyWithoutUserNestedInput
+    travelRequests?: TravelRequestUpdateManyWithoutUserNestedInput
+    approvedTravelRequests?: TravelRequestUpdateManyWithoutApproverNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutDisbursedTravelRequestsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    paternalSurname?: StringFieldUpdateOperationsInput | string
+    maternalSurname?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    companyId?: IntFieldUpdateOperationsInput | number
+    branchId?: IntFieldUpdateOperationsInput | number
+    areaId?: IntFieldUpdateOperationsInput | number
+    roleId?: IntFieldUpdateOperationsInput | number
+    supervisorId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subordinates?: UserUncheckedUpdateManyWithoutSupervisorNestedInput
+    cards?: CardAssignmentUncheckedUpdateManyWithoutUserNestedInput
+    travelRequests?: TravelRequestUncheckedUpdateManyWithoutUserNestedInput
+    approvedTravelRequests?: TravelRequestUncheckedUpdateManyWithoutApproverNestedInput
   }
 
   export type CardUpsertWithoutTravelRequestsInput = {
@@ -17299,6 +17655,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutTravelRequestsInput
     status: StatusTravelRequestCreateNestedOneWithoutTravelRequestsInput
     approver?: UserCreateNestedOneWithoutApprovedTravelRequestsInput
+    disburser?: UserCreateNestedOneWithoutDisbursedTravelRequestsInput
     card: CardCreateNestedOneWithoutTravelRequestsInput
   }
 
@@ -17315,6 +17672,7 @@ export namespace Prisma {
     disbursementDate?: Date | string | null
     approvalDate?: Date | string | null
     approverId?: number | null
+    disburserId?: number | null
     comment?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -17350,6 +17708,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutTravelRequestsNestedInput
     status?: StatusTravelRequestUpdateOneRequiredWithoutTravelRequestsNestedInput
     approver?: UserUpdateOneWithoutApprovedTravelRequestsNestedInput
+    disburser?: UserUpdateOneWithoutDisbursedTravelRequestsNestedInput
     card?: CardUpdateOneRequiredWithoutTravelRequestsNestedInput
   }
 
@@ -17366,6 +17725,7 @@ export namespace Prisma {
     disbursementDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approvalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approverId?: NullableIntFieldUpdateOperationsInput | number | null
+    disburserId?: NullableIntFieldUpdateOperationsInput | number | null
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17418,6 +17778,7 @@ export namespace Prisma {
     cards?: CardAssignmentUpdateManyWithoutUserNestedInput
     travelRequests?: TravelRequestUpdateManyWithoutUserNestedInput
     approvedTravelRequests?: TravelRequestUpdateManyWithoutApproverNestedInput
+    disbursedTravelRequests?: TravelRequestUpdateManyWithoutDisburserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCompanyInput = {
@@ -17438,6 +17799,7 @@ export namespace Prisma {
     cards?: CardAssignmentUncheckedUpdateManyWithoutUserNestedInput
     travelRequests?: TravelRequestUncheckedUpdateManyWithoutUserNestedInput
     approvedTravelRequests?: TravelRequestUncheckedUpdateManyWithoutApproverNestedInput
+    disbursedTravelRequests?: TravelRequestUncheckedUpdateManyWithoutDisburserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutCompanyInput = {
@@ -17535,6 +17897,7 @@ export namespace Prisma {
     cards?: CardAssignmentUpdateManyWithoutUserNestedInput
     travelRequests?: TravelRequestUpdateManyWithoutUserNestedInput
     approvedTravelRequests?: TravelRequestUpdateManyWithoutApproverNestedInput
+    disbursedTravelRequests?: TravelRequestUpdateManyWithoutDisburserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBranchInput = {
@@ -17555,6 +17918,7 @@ export namespace Prisma {
     cards?: CardAssignmentUncheckedUpdateManyWithoutUserNestedInput
     travelRequests?: TravelRequestUncheckedUpdateManyWithoutUserNestedInput
     approvedTravelRequests?: TravelRequestUncheckedUpdateManyWithoutApproverNestedInput
+    disbursedTravelRequests?: TravelRequestUncheckedUpdateManyWithoutDisburserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutBranchInput = {
@@ -17606,6 +17970,7 @@ export namespace Prisma {
     cards?: CardAssignmentUpdateManyWithoutUserNestedInput
     travelRequests?: TravelRequestUpdateManyWithoutUserNestedInput
     approvedTravelRequests?: TravelRequestUpdateManyWithoutApproverNestedInput
+    disbursedTravelRequests?: TravelRequestUpdateManyWithoutDisburserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAreaInput = {
@@ -17626,6 +17991,7 @@ export namespace Prisma {
     cards?: CardAssignmentUncheckedUpdateManyWithoutUserNestedInput
     travelRequests?: TravelRequestUncheckedUpdateManyWithoutUserNestedInput
     approvedTravelRequests?: TravelRequestUncheckedUpdateManyWithoutApproverNestedInput
+    disbursedTravelRequests?: TravelRequestUncheckedUpdateManyWithoutDisburserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutAreaInput = {
@@ -17677,6 +18043,7 @@ export namespace Prisma {
     cards?: CardAssignmentUpdateManyWithoutUserNestedInput
     travelRequests?: TravelRequestUpdateManyWithoutUserNestedInput
     approvedTravelRequests?: TravelRequestUpdateManyWithoutApproverNestedInput
+    disbursedTravelRequests?: TravelRequestUpdateManyWithoutDisburserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRoleInput = {
@@ -17697,6 +18064,7 @@ export namespace Prisma {
     cards?: CardAssignmentUncheckedUpdateManyWithoutUserNestedInput
     travelRequests?: TravelRequestUncheckedUpdateManyWithoutUserNestedInput
     approvedTravelRequests?: TravelRequestUncheckedUpdateManyWithoutApproverNestedInput
+    disbursedTravelRequests?: TravelRequestUncheckedUpdateManyWithoutDisburserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutRoleInput = {
@@ -17750,6 +18118,7 @@ export namespace Prisma {
     disbursementDate?: Date | string | null
     approvalDate?: Date | string | null
     approverId?: number | null
+    disburserId?: number | null
     comment?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -17767,6 +18136,25 @@ export namespace Prisma {
     returnDate: Date | string
     disbursementDate?: Date | string | null
     approvalDate?: Date | string | null
+    disburserId?: number | null
+    comment?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TravelRequestCreateManyDisburserInput = {
+    id?: number
+    userId: number
+    statusId: number
+    cardId: number
+    totalAmount: Decimal | DecimalJsLike | number | string
+    travelReason: string
+    travelObjectives: string
+    departureDate: Date | string
+    returnDate: Date | string
+    disbursementDate?: Date | string | null
+    approvalDate?: Date | string | null
+    approverId?: number | null
     comment?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -17789,6 +18177,7 @@ export namespace Prisma {
     cards?: CardAssignmentUpdateManyWithoutUserNestedInput
     travelRequests?: TravelRequestUpdateManyWithoutUserNestedInput
     approvedTravelRequests?: TravelRequestUpdateManyWithoutApproverNestedInput
+    disbursedTravelRequests?: TravelRequestUpdateManyWithoutDisburserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSupervisorInput = {
@@ -17809,6 +18198,7 @@ export namespace Prisma {
     cards?: CardAssignmentUncheckedUpdateManyWithoutUserNestedInput
     travelRequests?: TravelRequestUncheckedUpdateManyWithoutUserNestedInput
     approvedTravelRequests?: TravelRequestUncheckedUpdateManyWithoutApproverNestedInput
+    disbursedTravelRequests?: TravelRequestUncheckedUpdateManyWithoutDisburserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutSupervisorInput = {
@@ -17860,6 +18250,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StatusTravelRequestUpdateOneRequiredWithoutTravelRequestsNestedInput
     approver?: UserUpdateOneWithoutApprovedTravelRequestsNestedInput
+    disburser?: UserUpdateOneWithoutDisbursedTravelRequestsNestedInput
     card?: CardUpdateOneRequiredWithoutTravelRequestsNestedInput
     details?: TravelDetailUpdateManyWithoutRequestNestedInput
   }
@@ -17876,6 +18267,7 @@ export namespace Prisma {
     disbursementDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approvalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approverId?: NullableIntFieldUpdateOperationsInput | number | null
+    disburserId?: NullableIntFieldUpdateOperationsInput | number | null
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17894,6 +18286,7 @@ export namespace Prisma {
     disbursementDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approvalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approverId?: NullableIntFieldUpdateOperationsInput | number | null
+    disburserId?: NullableIntFieldUpdateOperationsInput | number | null
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17912,6 +18305,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutTravelRequestsNestedInput
     status?: StatusTravelRequestUpdateOneRequiredWithoutTravelRequestsNestedInput
+    disburser?: UserUpdateOneWithoutDisbursedTravelRequestsNestedInput
     card?: CardUpdateOneRequiredWithoutTravelRequestsNestedInput
     details?: TravelDetailUpdateManyWithoutRequestNestedInput
   }
@@ -17928,6 +18322,7 @@ export namespace Prisma {
     returnDate?: DateTimeFieldUpdateOperationsInput | Date | string
     disbursementDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approvalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    disburserId?: NullableIntFieldUpdateOperationsInput | number | null
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17946,6 +18341,62 @@ export namespace Prisma {
     returnDate?: DateTimeFieldUpdateOperationsInput | Date | string
     disbursementDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approvalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    disburserId?: NullableIntFieldUpdateOperationsInput | number | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TravelRequestUpdateWithoutDisburserInput = {
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    travelReason?: StringFieldUpdateOperationsInput | string
+    travelObjectives?: StringFieldUpdateOperationsInput | string
+    departureDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    returnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    disbursementDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutTravelRequestsNestedInput
+    status?: StatusTravelRequestUpdateOneRequiredWithoutTravelRequestsNestedInput
+    approver?: UserUpdateOneWithoutApprovedTravelRequestsNestedInput
+    card?: CardUpdateOneRequiredWithoutTravelRequestsNestedInput
+    details?: TravelDetailUpdateManyWithoutRequestNestedInput
+  }
+
+  export type TravelRequestUncheckedUpdateWithoutDisburserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    statusId?: IntFieldUpdateOperationsInput | number
+    cardId?: IntFieldUpdateOperationsInput | number
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    travelReason?: StringFieldUpdateOperationsInput | string
+    travelObjectives?: StringFieldUpdateOperationsInput | string
+    departureDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    returnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    disbursementDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approverId?: NullableIntFieldUpdateOperationsInput | number | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    details?: TravelDetailUncheckedUpdateManyWithoutRequestNestedInput
+  }
+
+  export type TravelRequestUncheckedUpdateManyWithoutDisburserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    statusId?: IntFieldUpdateOperationsInput | number
+    cardId?: IntFieldUpdateOperationsInput | number
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    travelReason?: StringFieldUpdateOperationsInput | string
+    travelObjectives?: StringFieldUpdateOperationsInput | string
+    departureDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    returnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    disbursementDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approverId?: NullableIntFieldUpdateOperationsInput | number | null
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17970,6 +18421,7 @@ export namespace Prisma {
     disbursementDate?: Date | string | null
     approvalDate?: Date | string | null
     approverId?: number | null
+    disburserId?: number | null
     comment?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -18009,6 +18461,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutTravelRequestsNestedInput
     status?: StatusTravelRequestUpdateOneRequiredWithoutTravelRequestsNestedInput
     approver?: UserUpdateOneWithoutApprovedTravelRequestsNestedInput
+    disburser?: UserUpdateOneWithoutDisbursedTravelRequestsNestedInput
     details?: TravelDetailUpdateManyWithoutRequestNestedInput
   }
 
@@ -18024,6 +18477,7 @@ export namespace Prisma {
     disbursementDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approvalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approverId?: NullableIntFieldUpdateOperationsInput | number | null
+    disburserId?: NullableIntFieldUpdateOperationsInput | number | null
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18042,6 +18496,7 @@ export namespace Prisma {
     disbursementDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approvalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approverId?: NullableIntFieldUpdateOperationsInput | number | null
+    disburserId?: NullableIntFieldUpdateOperationsInput | number | null
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18059,6 +18514,7 @@ export namespace Prisma {
     disbursementDate?: Date | string | null
     approvalDate?: Date | string | null
     approverId?: number | null
+    disburserId?: number | null
     comment?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -18077,6 +18533,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutTravelRequestsNestedInput
     approver?: UserUpdateOneWithoutApprovedTravelRequestsNestedInput
+    disburser?: UserUpdateOneWithoutDisbursedTravelRequestsNestedInput
     card?: CardUpdateOneRequiredWithoutTravelRequestsNestedInput
     details?: TravelDetailUpdateManyWithoutRequestNestedInput
   }
@@ -18093,6 +18550,7 @@ export namespace Prisma {
     disbursementDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approvalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approverId?: NullableIntFieldUpdateOperationsInput | number | null
+    disburserId?: NullableIntFieldUpdateOperationsInput | number | null
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18111,6 +18569,7 @@ export namespace Prisma {
     disbursementDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approvalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approverId?: NullableIntFieldUpdateOperationsInput | number | null
+    disburserId?: NullableIntFieldUpdateOperationsInput | number | null
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

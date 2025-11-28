@@ -4,6 +4,7 @@ import {
   CreateTravelRequestInput,
   TravelRequest,
   TravelRequestRepository,
+  UpdateTravelRequestStatusInput,
 } from '../../application/interfaces';
 import { PaginationInput } from '../../application/interfaces/pagination.input';
 
@@ -20,6 +21,7 @@ interface TravelRequestWithRelations {
   disbursementDate: Date | null;
   approvalDate: Date | null;
   approverId: number | null;
+  disburserId: number | null;
   comment: string | null;
   user: {
     id: number;
@@ -33,6 +35,11 @@ interface TravelRequestWithRelations {
     name: string;
   };
   approver: {
+    id: number;
+    name: string;
+    email: string;
+  } | null;
+  disburser: {
     id: number;
     name: string;
     email: string;
@@ -74,6 +81,7 @@ export class PrismaTravelRequestRepository implements TravelRequestRepository {
       disbursementDate: data.disbursementDate ?? null,
       approvalDate: data.approvalDate ?? null,
       approverId: data.approverId ?? null,
+      disburserId: data.disburserId ?? null,
       comment: data.comment ?? null,
       user: {
         id: data.user.id,
@@ -91,6 +99,13 @@ export class PrismaTravelRequestRepository implements TravelRequestRepository {
             id: data.approver.id,
             name: data.approver.name,
             email: data.approver.email,
+          }
+        : null,
+      disburser: data.disburser
+        ? {
+            id: data.disburser.id,
+            name: data.disburser.name,
+            email: data.disburser.email,
           }
         : null,
       card: {
@@ -147,6 +162,13 @@ export class PrismaTravelRequestRepository implements TravelRequestRepository {
             email: true,
           },
         },
+        disburser: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
         card: {
           select: {
             id: true,
@@ -161,6 +183,26 @@ export class PrismaTravelRequestRepository implements TravelRequestRepository {
     });
 
     return travelRequests.map((tr) => this.mapToTravelRequest(tr));
+  }
+
+  async count(input: PaginationInput): Promise<number> {
+    const { statusId, userId } = input;
+
+    const where: TravelRequestWhereInput = {};
+
+    if (statusId !== undefined) {
+      where.statusId = statusId;
+    }
+
+    if (userId !== undefined) {
+      where.userId = userId;
+    }
+
+    const whereClause = Object.keys(where).length > 0 ? where : undefined;
+
+    return this.prisma.travelRequest.count({
+      where: whereClause,
+    });
   }
 
   async create(input: CreateTravelRequestInput): Promise<TravelRequest> {
@@ -199,6 +241,13 @@ export class PrismaTravelRequestRepository implements TravelRequestRepository {
             email: true,
           },
         },
+        disburser: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
         card: {
           select: {
             id: true,
@@ -210,5 +259,152 @@ export class PrismaTravelRequestRepository implements TravelRequestRepository {
     });
 
     return this.mapToTravelRequest(created);
+  }
+
+  async findById(id: number): Promise<TravelRequest | null> {
+    const travelRequest = await this.prisma.travelRequest.findUnique({
+      where: { id },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            paternalSurname: true,
+            maternalSurname: true,
+            email: true,
+          },
+        },
+        status: true,
+        approver: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+        disburser: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+        card: {
+          select: {
+            id: true,
+            cardNumber: true,
+          },
+        },
+        details: true,
+      },
+    });
+
+    if (!travelRequest) {
+      return null;
+    }
+
+    return this.mapToTravelRequest(travelRequest);
+  }
+
+  async updateStatus(
+    id: number,
+    input: UpdateTravelRequestStatusInput,
+  ): Promise<TravelRequest> {
+    const updated = await this.prisma.travelRequest.update({
+      where: { id },
+      data: {
+        statusId: input.statusId,
+        approverId: input.approverId,
+        approvalDate: new Date(),
+        comment: input.comment ?? null,
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            paternalSurname: true,
+            maternalSurname: true,
+            email: true,
+          },
+        },
+        status: true,
+        approver: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+        disburser: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+        card: {
+          select: {
+            id: true,
+            cardNumber: true,
+          },
+        },
+        details: true,
+      },
+    });
+
+    return this.mapToTravelRequest(updated);
+  }
+
+  async getDisbursements(
+    input?: PaginationInput,
+  ): Promise<TravelRequest[]> {
+    const { limit = 20, offset = 0 } = input ?? {};
+
+    const disbursements = await this.prisma.travelRequest.findMany({
+      where: {
+        disbursementDate: { not: null },
+      },
+      take: limit,
+      skip: offset,
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            paternalSurname: true,
+            maternalSurname: true,
+            email: true,
+          },
+        },
+        status: true,
+        approver: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+        disburser: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+        card: {
+          select: {
+            id: true,
+            cardNumber: true,
+          },
+        },
+        details: true,
+      },
+      orderBy: {
+        disbursementDate: 'desc',
+      },
+    });
+
+    return disbursements.map((tr) => this.mapToTravelRequest(tr));
   }
 }

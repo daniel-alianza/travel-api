@@ -21,7 +21,8 @@
     "seed:companies": "ts-node -r tsconfig-paths/register src/seed/seed-companies.ts",
     "seed:branches": "ts-node -r tsconfig-paths/register src/seed/seed-branches.ts",
     "seed:areas": "ts-node -r tsconfig-paths/register src/seed/seed-areas.ts",
-    "all:seeds": "npm run seed:companies && npm run seed:branches && npm run seed:areas"
+    "seed:status": "ts-node -r tsconfig-paths/register src/seed/seed-status.ts",
+    "all:seeds": "npm run seed:companies && npm run seed:branches && npm run seed:areas && npm run seed:status"
   },
   "dependencies": {
     "@nestjs/axios": "^4.0.1",

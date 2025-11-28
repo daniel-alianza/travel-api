@@ -25,6 +25,7 @@ export interface TravelRequest {
   disbursementDate: Date | null;
   approvalDate: Date | null;
   approverId: number | null;
+  disburserId: number | null;
   comment: string | null;
   user: {
     id: number;
@@ -38,6 +39,11 @@ export interface TravelRequest {
     name: string;
   };
   approver: {
+    id: number;
+    name: string;
+    email: string;
+  } | null;
+  disburser: {
     id: number;
     name: string;
     email: string;
@@ -62,7 +68,21 @@ export interface CreateTravelRequestInput {
   returnDate: Date;
   details: CreateTravelDetailInput[];
 }
+
+export interface UpdateTravelRequestStatusInput {
+  statusId: number;
+  approverId: number;
+  comment?: string | null;
+}
+
 export interface TravelRequestRepository {
   findAll(input: PaginationInput): Promise<TravelRequest[]>;
+  count(input: PaginationInput): Promise<number>;
   create(input: CreateTravelRequestInput): Promise<TravelRequest>;
+  findById(id: number): Promise<TravelRequest | null>;
+  updateStatus(
+    id: number,
+    input: UpdateTravelRequestStatusInput,
+  ): Promise<TravelRequest>;
+  getDisbursements(input?: PaginationInput): Promise<TravelRequest[]>;
 }

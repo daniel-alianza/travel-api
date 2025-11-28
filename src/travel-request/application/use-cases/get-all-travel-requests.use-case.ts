@@ -9,14 +9,29 @@ export class GetAllTravelRequestsUseCase {
     private readonly travelRequestRepo: TravelRequestRepository,
   ) {}
 
-  async execute(input?: Partial<PaginationInput>): Promise<TravelRequest[]> {
+  async execute(input?: Partial<PaginationInput>): Promise<{
+    data: TravelRequest[];
+    total: number;
+    limit: number;
+    offset: number;
+  }> {
     const paginationInput: PaginationInput = {
-      limit: input?.limit ?? 20,
+      limit: input?.limit ?? 5,
       offset: input?.offset ?? 0,
       statusId: input?.statusId,
       userId: input?.userId,
     };
 
-    return this.travelRequestRepo.findAll(paginationInput);
+    const [data, total] = await Promise.all([
+      this.travelRequestRepo.findAll(paginationInput),
+      this.travelRequestRepo.count(paginationInput),
+    ]);
+
+    return {
+      data,
+      total,
+      limit: paginationInput.limit,
+      offset: paginationInput.offset,
+    };
   }
 }

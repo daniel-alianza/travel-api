@@ -77,6 +77,7 @@ model User {
 
   travelRequests         TravelRequest[] @relation("UserRequests")
   approvedTravelRequests TravelRequest[] @relation("UserApprovals")
+  disbursedTravelRequests TravelRequest[] @relation("UserDisbursements")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -131,11 +132,13 @@ model TravelRequest {
   approvalDate     DateTime?
 
   approverId Int?
+  disburserId Int?
   comment    String? @db.VarChar(255)
 
   user     User                @relation("UserRequests", fields: [userId], references: [id])
   status   StatusTravelRequest @relation(fields: [statusId], references: [id])
   approver User?               @relation("UserApprovals", fields: [approverId], references: [id])
+  disburser User?              @relation("UserDisbursements", fields: [disburserId], references: [id])
   card     Card                @relation(fields: [cardId], references: [id])
 
   details TravelDetail[]

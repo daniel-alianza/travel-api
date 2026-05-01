@@ -1,0 +1,24 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model Company {
+  id   Int    @id @default(autoincrement())
+  name String
+}
+
+model Area {
+  id   Int    @id @default(autoincrement())
+  name String
+}
+
+model Branch {
+  id   Int    @id @default(autoincrement())
+  name String
+}

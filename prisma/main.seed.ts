@@ -4,6 +4,8 @@ import { PrismaClient } from '../generated/prisma/client';
 import { seedAreas } from './seeds/area.seed';
 import { seedBranches } from './seeds/branch.seed';
 import { seedCompanies } from './seeds/company.seed';
+import { seedRoles } from './seeds/role.seed';
+import { seedUsers } from './seeds/users.seed';
 
 type SeederTask = {
   readonly name: string;
@@ -33,6 +35,14 @@ const seederTasks: readonly SeederTask[] = [
   {
     name: 'Sucursales',
     execute: seedBranches,
+  },
+  {
+    name: 'Roles',
+    execute: seedRoles,
+  },
+  {
+    name: 'Usuarios',
+    execute: seedUsers,
   },
 ];
 

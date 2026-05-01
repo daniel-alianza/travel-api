@@ -1,0 +1,6 @@
+-- AlterTable
+ALTER TABLE `User` ADD COLUMN `isActive` BOOLEAN NOT NULL DEFAULT true,
+    ADD COLUMN `managerId` INTEGER NULL;
+
+-- AddForeignKey
+ALTER TABLE `User` ADD CONSTRAINT `User_managerId_fkey` FOREIGN KEY (`managerId`) REFERENCES `User`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;

@@ -5,6 +5,7 @@ import type {
   CardLookupRecord,
   CreateTravelRequestRepositoryInput,
   CreatedTravelRequestRecord,
+  TravelRequestFormUserRecord,
   TravelRequestRepository,
   UserLookupRecord,
 } from '../application/interfaces/travel-request-repository.interface';
@@ -15,6 +16,24 @@ type PrismaDelegate = {
       where: { id: number };
       select: { id: true; name: true; areaId: true; managerId: true };
     }): Promise<UserLookupRecord | null>;
+    findFirst(args: {
+      where: { id: number };
+      select: {
+        id: true;
+        name: true;
+        company: { select: { id: true; name: true } };
+        branch: { select: { id: true; name: true } };
+        area: { select: { id: true; name: true } };
+        cards: {
+          select: {
+            id: true;
+            cardNumber: true;
+            type: true;
+            isActive: true;
+          };
+        };
+      };
+    }): Promise<TravelRequestFormUserRecord | null>;
   };
   area: {
     findUnique(args: {
@@ -118,6 +137,46 @@ export class TravelRequestPrismaRepository implements TravelRequestRepository {
     return prisma.card.findUnique({
       where: { id: cardId },
       select: { id: true, type: true, isActive: true },
+    });
+  }
+
+  async findFormDataByUserId(
+    userId: number,
+  ): Promise<TravelRequestFormUserRecord | null> {
+    const prisma = this.prismaService as unknown as PrismaDelegate;
+
+    return prisma.user.findFirst({
+      where: { id: userId },
+      select: {
+        id: true,
+        name: true,
+        company: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        branch: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        area: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        cards: {
+          select: {
+            id: true,
+            cardNumber: true,
+            type: true,
+            isActive: true,
+          },
+        },
+      },
     });
   }
 

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, ParseIntPipe, Post } from '@nestjs/common';
 import {
   ApiBody,
   ApiCreatedResponse,
@@ -10,6 +10,14 @@ import {
   CreateTravelRequestUseCase,
   type CreateTravelRequestResponse,
 } from '../application/use-cases/create-travel-request.use-case';
+import {
+  GetTravelRequestFormDataUseCase,
+  type GetTravelRequestFormDataResponse,
+} from '../application/use-cases/get-travel-request-form-data.use-case';
+import {
+  GetUserFuelCardsUseCase,
+  type GetUserFuelCardsResponse,
+} from '../application/use-cases/get-user-fuel-cards.use-case';
 import { CreateTravelRequestDto } from './dtos/create-travel-request.dto';
 
 type TravelRequestPoliciesResponse = {
@@ -44,7 +52,37 @@ type TravelRequestPoliciesResponse = {
 export class TravelRequestController {
   constructor(
     private readonly createTravelRequestUseCase: CreateTravelRequestUseCase,
+    private readonly getTravelRequestFormDataUseCase: GetTravelRequestFormDataUseCase,
+    private readonly getUserFuelCardsUseCase: GetUserFuelCardsUseCase,
   ) {}
+
+  @Get('form-data/:userId')
+  @HttpCode(200)
+  @ApiOperation({
+    summary: 'Obtener datos precargados de solicitud',
+  })
+  @ApiOkResponse({
+    description: 'Datos bloqueados para empresa/sucursal/área y tarjetas viatic del usuario.',
+  })
+  async getFormData(
+    @Param('userId', ParseIntPipe) userId: number,
+  ): Promise<GetTravelRequestFormDataResponse> {
+    return this.getTravelRequestFormDataUseCase.execute(userId);
+  }
+
+  @Get('fuel-cards/:userId')
+  @HttpCode(200)
+  @ApiOperation({
+    summary: 'Obtener tarjetas fuel activas del usuario',
+  })
+  @ApiOkResponse({
+    description: 'Tarjetas fuel para mostrar en select de gasolina.',
+  })
+  async getUserFuelCards(
+    @Param('userId', ParseIntPipe) userId: number,
+  ): Promise<GetUserFuelCardsResponse> {
+    return this.getUserFuelCardsUseCase.execute(userId);
+  }
 
   @Get('policies')
   @HttpCode(200)

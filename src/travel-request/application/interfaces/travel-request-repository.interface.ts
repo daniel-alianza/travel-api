@@ -74,10 +74,34 @@ export type CardLookupRecord = {
   readonly isActive: boolean;
 };
 
+export type TravelRequestFormUserRecord = {
+  readonly id: number;
+  readonly name: string;
+  readonly company: {
+    readonly id: number;
+    readonly name: string;
+  };
+  readonly branch: {
+    readonly id: number;
+    readonly name: string;
+  };
+  readonly area: {
+    readonly id: number;
+    readonly name: string;
+  };
+  readonly cards: readonly {
+    readonly id: number;
+    readonly cardNumber: string;
+    readonly type: 'VIATIC' | 'FUEL';
+    readonly isActive: boolean;
+  }[];
+};
+
 export interface TravelRequestRepository {
   findUserById(userId: number): Promise<UserLookupRecord | null>;
   findAreaById(areaId: number): Promise<AreaLookupRecord | null>;
   findFuelCardById(cardId: number): Promise<CardLookupRecord | null>;
+  findFormDataByUserId(userId: number): Promise<TravelRequestFormUserRecord | null>;
   createTravelRequest(
     input: CreateTravelRequestRepositoryInput,
   ): Promise<CreatedTravelRequestRecord>;

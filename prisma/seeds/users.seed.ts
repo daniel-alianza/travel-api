@@ -12,6 +12,27 @@ const SEED_USER = {
   isActive: true,
 } as const;
 
+const SEED_CARDS = [
+  {
+    cardNumber: '5555555555555555',
+    type: 'FUEL',
+    userId: SEED_USER.id,
+    companyId: SEED_USER.companyId,
+    isActive: true,
+    fuelName: 'Tarjeta fuel demo',
+    fuelStatus: 'active',
+  },
+  {
+    cardNumber: '2222222222222222',
+    type: 'VIATIC',
+    userId: SEED_USER.id,
+    companyId: SEED_USER.companyId,
+    isActive: true,
+    fuelName: null,
+    fuelStatus: null,
+  },
+] as const;
+
 type UserRecord = {
   readonly id: number;
   readonly email: string;
@@ -19,6 +40,14 @@ type UserRecord = {
 
 type UserCreateResult = {
   readonly id: number;
+};
+
+type CardRecord = {
+  readonly cardNumber: string;
+};
+
+type CardCreateManyResult = {
+  readonly count: number;
 };
 
 type PrismaClientWithUserDelegate = PrismaClient & {
@@ -42,10 +71,28 @@ type PrismaClientWithUserDelegate = PrismaClient & {
       select: { id: true };
     }): Promise<UserCreateResult>;
   };
+  readonly card: {
+    findMany(args: {
+      where: { cardNumber: { in: readonly string[] } };
+      select: { cardNumber: true };
+    }): Promise<readonly CardRecord[]>;
+    createMany(args: {
+      data: readonly {
+        cardNumber: string;
+        type: 'FUEL' | 'VIATIC';
+        userId: number;
+        companyId: number;
+        isActive: boolean;
+        fuelName: string | null;
+        fuelStatus: 'active' | null;
+      }[];
+    }): Promise<CardCreateManyResult>;
+  };
 };
 
 export async function seedUsers(prismaClient: PrismaClient): Promise<number> {
   const prismaClientWithUser = prismaClient as PrismaClientWithUserDelegate;
+  let insertedRecords = 0;
 
   const existingUser = await prismaClientWithUser.user.findFirst({
     where: {
@@ -54,24 +101,55 @@ export async function seedUsers(prismaClient: PrismaClient): Promise<number> {
     select: { id: true, email: true },
   });
 
-  if (existingUser) {
-    return 0;
+  if (!existingUser) {
+    await prismaClientWithUser.user.create({
+      data: {
+        id: SEED_USER.id,
+        name: SEED_USER.name,
+        email: SEED_USER.email,
+        password: SEED_USER.password,
+        companyId: SEED_USER.companyId,
+        branchId: SEED_USER.branchId,
+        areaId: SEED_USER.areaId,
+        roleId: SEED_USER.roleId,
+        isActive: SEED_USER.isActive,
+      },
+      select: { id: true },
+    });
+    insertedRecords += 1;
   }
 
-  await prismaClientWithUser.user.create({
-    data: {
-      id: SEED_USER.id,
-      name: SEED_USER.name,
-      email: SEED_USER.email,
-      password: SEED_USER.password,
-      companyId: SEED_USER.companyId,
-      branchId: SEED_USER.branchId,
-      areaId: SEED_USER.areaId,
-      roleId: SEED_USER.roleId,
-      isActive: SEED_USER.isActive,
+  const existingCards = await prismaClientWithUser.card.findMany({
+    where: {
+      cardNumber: {
+        in: SEED_CARDS.map((card) => card.cardNumber),
+      },
     },
-    select: { id: true },
+    select: { cardNumber: true },
   });
 
-  return 1;
+  const existingCardNumbers = new Set<string>(
+    existingCards.map((card) => card.cardNumber),
+  );
+
+  const cardsToCreate = SEED_CARDS.filter(
+    (card) => !existingCardNumbers.has(card.cardNumber),
+  ).map((card) => ({
+    cardNumber: card.cardNumber,
+    type: card.type,
+    userId: card.userId,
+    companyId: card.companyId,
+    isActive: card.isActive,
+    fuelName: card.fuelName,
+    fuelStatus: card.fuelStatus,
+  }));
+
+  if (cardsToCreate.length > 0) {
+    const cardResult = await prismaClientWithUser.card.createMany({
+      data: cardsToCreate,
+    });
+    insertedRecords += cardResult.count;
+  }
+
+  return insertedRecords;
 }

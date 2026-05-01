@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './infrastructure/prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
+import { TravelRequestModule } from './travel-request/travel-request.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { AuthModule } from './auth/auth.module';
     }),
     PrismaModule,
     AuthModule,
+    TravelRequestModule,
   ],
   controllers: [],
   providers: [],

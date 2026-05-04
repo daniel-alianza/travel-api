@@ -15,6 +15,7 @@ export class PrismaService
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       connectionLimit: 5,
+      allowPublicKeyRetrieval: true,
     });
     super({ adapter });
   }

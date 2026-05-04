@@ -157,3 +157,13 @@ export class CreateTravelRequestDto {
   @Type(() => TravelRequestTripDto)
   trips: TravelRequestTripDto[];
 }
+
+export class CorrectTravelRequestTripDto {
+  @Type(() => Number)
+  @IsInt()
+  userId: number;
+
+  @ValidateNested()
+  @Type(() => TravelRequestTripDto)
+  trip: TravelRequestTripDto;
+}

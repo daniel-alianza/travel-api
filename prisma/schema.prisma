@@ -117,10 +117,18 @@ model Card {
 enum TravelRequestStatus {
   draft
   submitted
+  awaiting_trip_correction
   approved
   rejected
   dispersed
   cancelled
+}
+
+enum TravelRequestTripApprovalStatus {
+  pending
+  approved
+  rejected
+  dispersed
 }
 
 model TravelRequest {
@@ -138,6 +146,8 @@ model TravelRequest {
   approvedAt          DateTime?
   rejectedAt          DateTime?
   dispersedAt         DateTime?
+  dispersedTotal      Decimal?            @db.Decimal(12, 2)
+  dispersionComment   String?             @db.Text
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
 
@@ -158,17 +168,21 @@ model TravelRequest {
 }
 
 model TravelRequestTrip {
-  id               Int      @id @default(autoincrement())
-  travelRequestId  Int
-  tripOrder        Int
-  destination      String
-  purpose          String   @db.Text
-  departureDate    DateTime
-  returnDate       DateTime
-  disbursementDate DateTime
-  estimatedTotal   Decimal  @default(0) @db.Decimal(12, 2)
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  id                 Int                             @id @default(autoincrement())
+  travelRequestId    Int
+  tripOrder          Int
+  destination        String
+  purpose            String                          @db.Text
+  departureDate      DateTime
+  returnDate         DateTime
+  disbursementDate   DateTime
+  estimatedTotal     Decimal                         @default(0) @db.Decimal(12, 2)
+  tripApprovalStatus TravelRequestTripApprovalStatus @default(pending)
+  approvedAt         DateTime?
+  rejectedAt         DateTime?
+  approverComment    String?                         @db.Text
+  createdAt          DateTime                        @default(now())
+  updatedAt          DateTime                        @updatedAt
 
   travelRequest TravelRequest                @relation(fields: [travelRequestId], references: [id])
   objectives    TravelRequestTripObjective[]
@@ -179,6 +193,8 @@ model TravelRequestTrip {
 
   @@unique([travelRequestId, tripOrder])
   @@index([travelRequestId])
+  @@index([tripApprovalStatus])
+  @@index([travelRequestId, tripApprovalStatus])
 }
 
 model TravelRequestTripObjective {

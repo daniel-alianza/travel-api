@@ -12,6 +12,7 @@ import {
 } from '@nestjs/swagger';
 import { LoginUseCase } from '../application/use-cases/login.use-case';
 import { RegisterUseCase } from '../application/use-cases/register.use-case';
+import { buildSuccessResponse } from '../../common/exceptions/builders/success-response.builder';
 import { LoginRequestDto } from './dtos/login-request.dto';
 import { RegisterRequestDto } from './dtos/register-request.dto';
 import { AuthConfigService } from '../infrastructure/auth-config.service';
@@ -32,13 +33,6 @@ class LoginHttpResponseDto {
 
   @ApiProperty()
   message: string;
-
-  @ApiProperty({
-    type: String,
-    nullable: true,
-    example: null,
-  })
-  error: string | null;
 }
 
 class RegisterResponseDataDto {
@@ -69,13 +63,6 @@ class RegisterHttpResponseDto {
 
   @ApiProperty()
   message: string;
-
-  @ApiProperty({
-    type: String,
-    nullable: true,
-    example: null,
-  })
-  error: string | null;
 }
 
 @ApiTags('Auth')
@@ -115,11 +102,7 @@ export class AuthController {
       areaId: requestBody.areaId,
     });
 
-    return {
-      data: registeredUser,
-      message: 'Usuario registrado exitosamente',
-      error: null,
-    };
+    return buildSuccessResponse(registeredUser, 'Usuario registrado exitosamente');
   }
 
   @Post('login')
@@ -159,13 +142,12 @@ export class AuthController {
       path: '/',
     });
 
-    return {
-      data: {
+    return buildSuccessResponse(
+      {
         accessToken: loginResult.token.accessToken,
         expiresInSeconds: loginResult.token.expiresInSeconds,
       },
-      message: 'Login exitoso',
-      error: null,
-    };
+      'Login exitoso',
+    );
   }
 }

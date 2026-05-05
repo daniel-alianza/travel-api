@@ -5,6 +5,8 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { buildSuccessResponse } from '../../../common/exceptions/builders/success-response.builder';
+import type { ApiSuccessResponse } from '../../../common/exceptions/interfaces/api-success-response.interface';
 import type { TravelRequestRepository } from '../interfaces/travel-request-repository.interface';
 
 export type ConfirmTravelRequestDispersionCommand = {
@@ -13,10 +15,8 @@ export type ConfirmTravelRequestDispersionCommand = {
   readonly comment: string | null;
 };
 
-export type ConfirmTravelRequestDispersionResponse = {
-  readonly data: { readonly ok: true };
-  readonly message: string;
-};
+export type ConfirmTravelRequestDispersionResponse =
+  ApiSuccessResponse<{ readonly ok: true }>;
 
 @Injectable()
 export class ConfirmTravelRequestDispersionUseCase {
@@ -55,9 +55,9 @@ export class ConfirmTravelRequestDispersionUseCase {
       );
     }
 
-    return {
-      data: { ok: true },
-      message: 'Solicitud dispersada correctamente.',
-    };
+    return buildSuccessResponse(
+      { ok: true as const },
+      'Solicitud dispersada correctamente.',
+    );
   }
 }

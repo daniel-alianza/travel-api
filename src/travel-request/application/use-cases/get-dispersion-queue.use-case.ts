@@ -1,4 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { buildSuccessResponse } from '../../../common/exceptions/builders/success-response.builder';
+import type { ApiSuccessResponse } from '../../../common/exceptions/interfaces/api-success-response.interface';
 import type {
   ApprovalRequestRecord,
   TravelRequestRepository,
@@ -14,10 +16,8 @@ export type DispersionQueueItem = {
   readonly fechaFinViaje: string;
 };
 
-export type GetDispersionQueueResponse = {
-  readonly data: readonly DispersionQueueItem[];
-  readonly message: string;
-};
+export type GetDispersionQueueResponse =
+  ApiSuccessResponse<readonly DispersionQueueItem[]>;
 
 @Injectable()
 export class GetDispersionQueueUseCase {
@@ -29,10 +29,10 @@ export class GetDispersionQueueUseCase {
   async execute(): Promise<GetDispersionQueueResponse> {
     const requests = await this.travelRequestRepository.findDispersionPendingRequests();
 
-    return {
-      data: requests.map((request) => mapRequestToDispersionItem(request)),
-      message: 'Solicitudes aprobadas pendientes de dispersión.',
-    };
+    return buildSuccessResponse(
+      requests.map((request) => mapRequestToDispersionItem(request)),
+      'Solicitudes aprobadas pendientes de dispersión.',
+    );
   }
 }
 

@@ -1,4 +1,6 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { buildSuccessResponse } from '../../../common/exceptions/builders/success-response.builder';
+import type { ApiSuccessResponse } from '../../../common/exceptions/interfaces/api-success-response.interface';
 import type {
   CardAssignmentUserRecord,
   CardRepository,
@@ -11,11 +13,7 @@ type AssignCardToUserCommand = {
   readonly cardType: 'VIATIC' | 'FUEL';
 };
 
-export type AssignCardToUserResponse = {
-  readonly data: CardAssignmentUserRecord;
-  readonly message: string;
-  readonly error: null;
-};
+export type AssignCardToUserResponse = ApiSuccessResponse<CardAssignmentUserRecord>;
 
 @Injectable()
 export class AssignCardToUserUseCase {
@@ -38,10 +36,6 @@ export class AssignCardToUserUseCase {
     if (user === null) {
       throw new NotFoundException('No fue posible recuperar el colaborador actualizado.');
     }
-    return {
-      data: user,
-      message: 'Tarjeta asignada correctamente.',
-      error: null,
-    };
+    return buildSuccessResponse(user, 'Tarjeta asignada correctamente.');
   }
 }

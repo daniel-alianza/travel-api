@@ -1,23 +1,24 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { buildSuccessResponse } from '../../../common/exceptions/builders/success-response.builder';
+import type { ApiSuccessResponse } from '../../../common/exceptions/interfaces/api-success-response.interface';
 import type {
   CardAssignmentUserRecord,
   CardAssignmentUsersQuery,
   CardRepository,
 } from '../interfaces/card-repository.interface';
 
-export type GetCardAssignmentUsersResponse = {
-  readonly data: {
-    readonly items: readonly CardAssignmentUserRecord[];
-    readonly meta: {
-      readonly page: number;
-      readonly pageSize: number;
-      readonly total: number;
-      readonly totalPages: number;
-    };
+type GetCardAssignmentUsersData = {
+  readonly items: readonly CardAssignmentUserRecord[];
+  readonly meta: {
+    readonly page: number;
+    readonly pageSize: number;
+    readonly total: number;
+    readonly totalPages: number;
   };
-  readonly message: string;
-  readonly error: null;
 };
+
+export type GetCardAssignmentUsersResponse =
+  ApiSuccessResponse<GetCardAssignmentUsersData>;
 
 @Injectable()
 export class GetCardAssignmentUsersUseCase {
@@ -28,8 +29,8 @@ export class GetCardAssignmentUsersUseCase {
 
   async execute(query: CardAssignmentUsersQuery): Promise<GetCardAssignmentUsersResponse> {
     const users = await this.cardRepository.findCardAssignmentUsers(query);
-    return {
-      data: {
+    return buildSuccessResponse(
+      {
         items: users.items,
         meta: {
           page: users.page,
@@ -38,8 +39,7 @@ export class GetCardAssignmentUsersUseCase {
           totalPages: users.totalPages,
         },
       },
-      message: 'Colaboradores cargados correctamente.',
-      error: null,
-    };
+      'Colaboradores cargados correctamente.',
+    );
   }
 }

@@ -1,13 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { buildSuccessResponse } from '../../../common/exceptions/builders/success-response.builder';
+import type { ApiSuccessResponse } from '../../../common/exceptions/interfaces/api-success-response.interface';
 import type { TravelRequestRepository } from '../interfaces/travel-request-repository.interface';
 
-export type GetApprovalFilterCatalogResponse = {
-  readonly data: {
-    readonly areas: readonly string[];
-    readonly companies: readonly string[];
-  };
-  readonly message: string;
+type ApprovalFilterCatalogData = {
+  readonly areas: readonly string[];
+  readonly companies: readonly string[];
 };
+
+export type GetApprovalFilterCatalogResponse =
+  ApiSuccessResponse<ApprovalFilterCatalogData>;
 
 @Injectable()
 export class GetApprovalFilterCatalogUseCase {
@@ -19,12 +21,12 @@ export class GetApprovalFilterCatalogUseCase {
   async execute(): Promise<GetApprovalFilterCatalogResponse> {
     const catalog = await this.travelRequestRepository.findApprovalFilterCatalog();
 
-    return {
-      data: {
+    return buildSuccessResponse(
+      {
         areas: catalog.areas.map((area) => area.name),
         companies: catalog.companies.map((company) => company.name),
       },
-      message: 'Catálogo de filtros cargado correctamente.',
-    };
+      'Catálogo de filtros cargado correctamente.',
+    );
   }
 }

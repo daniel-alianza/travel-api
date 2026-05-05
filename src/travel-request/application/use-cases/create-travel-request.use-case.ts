@@ -4,6 +4,8 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { buildSuccessResponse } from '../../../common/exceptions/builders/success-response.builder';
+import type { ApiSuccessResponse } from '../../../common/exceptions/interfaces/api-success-response.interface';
 import type {
   CreateTravelRequestRepositoryInput,
   TravelRequestRepository,
@@ -52,14 +54,14 @@ export type CreateTravelRequestCommand = {
   readonly trips: readonly CreateTravelRequestTripCommand[];
 };
 
-export type CreateTravelRequestResponse = {
-  readonly data: {
-    readonly id: number;
-    readonly status: string;
-    readonly createdAt: string;
-  };
-  readonly message: string;
+type CreateTravelRequestData = {
+  readonly id: number;
+  readonly status: string;
+  readonly createdAt: string;
 };
+
+export type CreateTravelRequestResponse =
+  ApiSuccessResponse<CreateTravelRequestData>;
 
 const FOOD_POLICY_EVENT_COST = 250;
 const FOOD_POLICY_EVENTS_PER_DAY = 3;
@@ -204,14 +206,14 @@ export class CreateTravelRequestUseCase {
       trips: repositoryInputTrips,
     });
 
-    return {
-      data: {
+    return buildSuccessResponse(
+      {
         id: createdRequest.id,
         status: createdRequest.status,
         createdAt: createdRequest.createdAt.toISOString(),
       },
-      message: 'Solicitud creada correctamente.',
-    };
+      'Solicitud creada correctamente.',
+    );
   }
 }
 

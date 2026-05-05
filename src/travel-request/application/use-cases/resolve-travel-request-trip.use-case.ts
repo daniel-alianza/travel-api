@@ -5,6 +5,8 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { buildSuccessResponse } from '../../../common/exceptions/builders/success-response.builder';
+import type { ApiSuccessResponse } from '../../../common/exceptions/interfaces/api-success-response.interface';
 import type { TravelRequestRepository } from '../interfaces/travel-request-repository.interface';
 
 export type ResolveTravelRequestTripCommand = {
@@ -13,12 +15,8 @@ export type ResolveTravelRequestTripCommand = {
   readonly comment: string | null;
 };
 
-export type ResolveTravelRequestTripResponse = {
-  readonly data: {
-    readonly ok: true;
-  };
-  readonly message: string;
-};
+export type ResolveTravelRequestTripResponse =
+  ApiSuccessResponse<{ readonly ok: true }>;
 
 @Injectable()
 export class ResolveTravelRequestTripUseCase {
@@ -63,12 +61,11 @@ export class ResolveTravelRequestTripUseCase {
       );
     }
 
-    return {
-      data: { ok: true },
-      message:
-        command.resolution === 'approve'
-          ? 'Viaje aprobado correctamente.'
-          : 'Viaje rechazado correctamente.',
-    };
+    return buildSuccessResponse(
+      { ok: true as const },
+      command.resolution === 'approve'
+        ? 'Viaje aprobado correctamente.'
+        : 'Viaje rechazado correctamente.',
+    );
   }
 }

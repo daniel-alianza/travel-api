@@ -7,6 +7,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { getDaysUntilMonthEnd as computeDaysUntilMonthEnd } from './date/days-until-month-end';
+import { buildSuccessResponse } from './exceptions/builders/success-response.builder';
 
 class DaysUntilMonthEndDataDto {
   @ApiProperty({ example: 12 })
@@ -22,13 +23,6 @@ class DaysUntilMonthEndHttpResponseDto {
 
   @ApiProperty()
   message: string;
-
-  @ApiProperty({
-    type: String,
-    nullable: true,
-    example: null,
-  })
-  error: string | null;
 }
 
 @ApiTags('Common')
@@ -50,13 +44,12 @@ export class CommonController {
     const timeZone =
       this.configService.get<string>('APP_TIMEZONE') ?? 'America/Mexico_City';
     const daysUntilMonthEnd = computeDaysUntilMonthEnd(new Date(), timeZone);
-    return {
-      data: {
+    return buildSuccessResponse(
+      {
         daysUntilMonthEnd,
         timeZone,
       },
-      message: 'Días hasta fin de mes calculados correctamente.',
-      error: null,
-    };
+      'Días hasta fin de mes calculados correctamente.',
+    );
   }
 }

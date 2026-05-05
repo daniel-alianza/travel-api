@@ -1,4 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { buildSuccessResponse } from '../../../common/exceptions/builders/success-response.builder';
+import type { ApiSuccessResponse } from '../../../common/exceptions/interfaces/api-success-response.interface';
 import type { TravelRequestRepository } from '../interfaces/travel-request-repository.interface';
 
 export type ApprovalTripConcept = {
@@ -43,10 +45,8 @@ export type ApprovalRequest = {
   readonly viajes: readonly ApprovalTrip[];
 };
 
-export type GetApprovalRequestsResponse = {
-  readonly data: readonly ApprovalRequest[];
-  readonly message: string;
-};
+export type GetApprovalRequestsResponse =
+  ApiSuccessResponse<readonly ApprovalRequest[]>;
 
 @Injectable()
 export class GetApprovalRequestsUseCase {
@@ -58,8 +58,8 @@ export class GetApprovalRequestsUseCase {
   async execute(): Promise<GetApprovalRequestsResponse> {
     const requests = await this.travelRequestRepository.findApprovalRequests();
 
-    return {
-      data: requests.map((request) => ({
+    return buildSuccessResponse(
+      requests.map((request) => ({
         id: request.id,
         nombreEmpleado: request.employeeName,
         correo: request.user.email,
@@ -96,8 +96,8 @@ export class GetApprovalRequestsUseCase {
             conceptosSolicitados: mapTripConcepts(trip.expenses),
           })),
       })),
-      message: 'Solicitudes cargadas correctamente.',
-    };
+      'Solicitudes cargadas correctamente.',
+    );
   }
 }
 

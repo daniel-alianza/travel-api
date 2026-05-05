@@ -1,29 +1,31 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { buildSuccessResponse } from '../../../common/exceptions/builders/success-response.builder';
+import type { ApiSuccessResponse } from '../../../common/exceptions/interfaces/api-success-response.interface';
 import type { TravelRequestRepository } from '../interfaces/travel-request-repository.interface';
 
-export type GetTravelRequestFormDataResponse = {
-  readonly data: {
-    readonly userId: number;
-    readonly employeeName: string;
-    readonly company: {
-      readonly id: number;
-      readonly name: string;
-    };
-    readonly branch: {
-      readonly id: number;
-      readonly name: string;
-    };
-    readonly area: {
-      readonly id: number;
-      readonly name: string;
-    };
-    readonly viaticCards: readonly {
-      readonly id: number;
-      readonly cardNumber: string;
-    }[];
+type GetTravelRequestFormDataData = {
+  readonly userId: number;
+  readonly employeeName: string;
+  readonly company: {
+    readonly id: number;
+    readonly name: string;
   };
-  readonly message: string;
+  readonly branch: {
+    readonly id: number;
+    readonly name: string;
+  };
+  readonly area: {
+    readonly id: number;
+    readonly name: string;
+  };
+  readonly viaticCards: readonly {
+    readonly id: number;
+    readonly cardNumber: string;
+  }[];
 };
+
+export type GetTravelRequestFormDataResponse =
+  ApiSuccessResponse<GetTravelRequestFormDataData>;
 
 @Injectable()
 export class GetTravelRequestFormDataUseCase {
@@ -46,8 +48,8 @@ export class GetTravelRequestFormDataUseCase {
         cardNumber: card.cardNumber,
       }));
 
-    return {
-      data: {
+    return buildSuccessResponse(
+      {
         userId: user.id,
         employeeName: user.name,
         company: user.company,
@@ -55,7 +57,7 @@ export class GetTravelRequestFormDataUseCase {
         area: user.area,
         viaticCards,
       },
-      message: 'Datos de formulario cargados correctamente.',
-    };
+      'Datos de formulario cargados correctamente.',
+    );
   }
 }

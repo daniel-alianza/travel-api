@@ -1,14 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { buildSuccessResponse } from '../../../common/exceptions/builders/success-response.builder';
+import type { ApiSuccessResponse } from '../../../common/exceptions/interfaces/api-success-response.interface';
 import type { CardRepository } from '../interfaces/card-repository.interface';
 
-export type CardAssignmentFilterCatalogResponse = {
-  readonly data: {
-    readonly companies: readonly { readonly name: string }[];
-    readonly areas: readonly { readonly name: string }[];
-  };
-  readonly message: string;
-  readonly error: null;
+type CardAssignmentFilterCatalogData = {
+  readonly companies: readonly { readonly name: string }[];
+  readonly areas: readonly { readonly name: string }[];
 };
+
+export type CardAssignmentFilterCatalogResponse =
+  ApiSuccessResponse<CardAssignmentFilterCatalogData>;
 
 @Injectable()
 export class GetCardAssignmentFilterCatalogUseCase {
@@ -20,14 +21,13 @@ export class GetCardAssignmentFilterCatalogUseCase {
   async execute(): Promise<CardAssignmentFilterCatalogResponse> {
     const catalog = await this.cardRepository.findCardAssignmentFilterCatalog();
 
-    return {
-      data: {
+    return buildSuccessResponse(
+      {
         companies: catalog.companies,
         areas: catalog.areas,
       },
-      message: 'Catálogo de filtros cargado correctamente.',
-      error: null,
-    };
+      'Catálogo de filtros cargado correctamente.',
+    );
   }
 }
 

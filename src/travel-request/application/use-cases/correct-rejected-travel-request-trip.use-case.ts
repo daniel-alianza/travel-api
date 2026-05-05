@@ -5,6 +5,8 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { buildSuccessResponse } from '../../../common/exceptions/builders/success-response.builder';
+import type { ApiSuccessResponse } from '../../../common/exceptions/interfaces/api-success-response.interface';
 import type {
   TravelRequestRepository,
   TravelRequestTripInput,
@@ -17,15 +19,15 @@ export type CorrectRejectedTravelRequestTripCommand = {
   readonly trip: CreateTravelRequestTripCommand;
 };
 
-export type CorrectRejectedTravelRequestTripResponse = {
-  readonly data: {
-    readonly solicitudId: number;
-    readonly tripId: number;
-    readonly statusViaje: string;
-    readonly statusSolicitud: string;
-  };
-  readonly message: string;
+type CorrectRejectedTravelRequestTripData = {
+  readonly solicitudId: number;
+  readonly tripId: number;
+  readonly statusViaje: string;
+  readonly statusSolicitud: string;
 };
+
+export type CorrectRejectedTravelRequestTripResponse =
+  ApiSuccessResponse<CorrectRejectedTravelRequestTripData>;
 
 @Injectable()
 export class CorrectRejectedTravelRequestTripUseCase {
@@ -133,15 +135,15 @@ export class CorrectRejectedTravelRequestTripUseCase {
 
     const viajeActualizado = solicitud?.trips.find((viaje) => viaje.id === command.tripId);
 
-    return {
-      data: {
+    return buildSuccessResponse(
+      {
         solicitudId: solicitud?.id ?? 0,
         tripId: command.tripId,
         statusViaje: viajeActualizado?.tripApprovalStatus ?? 'pending',
         statusSolicitud: solicitud?.status ?? 'submitted',
       },
-      message: 'Viaje corregido y reenviado a revisión.',
-    };
+      'Viaje corregido y reenviado a revisión.',
+    );
   }
 }
 

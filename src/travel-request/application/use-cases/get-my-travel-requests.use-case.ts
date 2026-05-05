@@ -1,25 +1,26 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { buildSuccessResponse } from '../../../common/exceptions/builders/success-response.builder';
+import type { ApiSuccessResponse } from '../../../common/exceptions/interfaces/api-success-response.interface';
 import type { TravelRequestRepository } from '../interfaces/travel-request-repository.interface';
 
-export type GetMyTravelRequestsResponse = {
-  readonly data: {
-    readonly solicitudes: readonly {
-      readonly id: number;
-      readonly status: string;
-      readonly createdAt: string;
-      readonly viajes: readonly {
-        readonly tripId: number;
-        readonly tripOrder: number;
-        readonly destino: string;
-        readonly estadoViaje: string;
-        readonly comentarioAprobador: string | null;
-        readonly aprobadoEn: string | null;
-        readonly rechazadoEn: string | null;
-      }[];
+type MyTravelRequestsData = {
+  readonly solicitudes: readonly {
+    readonly id: number;
+    readonly status: string;
+    readonly createdAt: string;
+    readonly viajes: readonly {
+      readonly tripId: number;
+      readonly tripOrder: number;
+      readonly destino: string;
+      readonly estadoViaje: string;
+      readonly comentarioAprobador: string | null;
+      readonly aprobadoEn: string | null;
+      readonly rechazadoEn: string | null;
     }[];
-  };
-  readonly message: string;
+  }[];
 };
+
+export type GetMyTravelRequestsResponse = ApiSuccessResponse<MyTravelRequestsData>;
 
 @Injectable()
 export class GetMyTravelRequestsUseCase {
@@ -32,8 +33,8 @@ export class GetMyTravelRequestsUseCase {
     const solicitudes =
       await this.travelRequestRepository.findTravelRequestsByUserId(userId);
 
-    return {
-      data: {
+    return buildSuccessResponse(
+      {
         solicitudes: solicitudes.map((solicitud) => ({
           id: solicitud.id,
           status: solicitud.status,
@@ -49,7 +50,7 @@ export class GetMyTravelRequestsUseCase {
           })),
         })),
       },
-      message: 'Solicitudes del usuario cargadas correctamente.',
-    };
+      'Solicitudes del usuario cargadas correctamente.',
+    );
   }
 }

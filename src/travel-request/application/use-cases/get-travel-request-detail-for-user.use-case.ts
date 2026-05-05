@@ -1,54 +1,56 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { buildSuccessResponse } from '../../../common/exceptions/builders/success-response.builder';
+import type { ApiSuccessResponse } from '../../../common/exceptions/interfaces/api-success-response.interface';
 import type { TravelRequestRepository } from '../interfaces/travel-request-repository.interface';
 
-export type GetTravelRequestDetailForUserResponse = {
-  readonly data: {
-    readonly solicitudId: number;
-    readonly status: string;
-    readonly employeeName: string;
-    readonly corporateCardNumber: string | null;
-    readonly company: { readonly id: number; readonly name: string };
-    readonly branch: { readonly id: number; readonly name: string };
-    readonly area: { readonly id: number; readonly name: string };
-    readonly viajes: readonly {
-      readonly tripId: number;
-      readonly tripOrder: number;
-      readonly estadoViaje: string;
-      readonly destinoViaje: string;
-      readonly motivoViaje: string;
-      readonly fechaSalida: string;
-      readonly fechaRegreso: string;
-      readonly fechaDispersion: string;
-      readonly gastos: {
-        readonly transporte: number;
-        readonly peajes: number;
-        readonly hospedaje: number;
-        readonly alimentos: number;
-        readonly fletes: number;
-        readonly herramientas: number;
-        readonly envios: number;
-        readonly miscelaneos: number;
-      };
-      readonly objetivos: readonly string[];
-      readonly gasolina: {
-        readonly necesitaGasolina: boolean;
-        readonly cardId: number | null;
-        readonly cardNumber: string | null;
-        readonly placa: string | null;
-        readonly kilometrajeActualKm: number | null;
-        readonly montoSolicitado: number | null;
-        readonly distanciaKm: number | null;
-        readonly comentarios: string | null;
-      };
-      readonly tag: {
-        readonly necesitaTag: boolean;
-        readonly montoSolicitado: number | null;
-        readonly comentarios: string | null;
-      };
-    }[];
-  };
-  readonly message: string;
+type TravelRequestDetailForUserData = {
+  readonly solicitudId: number;
+  readonly status: string;
+  readonly employeeName: string;
+  readonly corporateCardNumber: string | null;
+  readonly company: { readonly id: number; readonly name: string };
+  readonly branch: { readonly id: number; readonly name: string };
+  readonly area: { readonly id: number; readonly name: string };
+  readonly viajes: readonly {
+    readonly tripId: number;
+    readonly tripOrder: number;
+    readonly estadoViaje: string;
+    readonly destinoViaje: string;
+    readonly motivoViaje: string;
+    readonly fechaSalida: string;
+    readonly fechaRegreso: string;
+    readonly fechaDispersion: string;
+    readonly gastos: {
+      readonly transporte: number;
+      readonly peajes: number;
+      readonly hospedaje: number;
+      readonly alimentos: number;
+      readonly fletes: number;
+      readonly herramientas: number;
+      readonly envios: number;
+      readonly miscelaneos: number;
+    };
+    readonly objetivos: readonly string[];
+    readonly gasolina: {
+      readonly necesitaGasolina: boolean;
+      readonly cardId: number | null;
+      readonly cardNumber: string | null;
+      readonly placa: string | null;
+      readonly kilometrajeActualKm: number | null;
+      readonly montoSolicitado: number | null;
+      readonly distanciaKm: number | null;
+      readonly comentarios: string | null;
+    };
+    readonly tag: {
+      readonly necesitaTag: boolean;
+      readonly montoSolicitado: number | null;
+      readonly comentarios: string | null;
+    };
+  }[];
 };
+
+export type GetTravelRequestDetailForUserResponse =
+  ApiSuccessResponse<TravelRequestDetailForUserData>;
 
 @Injectable()
 export class GetTravelRequestDetailForUserUseCase {
@@ -70,8 +72,8 @@ export class GetTravelRequestDetailForUserUseCase {
       throw new NotFoundException('No se encontró la solicitud o no pertenece al usuario.');
     }
 
-    return {
-      data: {
+    return buildSuccessResponse(
+      {
         solicitudId: solicitud.id,
         status: solicitud.status,
         employeeName: solicitud.employeeName,
@@ -116,8 +118,8 @@ export class GetTravelRequestDetailForUserUseCase {
           },
         })),
       },
-      message: 'Detalle de solicitud cargado correctamente.',
-    };
+      'Detalle de solicitud cargado correctamente.',
+    );
   }
 }
 

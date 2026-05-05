@@ -1,16 +1,17 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { buildSuccessResponse } from '../../../common/exceptions/builders/success-response.builder';
+import type { ApiSuccessResponse } from '../../../common/exceptions/interfaces/api-success-response.interface';
 import type { TravelRequestRepository } from '../interfaces/travel-request-repository.interface';
 
-export type GetUserFuelCardsResponse = {
-  readonly data: {
-    readonly userId: number;
-    readonly fuelCards: readonly {
-      readonly id: number;
-      readonly cardNumber: string;
-    }[];
-  };
-  readonly message: string;
+type GetUserFuelCardsData = {
+  readonly userId: number;
+  readonly fuelCards: readonly {
+    readonly id: number;
+    readonly cardNumber: string;
+  }[];
 };
+
+export type GetUserFuelCardsResponse = ApiSuccessResponse<GetUserFuelCardsData>;
 
 @Injectable()
 export class GetUserFuelCardsUseCase {
@@ -33,12 +34,12 @@ export class GetUserFuelCardsUseCase {
         cardNumber: card.cardNumber,
       }));
 
-    return {
-      data: {
+    return buildSuccessResponse(
+      {
         userId: user.id,
         fuelCards,
       },
-      message: 'Tarjetas fuel cargadas correctamente.',
-    };
+      'Tarjetas fuel cargadas correctamente.',
+    );
   }
 }

@@ -2,10 +2,13 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { HttpExceptionFilter } from './common/exceptions/filters/http-exception.filter';
+import { UnknownExceptionFilter } from './common/exceptions/filters/unknown-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api');
+  app.useGlobalFilters(new HttpExceptionFilter(), new UnknownExceptionFilter());
 
   app.enableCors({
     origin: process.env.FRONTEND_URL ?? '*',

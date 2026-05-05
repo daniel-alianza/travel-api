@@ -1,14 +1,13 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { buildSuccessResponse } from '../../../common/exceptions/builders/success-response.builder';
+import type { ApiSuccessResponse } from '../../../common/exceptions/interfaces/api-success-response.interface';
 import type {
   CardAssignmentUserRecord,
   CardRepository,
 } from '../interfaces/card-repository.interface';
 
-export type DeactivateUserCardResponse = {
-  readonly data: CardAssignmentUserRecord;
-  readonly message: string;
-  readonly error: null;
-};
+export type DeactivateUserCardResponse =
+  ApiSuccessResponse<CardAssignmentUserRecord>;
 
 @Injectable()
 export class DeactivateUserCardUseCase {
@@ -29,10 +28,6 @@ export class DeactivateUserCardUseCase {
     if (user === null) {
       throw new NotFoundException('No fue posible recuperar el colaborador actualizado.');
     }
-    return {
-      data: user,
-      message: 'Tarjeta desactivada correctamente.',
-      error: null,
-    };
+    return buildSuccessResponse(user, 'Tarjeta desactivada correctamente.');
   }
 }

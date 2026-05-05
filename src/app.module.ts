@@ -3,6 +3,8 @@ import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './infrastructure/prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { TravelRequestModule } from './travel-request/travel-request.module';
+import { CommonModule } from './common/common.module';
+import { CardsModule } from './cards/cards.module';
 
 @Module({
   imports: [
@@ -13,6 +15,8 @@ import { TravelRequestModule } from './travel-request/travel-request.module';
     PrismaModule,
     AuthModule,
     TravelRequestModule,
+    CommonModule,
+    CardsModule,
   ],
   controllers: [],
   providers: [],

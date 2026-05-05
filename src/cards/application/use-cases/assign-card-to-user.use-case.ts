@@ -1,4 +1,9 @@
-import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { buildSuccessResponse } from '../../../common/exceptions/builders/success-response.builder';
 import type { ApiSuccessResponse } from '../../../common/exceptions/interfaces/api-success-response.interface';
 import type {
@@ -8,6 +13,7 @@ import type {
 
 type AssignCardToUserCommand = {
   readonly userId: number;
+  readonly actorUserId?: number;
   readonly cardNumber: string;
   readonly companyName: string;
   readonly cardType: 'VIATIC' | 'FUEL';
@@ -18,7 +24,8 @@ type AssignCardToUserCommand = {
   readonly fuelStatus?: 'active' | 'inactive' | 'blocked' | 'cancelled';
 };
 
-export type AssignCardToUserResponse = ApiSuccessResponse<CardAssignmentUserRecord>;
+export type AssignCardToUserResponse =
+  ApiSuccessResponse<CardAssignmentUserRecord>;
 
 @Injectable()
 export class AssignCardToUserUseCase {
@@ -27,7 +34,9 @@ export class AssignCardToUserUseCase {
     private readonly cardRepository: CardRepository,
   ) {}
 
-  async execute(command: AssignCardToUserCommand): Promise<AssignCardToUserResponse> {
+  async execute(
+    command: AssignCardToUserCommand,
+  ): Promise<AssignCardToUserResponse> {
     const result = await this.cardRepository.assignCardToUser(command);
     if (result === 'user_not_found') {
       throw new NotFoundException('El colaborador no existe.');
@@ -45,9 +54,13 @@ export class AssignCardToUserUseCase {
         'La tarjeta ya está asignada a otro colaborador activo.',
       );
     }
-    const user = await this.cardRepository.findCardAssignmentUserById(command.userId);
+    const user = await this.cardRepository.findCardAssignmentUserById(
+      command.userId,
+    );
     if (user === null) {
-      throw new NotFoundException('No fue posible recuperar el colaborador actualizado.');
+      throw new NotFoundException(
+        'No fue posible recuperar el colaborador actualizado.',
+      );
     }
     return buildSuccessResponse(user, 'Tarjeta asignada correctamente.');
   }

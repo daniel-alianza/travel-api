@@ -97,6 +97,9 @@ model User {
   area    Area    @relation(fields: [areaId], references: [id])
   role    Role    @relation(fields: [roleId], references: [id])
   cards   Card[]
+  createdCards     Card[] @relation("CardCreatedByUser")
+  assignedCards    Card[] @relation("CardAssignedByUser")
+  deactivatedCards Card[] @relation("CardDeactivatedByUser")
 }
 
 model Card {
@@ -119,6 +122,13 @@ model Card {
   fuelStatus                 FuelCardStatus?
   sapCode                    String?
   sapSyncedAt                DateTime?
+  createdById                Int?
+  createdBy                  User?                       @relation("CardCreatedByUser", fields: [createdById], references: [id])
+  assignedById               Int?
+  assignedBy                 User?                       @relation("CardAssignedByUser", fields: [assignedById], references: [id])
+  deactivatedAt              DateTime?
+  deactivatedById            Int?
+  deactivatedBy              User?                       @relation("CardDeactivatedByUser", fields: [deactivatedById], references: [id])
   createdAt                  DateTime                    @default(now())
   updatedAt                  DateTime                    @updatedAt
   travelRequestTripGasolines TravelRequestTripGasoline[]
@@ -126,6 +136,9 @@ model Card {
   @@index([type])
   @@index([companyId])
   @@index([userId])
+  @@index([createdById])
+  @@index([assignedById])
+  @@index([deactivatedById])
 }
 
 enum TravelRequestStatus {

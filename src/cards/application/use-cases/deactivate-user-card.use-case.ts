@@ -18,15 +18,20 @@ export class DeactivateUserCardUseCase {
 
   async execute(input: {
     readonly userId: number;
+    readonly actorUserId?: number;
     readonly cardType: 'VIATIC' | 'FUEL';
   }): Promise<DeactivateUserCardResponse> {
     const result = await this.cardRepository.deactivateUserCard(input);
     if (result === 'user_not_found') {
       throw new NotFoundException('El colaborador no existe.');
     }
-    const user = await this.cardRepository.findCardAssignmentUserById(input.userId);
+    const user = await this.cardRepository.findCardAssignmentUserById(
+      input.userId,
+    );
     if (user === null) {
-      throw new NotFoundException('No fue posible recuperar el colaborador actualizado.');
+      throw new NotFoundException(
+        'No fue posible recuperar el colaborador actualizado.',
+      );
     }
     return buildSuccessResponse(user, 'Tarjeta desactivada correctamente.');
   }

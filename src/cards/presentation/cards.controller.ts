@@ -93,6 +93,7 @@ export class CardsController {
             })();
     return this.assignCardToUserUseCase.execute({
       userId,
+      actorUserId: body.actorUserId,
       cardNumber: body.cardNumber,
       companyName: body.companyName,
       cardType: validatedCardType,
@@ -125,6 +126,7 @@ export class CardsController {
             })();
     return this.deactivateUserCardUseCase.execute({
       userId,
+      actorUserId: body.actorUserId,
       cardType: validatedCardType,
     });
   }

@@ -26,6 +26,7 @@ export type CardAssignmentUsersListRecord = {
 
 export type AssignCardToUserInput = {
   readonly userId: number;
+  readonly actorUserId?: number;
   readonly cardNumber: string;
   readonly companyName: string;
   readonly cardType: 'VIATIC' | 'FUEL';
@@ -45,6 +46,7 @@ export type AssignCardToUserResult =
 
 export type DeactivateUserCardInput = {
   readonly userId: number;
+  readonly actorUserId?: number;
   readonly cardType: 'VIATIC' | 'FUEL';
 };
 
@@ -58,7 +60,13 @@ export interface CardRepository {
     readonly companies: readonly { readonly name: string }[];
     readonly areas: readonly { readonly name: string }[];
   }>;
-  assignCardToUser(input: AssignCardToUserInput): Promise<AssignCardToUserResult>;
-  deactivateUserCard(input: DeactivateUserCardInput): Promise<DeactivateUserCardResult>;
-  findCardAssignmentUserById(userId: number): Promise<CardAssignmentUserRecord | null>;
+  assignCardToUser(
+    input: AssignCardToUserInput,
+  ): Promise<AssignCardToUserResult>;
+  deactivateUserCard(
+    input: DeactivateUserCardInput,
+  ): Promise<DeactivateUserCardResult>;
+  findCardAssignmentUserById(
+    userId: number,
+  ): Promise<CardAssignmentUserRecord | null>;
 }

@@ -55,7 +55,9 @@ function pickLatestCardNumberPerType(
   return { viatic: viaticNumber, fuel: fuelNumber };
 }
 
-function toCardAssignmentUser(record: UserListDbRecord): CardAssignmentUserRecord {
+function toCardAssignmentUser(
+  record: UserListDbRecord,
+): CardAssignmentUserRecord {
   const { viatic, fuel } = pickLatestCardNumberPerType(record.cards);
   return {
     id: record.id,
@@ -153,7 +155,10 @@ export class CardPrismaRepository implements CardRepository {
     };
   }
 
-  async assignCardToUser(input: AssignCardToUserInput): Promise<AssignCardToUserResult> {
+  async assignCardToUser(
+    input: AssignCardToUserInput,
+  ): Promise<AssignCardToUserResult> {
+    const auditActorId = input.actorUserId ?? null;
     const selectedCompany = await this.prismaService.company.findFirst({
       where: { name: input.companyName.trim() },
       select: { id: true },
@@ -185,10 +190,11 @@ export class CardPrismaRepository implements CardRepository {
 
     const selectedCompanyId = selectedCompany.id;
     if (input.cardType === 'FUEL') {
-      const gasolineSupplier = await this.prismaService.gasolineSupplier.findFirst({
-        where: { companyId: selectedCompanyId },
-        select: { id: true },
-      });
+      const gasolineSupplier =
+        await this.prismaService.gasolineSupplier.findFirst({
+          where: { companyId: selectedCompanyId },
+          select: { id: true },
+        });
       if (gasolineSupplier === null) {
         return 'gasoline_supplier_not_found';
       }
@@ -209,15 +215,22 @@ export class CardPrismaRepository implements CardRepository {
         : null;
 
     await this.prismaService.$transaction(async (tx) => {
+      const deactivationDate = new Date();
       await tx.card.updateMany({
         where: { userId: input.userId, type: input.cardType, isActive: true },
-        data: { isActive: false },
+        data: {
+          isActive: false,
+          deactivatedAt: deactivationDate,
+          deactivatedById: auditActorId,
+          fuelStatus: input.cardType === 'FUEL' ? 'inactive' : undefined,
+        },
       });
       const existing = await tx.card.findUnique({
         where: { cardNumber: input.cardNumber },
-        select: { id: true, type: true },
+        select: { id: true, type: true, createdById: true },
       });
       if (existing === null) {
+        const assignmentDate = new Date();
         await tx.card.create({
           data: {
             cardNumber: input.cardNumber,
@@ -225,19 +238,32 @@ export class CardPrismaRepository implements CardRepository {
             companyId: selectedCompanyId,
             userId: input.userId,
             isActive: true,
-            assignedAt: new Date(),
+            assignedAt: assignmentDate,
+            createdById: auditActorId,
+            assignedById: auditActorId,
+            deactivatedAt: null,
+            deactivatedById: null,
             fuelName: input.cardType === 'FUEL' ? fuelName : null,
             fuelCardKind: input.cardType === 'FUEL' ? input.fuelCardKind : null,
-            fuelGroup: input.cardType === 'FUEL' ? input.fuelGroup ?? null : null,
+            fuelGroup:
+              input.cardType === 'FUEL' ? (input.fuelGroup ?? null) : null,
             fuelAssignmentType:
-              input.cardType === 'FUEL' ? input.fuelAssignmentType ?? null : null,
+              input.cardType === 'FUEL'
+                ? (input.fuelAssignmentType ?? null)
+                : null,
             fuelStatus: input.cardType === 'FUEL' ? fuelStatus : null,
-            sapCode: input.cardType === 'FUEL' ? sapSyncResult?.sapCode ?? null : null,
+            sapCode:
+              input.cardType === 'FUEL'
+                ? (sapSyncResult?.sapCode ?? null)
+                : null,
             sapSyncedAt:
-              input.cardType === 'FUEL' ? sapSyncResult?.sapSyncedAt ?? null : null,
+              input.cardType === 'FUEL'
+                ? (sapSyncResult?.sapSyncedAt ?? null)
+                : null,
           },
         });
       } else {
+        const assignmentDate = new Date();
         await tx.card.update({
           where: { id: existing.id },
           data: {
@@ -245,16 +271,28 @@ export class CardPrismaRepository implements CardRepository {
             companyId: selectedCompanyId,
             userId: input.userId,
             isActive: true,
-            assignedAt: new Date(),
+            assignedAt: assignmentDate,
+            createdById: existing.createdById ?? auditActorId,
+            assignedById: auditActorId,
+            deactivatedAt: null,
+            deactivatedById: null,
             fuelName: input.cardType === 'FUEL' ? fuelName : null,
             fuelCardKind: input.cardType === 'FUEL' ? input.fuelCardKind : null,
-            fuelGroup: input.cardType === 'FUEL' ? input.fuelGroup ?? null : null,
+            fuelGroup:
+              input.cardType === 'FUEL' ? (input.fuelGroup ?? null) : null,
             fuelAssignmentType:
-              input.cardType === 'FUEL' ? input.fuelAssignmentType ?? null : null,
+              input.cardType === 'FUEL'
+                ? (input.fuelAssignmentType ?? null)
+                : null,
             fuelStatus: input.cardType === 'FUEL' ? fuelStatus : null,
-            sapCode: input.cardType === 'FUEL' ? sapSyncResult?.sapCode ?? null : null,
+            sapCode:
+              input.cardType === 'FUEL'
+                ? (sapSyncResult?.sapCode ?? null)
+                : null,
             sapSyncedAt:
-              input.cardType === 'FUEL' ? sapSyncResult?.sapSyncedAt ?? null : null,
+              input.cardType === 'FUEL'
+                ? (sapSyncResult?.sapSyncedAt ?? null)
+                : null,
           },
         });
       }
@@ -265,6 +303,7 @@ export class CardPrismaRepository implements CardRepository {
 
   async deactivateUserCard(input: {
     readonly userId: number;
+    readonly actorUserId?: number;
     readonly cardType: 'VIATIC' | 'FUEL';
   }): Promise<DeactivateUserCardResult> {
     const user = await this.prismaService.user.findUnique({
@@ -276,12 +315,19 @@ export class CardPrismaRepository implements CardRepository {
     }
     await this.prismaService.card.updateMany({
       where: { userId: input.userId, type: input.cardType, isActive: true },
-      data: { isActive: false },
+      data: {
+        isActive: false,
+        deactivatedAt: new Date(),
+        deactivatedById: input.actorUserId ?? null,
+        fuelStatus: input.cardType === 'FUEL' ? 'inactive' : undefined,
+      },
     });
     return 'ok';
   }
 
-  async findCardAssignmentUserById(userId: number): Promise<CardAssignmentUserRecord | null> {
+  async findCardAssignmentUserById(
+    userId: number,
+  ): Promise<CardAssignmentUserRecord | null> {
     const user = await this.prismaService.user.findFirst({
       where: { id: userId, isActive: true },
       select: {

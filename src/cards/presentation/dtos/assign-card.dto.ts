@@ -1,7 +1,24 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsIn, IsNotEmpty, IsOptional, IsString, Matches } from 'class-validator';
+import {
+  IsInt,
+  IsIn,
+  IsNotEmpty,
+  IsPositive,
+  IsOptional,
+  IsString,
+  Matches,
+} from 'class-validator';
 
 export class AssignCardDto {
+  @ApiPropertyOptional({
+    example: 12,
+    description: 'Usuario que ejecuta la asignación de tarjeta.',
+  })
+  @IsOptional()
+  @IsInt()
+  @IsPositive()
+  actorUserId?: number;
+
   @ApiProperty({
     example: '4532123456789010',
     description: 'Número completo de tarjeta para registrar asignación.',

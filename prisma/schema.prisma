@@ -26,16 +26,23 @@ enum FuelCardKind {
   virtual
 }
 
+enum BranchSource {
+  INTERNAL
+  SAP_ALIANZA
+}
+
 datasource db {
   provider = "mysql"
 }
 
 model Company {
-  id             Int             @id @default(autoincrement())
-  name           String
-  users          User[]
-  cards          Card[]
-  travelRequests TravelRequest[]
+  id                Int                @id @default(autoincrement())
+  name              String
+  users             User[]
+  cards             Card[]
+  travelRequests    TravelRequest[]
+  branches          Branch[]
+  gasolineSuppliers GasolineSupplier[]
 }
 
 model Area {
@@ -48,8 +55,15 @@ model Area {
 model Branch {
   id             Int             @id @default(autoincrement())
   name           String
+  companyId      Int?
+  company        Company?        @relation(fields: [companyId], references: [id])
+  externalCode   String?
+  source         BranchSource?
   users          User[]
   travelRequests TravelRequest[]
+
+  @@unique([companyId, externalCode])
+  @@index([companyId])
 }
 
 model Role {
@@ -268,4 +282,15 @@ model TravelRequestTripFile {
   trip TravelRequestTrip @relation(fields: [tripId], references: [id])
 
   @@index([tripId])
+}
+
+model GasolineSupplier {
+  id        Int      @id @default(autoincrement())
+  code      String
+  name      String
+  companyId Int?
+  company   Company? @relation(fields: [companyId], references: [id])
+
+  @@unique([companyId, code])
+  @@index([companyId])
 }

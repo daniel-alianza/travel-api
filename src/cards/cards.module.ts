@@ -4,12 +4,16 @@ import { DeactivateUserCardUseCase } from './application/use-cases/deactivate-us
 import { GetCardAssignmentUsersUseCase } from './application/use-cases/get-card-assignment-users.use-case';
 import { GetCardAssignmentFilterCatalogUseCase } from './application/use-cases/get-card-assignment-filter-catalog.use-case';
 import { CardPrismaRepository } from './infrastructure/card-prisma.repository';
+import { FuelCardSapSyncService } from './infrastructure/fuel-card-sap-sync.service';
 import { CardsController } from './presentation/cards.controller';
+import { SapConnectionModule } from '../infrastructure/SL/sap-connection.module';
 
 @Module({
+  imports: [SapConnectionModule],
   controllers: [CardsController],
   providers: [
     CardPrismaRepository,
+    FuelCardSapSyncService,
     GetCardAssignmentUsersUseCase,
     GetCardAssignmentFilterCatalogUseCase,
     AssignCardToUserUseCase,

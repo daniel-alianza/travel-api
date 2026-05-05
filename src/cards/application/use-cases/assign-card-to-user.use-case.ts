@@ -11,6 +11,11 @@ type AssignCardToUserCommand = {
   readonly cardNumber: string;
   readonly companyName: string;
   readonly cardType: 'VIATIC' | 'FUEL';
+  readonly fuelName?: string;
+  readonly fuelCardKind?: 'physical' | 'virtual';
+  readonly fuelAssignmentType?: 'NotAcumulative' | 'Acumulable';
+  readonly fuelGroup?: string;
+  readonly fuelStatus?: 'active' | 'inactive' | 'blocked' | 'cancelled';
 };
 
 export type AssignCardToUserResponse = ApiSuccessResponse<CardAssignmentUserRecord>;
@@ -26,6 +31,14 @@ export class AssignCardToUserUseCase {
     const result = await this.cardRepository.assignCardToUser(command);
     if (result === 'user_not_found') {
       throw new NotFoundException('El colaborador no existe.');
+    }
+    if (result === 'company_not_found') {
+      throw new NotFoundException('La compañía seleccionada no existe.');
+    }
+    if (result === 'gasoline_supplier_not_found') {
+      throw new NotFoundException(
+        'La compañía seleccionada no tiene proveedor de gasolina configurado.',
+      );
     }
     if (result === 'card_in_use') {
       throw new BadRequestException(

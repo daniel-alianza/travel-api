@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
+import { FuelCardSapSyncService } from './fuel-card-sap-sync.service';
 import type {
   AssignCardToUserInput,
   AssignCardToUserResult,
@@ -69,7 +70,10 @@ function toCardAssignmentUser(record: UserListDbRecord): CardAssignmentUserRecor
 
 @Injectable()
 export class CardPrismaRepository implements CardRepository {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly fuelCardSapSyncService: FuelCardSapSyncService,
+  ) {}
 
   async findCardAssignmentFilterCatalog(): Promise<{
     readonly companies: readonly { readonly name: string }[];
@@ -154,6 +158,9 @@ export class CardPrismaRepository implements CardRepository {
       where: { name: input.companyName.trim() },
       select: { id: true },
     });
+    if (selectedCompany === null) {
+      return 'company_not_found';
+    }
 
     const user = await this.prismaService.user.findUnique({
       where: { id: input.userId },
@@ -176,6 +183,31 @@ export class CardPrismaRepository implements CardRepository {
       return 'card_in_use';
     }
 
+    const selectedCompanyId = selectedCompany.id;
+    if (input.cardType === 'FUEL') {
+      const gasolineSupplier = await this.prismaService.gasolineSupplier.findFirst({
+        where: { companyId: selectedCompanyId },
+        select: { id: true },
+      });
+      if (gasolineSupplier === null) {
+        return 'gasoline_supplier_not_found';
+      }
+    }
+
+    const fuelStatus = input.fuelStatus ?? 'active';
+    const lastFourDigits = input.cardNumber.slice(-4);
+    const fuelName = input.fuelName?.trim() || `Tarjeta ${lastFourDigits}`;
+
+    const sapSyncResult =
+      input.cardType === 'FUEL'
+        ? await this.fuelCardSapSyncService.sync({
+            companyId: selectedCompanyId,
+            cardNumber: input.cardNumber,
+            fuelName,
+            fuelStatus,
+          })
+        : null;
+
     await this.prismaService.$transaction(async (tx) => {
       await tx.card.updateMany({
         where: { userId: input.userId, type: input.cardType, isActive: true },
@@ -190,10 +222,19 @@ export class CardPrismaRepository implements CardRepository {
           data: {
             cardNumber: input.cardNumber,
             type: input.cardType,
-            companyId: selectedCompany?.id ?? user.companyId,
+            companyId: selectedCompanyId,
             userId: input.userId,
             isActive: true,
             assignedAt: new Date(),
+            fuelName: input.cardType === 'FUEL' ? fuelName : null,
+            fuelCardKind: input.cardType === 'FUEL' ? input.fuelCardKind : null,
+            fuelGroup: input.cardType === 'FUEL' ? input.fuelGroup ?? null : null,
+            fuelAssignmentType:
+              input.cardType === 'FUEL' ? input.fuelAssignmentType ?? null : null,
+            fuelStatus: input.cardType === 'FUEL' ? fuelStatus : null,
+            sapCode: input.cardType === 'FUEL' ? sapSyncResult?.sapCode ?? null : null,
+            sapSyncedAt:
+              input.cardType === 'FUEL' ? sapSyncResult?.sapSyncedAt ?? null : null,
           },
         });
       } else {
@@ -201,10 +242,19 @@ export class CardPrismaRepository implements CardRepository {
           where: { id: existing.id },
           data: {
             type: input.cardType,
-            companyId: selectedCompany?.id ?? user.companyId,
+            companyId: selectedCompanyId,
             userId: input.userId,
             isActive: true,
             assignedAt: new Date(),
+            fuelName: input.cardType === 'FUEL' ? fuelName : null,
+            fuelCardKind: input.cardType === 'FUEL' ? input.fuelCardKind : null,
+            fuelGroup: input.cardType === 'FUEL' ? input.fuelGroup ?? null : null,
+            fuelAssignmentType:
+              input.cardType === 'FUEL' ? input.fuelAssignmentType ?? null : null,
+            fuelStatus: input.cardType === 'FUEL' ? fuelStatus : null,
+            sapCode: input.cardType === 'FUEL' ? sapSyncResult?.sapCode ?? null : null,
+            sapSyncedAt:
+              input.cardType === 'FUEL' ? sapSyncResult?.sapSyncedAt ?? null : null,
           },
         });
       }

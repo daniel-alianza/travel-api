@@ -29,9 +29,19 @@ export type AssignCardToUserInput = {
   readonly cardNumber: string;
   readonly companyName: string;
   readonly cardType: 'VIATIC' | 'FUEL';
+  readonly fuelName?: string;
+  readonly fuelCardKind?: 'physical' | 'virtual';
+  readonly fuelAssignmentType?: 'NotAcumulative' | 'Acumulable';
+  readonly fuelGroup?: string;
+  readonly fuelStatus?: 'active' | 'inactive' | 'blocked' | 'cancelled';
 };
 
-export type AssignCardToUserResult = 'ok' | 'user_not_found' | 'card_in_use';
+export type AssignCardToUserResult =
+  | 'ok'
+  | 'user_not_found'
+  | 'company_not_found'
+  | 'gasoline_supplier_not_found'
+  | 'card_in_use';
 
 export type DeactivateUserCardInput = {
   readonly userId: number;

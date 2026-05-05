@@ -6,6 +6,7 @@ import { seedBranches } from './seeds/branch.seed';
 import { seedCompanies } from './seeds/company.seed';
 import { seedRoles } from './seeds/role.seed';
 import { seedUsers } from './seeds/users.seed';
+import { seedGasolineSuppliers } from './seeds/gasolinesupplier.seed';
 
 type SeederTask = {
   readonly name: string;
@@ -43,6 +44,10 @@ const seederTasks: readonly SeederTask[] = [
   {
     name: 'Usuarios',
     execute: seedUsers,
+  },
+  {
+    name: 'Proveedores de gasolina',
+    execute: seedGasolineSuppliers,
   },
 ];
 

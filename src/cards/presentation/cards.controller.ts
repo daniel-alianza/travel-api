@@ -96,6 +96,11 @@ export class CardsController {
       cardNumber: body.cardNumber,
       companyName: body.companyName,
       cardType: validatedCardType,
+      fuelName: body.fuelName,
+      fuelCardKind: body.fuelCardKind,
+      fuelAssignmentType: body.fuelAssignmentType,
+      fuelGroup: body.fuelGroup,
+      fuelStatus: body.fuelStatus,
     });
   }
 

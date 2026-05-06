@@ -34,13 +34,11 @@ export class SapAuthAdapter {
     };
 
     try {
-      this.logger.debug(
-        `Intentando login SAP para companyId=${companyId} db=${dbName}`,
-      );
-      return await this.sapHttpService.post<SapLoginResponse>(
+      const loginResponse = await this.sapHttpService.post<SapLoginResponse>(
         `${baseUrl}/Login`,
         payload,
       );
+      return loginResponse;
     } catch (error) {
       this.logger.error(`SAP login fallido: ${(error as Error).message}`);
       throw error;
@@ -69,7 +67,7 @@ export class SapAuthAdapter {
       1: 'ALIANZA',
       2: 'FGE',
       3: 'MANUFACTURING',
-      4: 'TEST',
+      4: 'TYA',
     };
 
     const empresa = empresaByCompanyId[companyId];
@@ -82,22 +80,22 @@ export class SapAuthAdapter {
   private getDbNameByEmpresa(companyKey: string): {
     dbName: string;
   } {
+    const normalizedCompanyKey = normalizeCompanyKey(companyKey);
     const dbEnvKeyByEmpresa: Record<string, string> = {
       ALIANZA: 'SAP_DB_AE',
       FGE: 'SAP_DB_FG',
       MANUFACTURING: 'SAP_DB_FGM',
-      TEST: 'SAP_DB_TEST',
       TYA: 'SAP_DB_TYA',
     };
 
-    const dbEnvKey = dbEnvKeyByEmpresa[companyKey];
+    const dbEnvKey = dbEnvKeyByEmpresa[normalizedCompanyKey];
     const dbName = dbEnvKey
       ? this.configService.get<string>(dbEnvKey)
       : undefined;
 
     if (!dbName) {
       throw new HttpException(
-        `Base de datos no configurada para la empresa ${companyKey}`,
+        `Base de datos no configurada para la empresa ${normalizedCompanyKey}`,
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -106,7 +104,10 @@ export class SapAuthAdapter {
   }
 
   private getUserNameByEmpresa(companyKey: string): string {
-    const userName = this.configService.get<string>(`SAP_USER_${companyKey}`);
+    const normalizedCompanyKey = normalizeCompanyKey(companyKey);
+    const userName = this.configService.get<string>(
+      `SAP_USER_${normalizedCompanyKey}`,
+    );
     if (!userName) {
       return this.configService.get<string>('SAP_USERNAME') ?? '';
     }
@@ -114,10 +115,30 @@ export class SapAuthAdapter {
   }
 
   private getPasswordByEmpresa(companyKey: string): string {
-    const password = this.configService.get<string>(`SAP_PASS_${companyKey}`);
+    const normalizedCompanyKey = normalizeCompanyKey(companyKey);
+    const password = this.configService.get<string>(
+      `SAP_PASS_${normalizedCompanyKey}`,
+    );
     if (!password) {
       return this.configService.get<string>('SAP_PASSWORD') ?? '';
     }
     return password;
   }
+}
+
+function normalizeCompanyKey(companyKey: string): string {
+  const normalized = companyKey.toUpperCase().trim();
+  if (normalized.includes('ALIANZA')) {
+    return 'ALIANZA';
+  }
+  if (normalized.includes('FG') && normalized.includes('ELECTRICAL')) {
+    return 'FGE';
+  }
+  if (normalized.includes('FG') && normalized.includes('MANUFACTURING')) {
+    return 'MANUFACTURING';
+  }
+  if (normalized.includes('TABLEROS') || normalized.includes('ARRANCADORES')) {
+    return 'TYA';
+  }
+  return normalized;
 }

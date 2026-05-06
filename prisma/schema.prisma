@@ -43,6 +43,7 @@ model Company {
   travelRequests    TravelRequest[]
   branches          Branch[]
   gasolineSuppliers GasolineSupplier[]
+  accountCodes      AccountCode[]
 }
 
 model Area {
@@ -92,14 +93,14 @@ model User {
   travelRequests         TravelRequest[] @relation("TravelRequestUser")
   approvedTravelRequests TravelRequest[] @relation("TravelRequestApprover")
 
-  company Company @relation(fields: [companyId], references: [id])
-  branch  Branch  @relation(fields: [branchId], references: [id])
-  area    Area    @relation(fields: [areaId], references: [id])
-  role    Role    @relation(fields: [roleId], references: [id])
-  cards   Card[]
-  createdCards     Card[] @relation("CardCreatedByUser")
-  assignedCards    Card[] @relation("CardAssignedByUser")
-  deactivatedCards Card[] @relation("CardDeactivatedByUser")
+  company          Company @relation(fields: [companyId], references: [id])
+  branch           Branch  @relation(fields: [branchId], references: [id])
+  area             Area    @relation(fields: [areaId], references: [id])
+  role             Role    @relation(fields: [roleId], references: [id])
+  cards            Card[]
+  createdCards     Card[]  @relation("CardCreatedByUser")
+  assignedCards    Card[]  @relation("CardAssignedByUser")
+  deactivatedCards Card[]  @relation("CardDeactivatedByUser")
 }
 
 model Card {
@@ -303,6 +304,18 @@ model GasolineSupplier {
   name      String
   companyId Int?
   company   Company? @relation(fields: [companyId], references: [id])
+
+  @@unique([companyId, code])
+  @@index([companyId])
+}
+
+model AccountCode {
+  id        Int     @id @default(autoincrement())
+  code      String
+  name      String
+  isActive  Boolean @default(true)
+  companyId Int
+  company   Company @relation(fields: [companyId], references: [id])
 
   @@unique([companyId, code])
   @@index([companyId])

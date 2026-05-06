@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module';
 import { TravelRequestModule } from './travel-request/travel-request.module';
 import { CommonModule } from './common/common.module';
 import { CardsModule } from './cards/cards.module';
+import { TravelChecksModule } from './travel-checks/travel.checks.module';
 import { SapConnectionModule } from './infrastructure/SL/sap-connection.module';
 
 @Module({
@@ -18,6 +19,7 @@ import { SapConnectionModule } from './infrastructure/SL/sap-connection.module';
     TravelRequestModule,
     CommonModule,
     CardsModule,
+    TravelChecksModule,
     SapConnectionModule,
   ],
   controllers: [],

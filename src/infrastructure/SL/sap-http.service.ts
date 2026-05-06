@@ -17,13 +17,21 @@ export class SapHttpService {
   ): Promise<T> {
     try {
       const headers = sessionId
-        ? { Cookie: `B1SESSION=${sessionId}` }
-        : undefined;
+        ? {
+            Cookie: `B1SESSION=${sessionId}`,
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          }
+        : {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          };
 
       const response = await firstValueFrom(
         this.httpService.post<T>(url, data, {
           httpsAgent: new https.Agent({ rejectUnauthorized: false }),
           headers,
+          timeout: 15000,
         }),
       );
 
@@ -41,7 +49,10 @@ export class SapHttpService {
           httpsAgent: new https.Agent({ rejectUnauthorized: false }),
           headers: {
             Cookie: `B1SESSION=${sessionId}`,
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
           },
+          timeout: 15000,
         }),
       );
 

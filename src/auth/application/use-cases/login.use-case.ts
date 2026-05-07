@@ -23,12 +23,21 @@ type AuthUserRecord = {
   id: number;
   email: string;
   password: string;
+  role: {
+    name: string;
+  };
 };
 
 type PrismaUserReader = {
   user: {
     findFirst(args: {
       where: { email: string };
+      select: {
+        id: true;
+        email: true;
+        password: true;
+        role: { select: { name: true } };
+      };
     }): Promise<AuthUserRecord | null>;
   };
 };
@@ -49,6 +58,12 @@ export class LoginUseCase {
       where: {
         email: normalizedEmail,
       },
+      select: {
+        id: true,
+        email: true,
+        password: true,
+        role: { select: { name: true } },
+      },
     });
 
     if (!user || !(await this.isEqual(command.password, user.password))) {
@@ -58,7 +73,7 @@ export class LoginUseCase {
     const token = this.authTokenService.signAccessToken({
       sub: user.id.toString(),
       email: normalizedEmail,
-      role: 'user',
+      role: user.role.name,
     });
 
     return {

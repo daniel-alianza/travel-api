@@ -8,6 +8,9 @@ import type {
   DispersedTripForCheckRecord,
   ExpenseTripExpenseAmountsRecord,
   TravelChecksRepository,
+  ReconciliationTripOwnershipRecord,
+  TravelRequestReconciliationRecord,
+  PendingTravelRequestReconciliationRecord,
 } from '../application/interfaces/travel-checks-repository.interface';
 
 @Injectable()
@@ -88,6 +91,14 @@ export class TravelChecksPrismaRepository implements TravelChecksRepository {
             employeeName: true,
             user: { select: { email: true } },
             company: { select: { name: true } },
+            reconciliations: {
+              where: {
+                requestedByUserId: userId,
+                status: 'verified',
+              },
+              select: { id: true },
+              take: 1,
+            },
           },
         },
         expenses: {
@@ -115,7 +126,16 @@ export class TravelChecksPrismaRepository implements TravelChecksRepository {
       disbursementDate: trip.disbursementDate,
       estimatedTotal: Number(trip.estimatedTotal.toString()),
       approvedAt: trip.approvedAt,
-      travelRequest: trip.travelRequest,
+      travelRequest: {
+        id: trip.travelRequest.id,
+        corporateCardNumber: trip.travelRequest.corporateCardNumber,
+        dispersedAt: trip.travelRequest.dispersedAt,
+        approvedAt: trip.travelRequest.approvedAt,
+        employeeName: trip.travelRequest.employeeName,
+        user: trip.travelRequest.user,
+        company: trip.travelRequest.company,
+        hasVerifiedReconciliation: trip.travelRequest.reconciliations.length > 0,
+      },
       expenses: trip.expenses === null ? null : mapExpenseAmounts(trip.expenses),
     }));
   }
@@ -220,6 +240,146 @@ export class TravelChecksPrismaRepository implements TravelChecksRepository {
       corporateCardNumber: trip.travelRequest.corporateCardNumber,
       accountCodes: accountCodes.map((row) => row.code),
     };
+  }
+
+  async findReconciliationTripOwnership(
+    tripId: number,
+    userId: number,
+  ): Promise<ReconciliationTripOwnershipRecord | null> {
+    const row = await this.prisma.travelRequestTrip.findFirst({
+      where: {
+        id: tripId,
+        tripApprovalStatus: 'dispersed',
+        travelRequest: {
+          userId,
+          status: 'dispersed',
+        },
+      },
+      select: {
+        id: true,
+        travelRequestId: true,
+        travelRequest: {
+          select: {
+            employeeName: true,
+            company: { select: { name: true } },
+          },
+        },
+      },
+    });
+    if (row === null) {
+      return null;
+    }
+    return {
+      tripId: row.id,
+      travelRequestId: row.travelRequestId,
+      companyName: row.travelRequest.company.name,
+      employeeName: row.travelRequest.employeeName,
+    };
+  }
+
+  async countReconciliationAttempts(
+    travelRequestId: number,
+    requestedByUserId: number,
+  ): Promise<number> {
+    return this.prisma.travelRequestReconciliation.count({
+      where: { travelRequestId, requestedByUserId },
+    });
+  }
+
+  async createTravelRequestReconciliation(input: {
+    travelRequestId: number;
+    requestedByUserId: number;
+    verificationCodeHash: string;
+    codeExpiresAt: Date;
+  }): Promise<TravelRequestReconciliationRecord> {
+    const created = await this.prisma.travelRequestReconciliation.create({
+      data: {
+        travelRequestId: input.travelRequestId,
+        requestedByUserId: input.requestedByUserId,
+        verificationCodeHash: input.verificationCodeHash,
+        codeExpiresAt: input.codeExpiresAt,
+      },
+    });
+    return created;
+  }
+
+  async findLatestTravelRequestReconciliation(
+    travelRequestId: number,
+    requestedByUserId: number,
+  ): Promise<TravelRequestReconciliationRecord | null> {
+    return this.prisma.travelRequestReconciliation.findFirst({
+      where: { travelRequestId, requestedByUserId },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  async markTravelRequestReconciliationVerified(
+    reconciliationId: number,
+  ): Promise<void> {
+    await this.prisma.travelRequestReconciliation.update({
+      where: { id: reconciliationId },
+      data: {
+        status: 'verified',
+        codeVerifiedAt: new Date(),
+      },
+    });
+  }
+
+  async listPendingTravelRequestReconciliations(): Promise<
+    readonly PendingTravelRequestReconciliationRecord[]
+  > {
+    const rows = await this.prisma.travelRequestReconciliation.findMany({
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        travelRequestId: true,
+        status: true,
+        verificationCodeHash: true,
+        codeExpiresAt: true,
+        createdAt: true,
+        travelRequest: {
+          select: {
+            employeeName: true,
+            company: { select: { name: true } },
+          },
+        },
+        requestedBy: { select: { id: true, name: true, email: true } },
+      },
+    });
+    return rows.map((row) => ({
+      id: row.id,
+      travelRequestId: row.travelRequestId,
+      status: row.status,
+      verificationCode: row.verificationCodeHash,
+      codeExpiresAt: row.codeExpiresAt,
+      createdAt: row.createdAt,
+      employeeName: row.travelRequest.employeeName,
+      companyName: row.travelRequest.company.name,
+      requestedBy: row.requestedBy,
+    }));
+  }
+
+  async decideTravelRequestReconciliation(input: {
+    reconciliationId: number;
+    decidedByUserId: number;
+    approve: boolean;
+    rejectionReason: string | null;
+  }): Promise<TravelRequestReconciliationRecord | null> {
+    const current = await this.prisma.travelRequestReconciliation.findUnique({
+      where: { id: input.reconciliationId },
+    });
+    if (current === null || current.status !== 'pending') {
+      return null;
+    }
+    return this.prisma.travelRequestReconciliation.update({
+      where: { id: input.reconciliationId },
+      data: {
+        status: input.approve ? 'approved' : 'rejected',
+        decidedByUserId: input.decidedByUserId,
+        decidedAt: new Date(),
+        rejectionReason: input.approve ? null : input.rejectionReason,
+      },
+    });
   }
 }
 

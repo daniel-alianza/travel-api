@@ -20,6 +20,7 @@ type ExpenseDispersedTripItem = {
   readonly fechaSalida: string;
   readonly fechaRegreso: string;
   readonly pendientesComprobacion: number;
+  readonly conciliacionVerificada: boolean;
 };
 
 type ListExpenseDispersedTripsData = {
@@ -66,6 +67,7 @@ function mapTrip(registro: DispersedExpenseTripListRecord): ExpenseDispersedTrip
     fechaSalida: toIsoDateOnly(registro.departureDate),
     fechaRegreso: toIsoDateOnly(registro.returnDate),
     pendientesComprobacion: contarLineasGastoPendientes(registro.expenses),
+    conciliacionVerificada: solicitud.hasVerifiedReconciliation,
   };
 }
 

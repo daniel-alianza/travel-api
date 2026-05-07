@@ -12,9 +12,23 @@ const SEED_USER = {
   isActive: true,
 } as const;
 
+const SEED_ACCOUNTING_USER = {
+  id: 2,
+  name: 'Contabilidad Alianza',
+  email: 'contabilidad@alianzaelectrica.com',
+  password: 'contaalianza10',
+  companyId: 1,
+  branchId: 1,
+  roleId: 2,
+  areaId: 8,
+  isActive: true,
+} as const;
+
+const SEED_USERS = [SEED_USER, SEED_ACCOUNTING_USER] as const;
+
 const SEED_CARDS = [
   {
-    cardNumber: '5555555555555555',
+    cardNumber: '2222222222222222',
     type: 'FUEL',
     userId: SEED_USER.id,
     companyId: SEED_USER.companyId,
@@ -23,7 +37,7 @@ const SEED_CARDS = [
     fuelStatus: 'active',
   },
   {
-    cardNumber: '2222222222222222',
+    cardNumber: '5161020005113727',
     type: 'VIATIC',
     userId: SEED_USER.id,
     companyId: SEED_USER.companyId,
@@ -94,25 +108,29 @@ export async function seedUsers(prismaClient: PrismaClient): Promise<number> {
   const prismaClientWithUser = prismaClient as PrismaClientWithUserDelegate;
   let insertedRecords = 0;
 
-  const existingUser = await prismaClientWithUser.user.findFirst({
-    where: {
-      OR: [{ id: SEED_USER.id }, { email: SEED_USER.email }],
-    },
-    select: { id: true, email: true },
-  });
+  for (const seedUser of SEED_USERS) {
+    const existingUser = await prismaClientWithUser.user.findFirst({
+      where: {
+        OR: [{ id: seedUser.id }, { email: seedUser.email }],
+      },
+      select: { id: true, email: true },
+    });
 
-  if (!existingUser) {
+    if (existingUser) {
+      continue;
+    }
+
     await prismaClientWithUser.user.create({
       data: {
-        id: SEED_USER.id,
-        name: SEED_USER.name,
-        email: SEED_USER.email,
-        password: SEED_USER.password,
-        companyId: SEED_USER.companyId,
-        branchId: SEED_USER.branchId,
-        areaId: SEED_USER.areaId,
-        roleId: SEED_USER.roleId,
-        isActive: SEED_USER.isActive,
+        id: seedUser.id,
+        name: seedUser.name,
+        email: seedUser.email,
+        password: seedUser.password,
+        companyId: seedUser.companyId,
+        branchId: seedUser.branchId,
+        areaId: seedUser.areaId,
+        roleId: seedUser.roleId,
+        isActive: seedUser.isActive,
       },
       select: { id: true },
     });

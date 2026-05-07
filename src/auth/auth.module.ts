@@ -4,6 +4,7 @@ import { RegisterUseCase } from './application/use-cases/register.use-case';
 import { AuthConfigService } from './infrastructure/auth-config.service';
 import { HmacJwtService } from './infrastructure/jwt/hmac-jwt.service';
 import { AuthController } from './presentation/auth.controller';
+import { JwtSessionGuard } from './presentation/guards/jwt-session.guard';
 
 @Module({
   controllers: [AuthController],
@@ -21,6 +22,8 @@ import { AuthController } from './presentation/auth.controller';
       provide: 'AUTH_TOKEN_SERVICE',
       useClass: HmacJwtService,
     },
+    JwtSessionGuard,
   ],
+  exports: ['AUTH_TOKEN_SERVICE', AuthConfigService, JwtSessionGuard],
 })
 export class AuthModule {}

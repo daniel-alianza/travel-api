@@ -337,6 +337,7 @@ model TravelRequestReconciliation {
   requestedByUserId    Int
   status               TravelRequestReconciliationStatus @default(pending)
   verificationCodeHash String                            @db.VarChar(255)
+  codeExpiresAt        DateTime
   decidedByUserId      Int?
   decidedAt            DateTime?
   rejectionReason      String?                           @db.Text

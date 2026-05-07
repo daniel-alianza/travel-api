@@ -9,6 +9,12 @@ export type AuthTokenResult = {
   expiresInSeconds: number;
 };
 
+export type AuthTokenVerifiedPayload = AuthTokenPayload & {
+  iat: number;
+  exp: number;
+};
+
 export interface AuthTokenService {
   signAccessToken(payload: AuthTokenPayload): AuthTokenResult;
+  verifyAccessToken(token: string): AuthTokenVerifiedPayload | null;
 }

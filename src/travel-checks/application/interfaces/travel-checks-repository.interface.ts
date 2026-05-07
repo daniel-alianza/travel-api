@@ -57,6 +57,7 @@ export type DispersedExpenseTripListRecord = {
     readonly employeeName: string;
     readonly user: { readonly email: string };
     readonly company: { readonly name: string };
+    readonly hasVerifiedReconciliation: boolean;
   };
   readonly expenses: ExpenseTripExpenseAmountsRecord | null;
 };
@@ -81,6 +82,43 @@ export type ExpenseTripMovementContextRecord = {
   readonly accountCodes: readonly string[];
 };
 
+export type ReconciliationTripOwnershipRecord = {
+  readonly tripId: number;
+  readonly travelRequestId: number;
+  readonly companyName: string;
+  readonly employeeName: string;
+};
+
+export type TravelRequestReconciliationRecord = {
+  readonly id: number;
+  readonly travelRequestId: number;
+  readonly requestedByUserId: number;
+  readonly status: 'pending' | 'rejected' | 'approved' | 'verified';
+  readonly verificationCodeHash: string;
+  readonly codeExpiresAt: Date;
+  readonly decidedByUserId: number | null;
+  readonly decidedAt: Date | null;
+  readonly rejectionReason: string | null;
+  readonly codeVerifiedAt: Date | null;
+  readonly createdAt: Date;
+};
+
+export type PendingTravelRequestReconciliationRecord = {
+  readonly id: number;
+  readonly travelRequestId: number;
+  readonly status: 'pending' | 'rejected' | 'approved' | 'verified';
+  readonly verificationCode: string;
+  readonly codeExpiresAt: Date;
+  readonly createdAt: Date;
+  readonly employeeName: string;
+  readonly companyName: string;
+  readonly requestedBy: {
+    readonly id: number;
+    readonly name: string;
+    readonly email: string;
+  };
+};
+
 export interface TravelChecksRepository {
   findDispersedTravelRequestsWithDispersedTrips(): Promise<
     readonly DispersedTravelRequestForCheckRecord[]
@@ -96,4 +134,34 @@ export interface TravelChecksRepository {
     tripId: number,
     userId: number,
   ): Promise<ExpenseTripMovementContextRecord | null>;
+  findReconciliationTripOwnership(
+    tripId: number,
+    userId: number,
+  ): Promise<ReconciliationTripOwnershipRecord | null>;
+  countReconciliationAttempts(
+    travelRequestId: number,
+    requestedByUserId: number,
+  ): Promise<number>;
+  createTravelRequestReconciliation(input: {
+    travelRequestId: number;
+    requestedByUserId: number;
+    verificationCodeHash: string;
+    codeExpiresAt: Date;
+  }): Promise<TravelRequestReconciliationRecord>;
+  findLatestTravelRequestReconciliation(
+    travelRequestId: number,
+    requestedByUserId: number,
+  ): Promise<TravelRequestReconciliationRecord | null>;
+  markTravelRequestReconciliationVerified(
+    reconciliationId: number,
+  ): Promise<void>;
+  listPendingTravelRequestReconciliations(): Promise<
+    readonly PendingTravelRequestReconciliationRecord[]
+  >;
+  decideTravelRequestReconciliation(input: {
+    reconciliationId: number;
+    decidedByUserId: number;
+    approve: boolean;
+    rejectionReason: string | null;
+  }): Promise<TravelRequestReconciliationRecord | null>;
 }

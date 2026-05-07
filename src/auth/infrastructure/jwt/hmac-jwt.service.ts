@@ -5,6 +5,7 @@ import type {
   AuthTokenPayload,
   AuthTokenResult,
   AuthTokenService,
+  AuthTokenVerifiedPayload,
 } from '../../application/interfaces/auth-token.service.interface';
 
 type JwtHeader = {
@@ -53,5 +54,43 @@ export class HmacJwtService implements AuthTokenService {
 
   private base64UrlEncodeBuffer(value: Buffer): string {
     return value.toString('base64url');
+  }
+
+  verifyAccessToken(token: string): AuthTokenVerifiedPayload | null {
+    const pieces = token.split('.');
+    if (pieces.length !== 3) {
+      return null;
+    }
+    const [encodedHeader, encodedPayload, signature] = pieces;
+    const expectedSignature = this.base64UrlEncodeBuffer(
+      createHmac('sha256', this.authConfig.jwtSecret)
+        .update(`${encodedHeader}.${encodedPayload}`)
+        .digest(),
+    );
+    if (expectedSignature !== signature) {
+      return null;
+    }
+    try {
+      const payloadJson = Buffer.from(encodedPayload, 'base64url').toString(
+        'utf8',
+      );
+      const payload = JSON.parse(payloadJson) as AuthTokenVerifiedPayload;
+      if (
+        typeof payload.sub !== 'string' ||
+        typeof payload.email !== 'string' ||
+        typeof payload.role !== 'string' ||
+        typeof payload.exp !== 'number' ||
+        typeof payload.iat !== 'number'
+      ) {
+        return null;
+      }
+      const nowSeconds = Math.floor(Date.now() / 1000);
+      if (payload.exp <= nowSeconds) {
+        return null;
+      }
+      return payload;
+    } catch {
+      return null;
+    }
   }
 }

@@ -42,6 +42,18 @@ export class RequestTravelReconciliationCodeUseCase {
       });
     }
 
+    const tripFilesCount = await this.travelChecksRepository.countTripFilesForUser(
+      tripId,
+      userId,
+    );
+    if (tripFilesCount === 0) {
+      throw new BadRequestException({
+        message:
+          'Debes cargar al menos un comprobante en el bucket antes de solicitar conciliación.',
+        error: 'Sin comprobantes',
+      });
+    }
+
     const attempts = await this.travelChecksRepository.countReconciliationAttempts(
       ownership.travelRequestId,
       userId,

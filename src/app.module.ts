@@ -7,6 +7,7 @@ import { CommonModule } from './common/common.module';
 import { CardsModule } from './cards/cards.module';
 import { TravelChecksModule } from './travel-checks/travel.checks.module';
 import { SapConnectionModule } from './infrastructure/SL/sap-connection.module';
+import { DmsModule } from './dms/dms.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { SapConnectionModule } from './infrastructure/SL/sap-connection.module';
     CardsModule,
     TravelChecksModule,
     SapConnectionModule,
+    DmsModule,
   ],
   controllers: [],
   providers: [],

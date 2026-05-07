@@ -19,7 +19,7 @@ type ExpenseMovimientoItem = {
   readonly descripcion: string;
   readonly numeroTarjeta: string;
   readonly gasto: number;
-  readonly estado: 'pendiente';
+  readonly estado: 'pendiente' | 'comprobado';
 };
 
 type ListExpenseTripMovementsData = {
@@ -61,10 +61,14 @@ export class ListExpenseTripMovementsForUserUseCase {
     }
     const movimientosSap =
       await this.travelChecksSapMovementsPort.fetchByReference(context);
+    const movementProofs = await this.travelChecksRepository.listTripMovementProofsByTripId(
+      context.tripId,
+    );
     return buildSuccessResponse(
       {
         movimientos: construirMovimientos(
           movimientosSap,
+          movementProofs,
           context.tripId,
           context.destination,
           context.corporateCardNumber,
@@ -77,11 +81,15 @@ export class ListExpenseTripMovementsForUserUseCase {
 
 function construirMovimientos(
   movimientosSap: readonly SapExpenseMovementRecord[],
+  movementProofs: readonly { movementSequence: number; status: 'submitted' | 'approved' | 'rejected' }[],
   tripId: number,
   destination: string,
   corporateCardNumber: string,
 ): readonly ExpenseMovimientoItem[] {
   const tarjeta = enmascararTarjetaCorporativa(corporateCardNumber);
+  const proofBySequence = new Map<number, 'submitted' | 'approved' | 'rejected'>(
+    movementProofs.map((proof) => [proof.movementSequence, proof.status]),
+  );
   return movimientosSap.map((movimiento, index) => ({
     id: `${String(tripId)}-mov-${String(movimiento.sequence)}-${String(index + 1)}`,
     numeroMovimiento: movimiento.sequence,
@@ -89,8 +97,17 @@ function construirMovimientos(
     descripcion: construirDescripcionMovimiento(movimiento.memo, destination),
     numeroTarjeta: tarjeta,
     gasto: movimiento.debitAmount,
-    estado: 'pendiente',
+    estado: mapMovementStatus(proofBySequence.get(movimiento.sequence)),
   }));
+}
+
+function mapMovementStatus(
+  status: 'submitted' | 'approved' | 'rejected' | undefined,
+): 'pendiente' | 'comprobado' {
+  if (status === 'submitted' || status === 'approved') {
+    return 'comprobado';
+  }
+  return 'pendiente';
 }
 
 function construirDescripcionMovimiento(memo: string, destination: string): string {

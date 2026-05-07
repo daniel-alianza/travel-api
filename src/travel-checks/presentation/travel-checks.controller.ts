@@ -42,9 +42,14 @@ import {
   DecideTravelReconciliationUseCase,
   type DecideTravelReconciliationResponse,
 } from '../application/use-cases/decide-travel-reconciliation.use-case';
+import {
+  SubmitTripMovementProofUseCase,
+  type SubmitTripMovementProofResponse,
+} from '../application/use-cases/submit-trip-movement-proof.use-case';
 import { CurrentUser } from '../../auth/presentation/decorators/current-user.decorator';
 import { JwtSessionGuard } from '../../auth/presentation/guards/jwt-session.guard';
 import type { AuthTokenVerifiedPayload } from '../../auth/application/interfaces/auth-token.service.interface';
+import { SubmitTripMovementProofDto } from './dtos/submit-trip-movement-proof.dto';
 class DispersedTripCheckItemDto {
   @ApiProperty()
   tripId: number;
@@ -208,8 +213,8 @@ class ExpenseTripMovimientoItemDto {
   @ApiProperty()
   gasto: number;
 
-  @ApiProperty({ enum: ['pendiente'] })
-  estado: 'pendiente';
+  @ApiProperty({ enum: ['pendiente', 'comprobado'] })
+  estado: 'pendiente' | 'comprobado';
 }
 
 class ListExpenseTripMovementsDataDto {
@@ -339,6 +344,22 @@ class RejectTravelReconciliationBodyDto {
   rejectionReason: string | null;
 }
 
+class SubmitTripMovementProofDataDto {
+  @ApiProperty()
+  id: number;
+
+  @ApiProperty({ enum: ['submitted'] })
+  status: 'submitted';
+}
+
+class SubmitTripMovementProofHttpDto {
+  @ApiProperty({ type: SubmitTripMovementProofDataDto })
+  data: SubmitTripMovementProofDataDto;
+
+  @ApiProperty()
+  message: string;
+}
+
 @ApiTags('Travel Checks')
 @Controller('travel-checks')
 @UseGuards(JwtSessionGuard)
@@ -351,6 +372,7 @@ export class TravelChecksController {
     private readonly verifyTravelReconciliationCodeUseCase: VerifyTravelReconciliationCodeUseCase,
     private readonly listPendingTravelReconciliationsUseCase: ListPendingTravelReconciliationsUseCase,
     private readonly decideTravelReconciliationUseCase: DecideTravelReconciliationUseCase,
+    private readonly submitTripMovementProofUseCase: SubmitTripMovementProofUseCase,
   ) {}
   @Get('dispersed')
   @ApiOperation({
@@ -398,6 +420,34 @@ export class TravelChecksController {
       });
     }
     return this.listExpenseTripMovementsForUserUseCase.execute(userId, tripId);
+  }
+
+  @Post('expense-trips/:userId/trips/:tripId/movements/:movementSequence/proofs')
+  @ApiOperation({
+    summary: 'Comprobar movimiento con archivos previamente subidos',
+  })
+  @ApiOkResponse({ type: SubmitTripMovementProofHttpDto })
+  async submitTripMovementProof(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Param('tripId', ParseIntPipe) tripId: number,
+    @Param('movementSequence', ParseIntPipe) movementSequence: number,
+    @Body() body: SubmitTripMovementProofDto,
+    @CurrentUser() user: AuthTokenVerifiedPayload,
+  ): Promise<SubmitTripMovementProofResponse> {
+    if (Number(user.sub) !== userId) {
+      throw new ForbiddenException({
+        message: 'No puedes comprobar movimientos de otro usuario.',
+        error: 'Prohibido',
+      });
+    }
+    return this.submitTripMovementProofUseCase.execute({
+      userId,
+      tripId,
+      movementSequence,
+      proofType: body.proofType,
+      comment: body.comment ?? null,
+      files: body.files,
+    });
   }
 
   @Post('reconciliations/request-code')

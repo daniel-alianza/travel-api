@@ -119,6 +119,15 @@ export type PendingTravelRequestReconciliationRecord = {
   };
 };
 
+export type TripMovementProofStatusRecord = 'submitted' | 'approved' | 'rejected';
+
+export type TripMovementProofRecord = {
+  readonly id: number;
+  readonly tripId: number;
+  readonly movementSequence: number;
+  readonly status: TripMovementProofStatusRecord;
+};
+
 export interface TravelChecksRepository {
   findDispersedTravelRequestsWithDispersedTrips(): Promise<
     readonly DispersedTravelRequestForCheckRecord[]
@@ -138,6 +147,7 @@ export interface TravelChecksRepository {
     tripId: number,
     userId: number,
   ): Promise<ReconciliationTripOwnershipRecord | null>;
+  countTripFilesForUser(tripId: number, userId: number): Promise<number>;
   countReconciliationAttempts(
     travelRequestId: number,
     requestedByUserId: number,
@@ -164,4 +174,31 @@ export interface TravelChecksRepository {
     approve: boolean;
     rejectionReason: string | null;
   }): Promise<TravelRequestReconciliationRecord | null>;
+  listTripMovementProofsByTripId(tripId: number): Promise<readonly TripMovementProofRecord[]>;
+  areTripFilesOwnedByUser(input: {
+    tripId: number;
+    userId: number;
+    fileIds: readonly number[];
+  }): Promise<boolean>;
+  createTripMovementProof(input: {
+    tripId: number;
+    movementSequence: number;
+    movementDate: Date;
+    movementAmount: number;
+    movementMemo: string;
+    proofType: 'ticket' | 'invoice';
+    createdByUserId: number;
+    comment: string | null;
+    files: readonly {
+      tripFileId: number;
+      fileRole:
+        | 'ticket'
+        | 'invoice_xml'
+        | 'invoice_pdf'
+        | 'invoice_xml_outbound'
+        | 'invoice_pdf_outbound'
+        | 'invoice_xml_return'
+        | 'invoice_pdf_return';
+    }[];
+  }): Promise<TripMovementProofRecord>;
 }

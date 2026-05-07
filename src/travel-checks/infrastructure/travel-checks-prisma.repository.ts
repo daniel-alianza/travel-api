@@ -277,6 +277,17 @@ export class TravelChecksPrismaRepository implements TravelChecksRepository {
     };
   }
 
+  async countTripFilesForUser(tripId: number, userId: number): Promise<number> {
+    return this.prisma.travelRequestTripFile.count({
+      where: {
+        tripId,
+        trip: {
+          travelRequest: { userId },
+        },
+      },
+    });
+  }
+
   async countReconciliationAttempts(
     travelRequestId: number,
     requestedByUserId: number,
@@ -379,6 +390,198 @@ export class TravelChecksPrismaRepository implements TravelChecksRepository {
         decidedAt: new Date(),
         rejectionReason: input.approve ? null : input.rejectionReason,
       },
+    });
+  }
+
+  async listTripMovementProofsByTripId(
+    tripId: number,
+  ): Promise<
+    readonly {
+      movementSequence: number;
+      status: 'submitted' | 'approved' | 'rejected';
+      id: number;
+      tripId: number;
+    }[]
+  > {
+    const prismaWithMovementProof = this.prisma as PrismaService & {
+      readonly tripMovementProof: {
+        findMany(args: {
+          where: { tripId: number };
+          select: {
+            id: true;
+            tripId: true;
+            movementSequence: true;
+            status: true;
+          };
+        }): Promise<
+          readonly {
+            id: number;
+            tripId: number;
+            movementSequence: number;
+            status: 'submitted' | 'approved' | 'rejected';
+          }[]
+        >;
+      };
+    };
+
+    return prismaWithMovementProof.tripMovementProof.findMany({
+      where: { tripId },
+      select: {
+        id: true,
+        tripId: true,
+        movementSequence: true,
+        status: true,
+      },
+    });
+  }
+
+  async areTripFilesOwnedByUser(input: {
+    tripId: number;
+    userId: number;
+    fileIds: readonly number[];
+  }): Promise<boolean> {
+    if (input.fileIds.length === 0) {
+      return false;
+    }
+
+    const count = await this.prisma.travelRequestTripFile.count({
+      where: {
+        id: { in: [...input.fileIds] },
+        tripId: input.tripId,
+        trip: {
+          travelRequest: { userId: input.userId },
+        },
+      },
+    });
+
+    return count === input.fileIds.length;
+  }
+
+  async createTripMovementProof(input: {
+    tripId: number;
+    movementSequence: number;
+    movementDate: Date;
+    movementAmount: number;
+    movementMemo: string;
+    proofType: 'ticket' | 'invoice';
+    createdByUserId: number;
+    comment: string | null;
+    files: readonly {
+      tripFileId: number;
+      fileRole:
+        | 'ticket'
+        | 'invoice_xml'
+        | 'invoice_pdf'
+        | 'invoice_xml_outbound'
+        | 'invoice_pdf_outbound'
+        | 'invoice_xml_return'
+        | 'invoice_pdf_return';
+    }[];
+  }): Promise<{
+    id: number;
+    tripId: number;
+    movementSequence: number;
+    status: 'submitted' | 'approved' | 'rejected';
+  }> {
+    const prismaWithMovementProof = this.prisma as PrismaService & {
+      readonly tripMovementProof: {
+        upsert(args: {
+          where: { tripId_movementSequence: { tripId: number; movementSequence: number } };
+          create: {
+            tripId: number;
+            movementSequence: number;
+            movementDate: Date;
+            movementAmount: number;
+            movementMemo: string;
+            proofType: 'ticket' | 'invoice';
+            status: 'submitted';
+            comment: string | null;
+            createdByUserId: number;
+          };
+          update: {
+            movementDate: Date;
+            movementAmount: number;
+            movementMemo: string;
+            proofType: 'ticket' | 'invoice';
+            status: 'submitted';
+            comment: string | null;
+            createdByUserId: number;
+          };
+          select: {
+            id: true;
+            tripId: true;
+            movementSequence: true;
+            status: true;
+          };
+        }): Promise<{
+          id: number;
+          tripId: number;
+          movementSequence: number;
+          status: 'submitted' | 'approved' | 'rejected';
+        }>;
+      };
+    };
+
+    return this.prisma.$transaction(async (transaction) => {
+      const txWithMovementProof = transaction as typeof prismaWithMovementProof;
+
+      const proof = await txWithMovementProof.tripMovementProof.upsert({
+        where: {
+          tripId_movementSequence: {
+            tripId: input.tripId,
+            movementSequence: input.movementSequence,
+          },
+        },
+        create: {
+          tripId: input.tripId,
+          movementSequence: input.movementSequence,
+          movementDate: input.movementDate,
+          movementAmount: input.movementAmount,
+          movementMemo: input.movementMemo,
+          proofType: input.proofType,
+          status: 'submitted',
+          comment: input.comment,
+          createdByUserId: input.createdByUserId,
+        },
+        update: {
+          movementDate: input.movementDate,
+          movementAmount: input.movementAmount,
+          movementMemo: input.movementMemo,
+          proofType: input.proofType,
+          status: 'submitted',
+          comment: input.comment,
+          createdByUserId: input.createdByUserId,
+        },
+        select: {
+          id: true,
+          tripId: true,
+          movementSequence: true,
+          status: true,
+        },
+      });
+
+      await transaction.travelRequestTripFile.updateMany({
+        where: {
+          tripId: input.tripId,
+          tripMovementProofId: proof.id,
+        },
+        data: {
+          tripMovementProofId: null,
+          fileRole: null,
+        },
+      });
+
+      for (const file of input.files) {
+        await transaction.travelRequestTripFile.update({
+          where: { id: file.tripFileId },
+          data: {
+            tripMovementProofId: proof.id,
+            fileRole: file.fileRole,
+          },
+        });
+      }
+
+      return proof;
     });
   }
 }

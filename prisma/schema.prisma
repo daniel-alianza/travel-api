@@ -38,6 +38,27 @@ enum TravelRequestReconciliationStatus {
   verified
 }
 
+enum TripMovementProofType {
+  ticket
+  invoice
+}
+
+enum TripMovementProofStatus {
+  submitted
+  approved
+  rejected
+}
+
+enum TripMovementFileRole {
+  ticket
+  invoice_xml
+  invoice_pdf
+  invoice_xml_outbound
+  invoice_pdf_outbound
+  invoice_xml_return
+  invoice_pdf_return
+}
+
 datasource db {
   provider = "mysql"
 }
@@ -110,6 +131,7 @@ model User {
   deactivatedCards         Card[]                        @relation("CardDeactivatedByUser")
   requestedReconciliations TravelRequestReconciliation[] @relation("TravelRequestReconciliationRequestedBy")
   decidedReconciliations   TravelRequestReconciliation[] @relation("TravelRequestReconciliationDecidedBy")
+  movementProofs           TripMovementProof[]
 }
 
 model Card {
@@ -222,12 +244,13 @@ model TravelRequestTrip {
   createdAt          DateTime                        @default(now())
   updatedAt          DateTime                        @updatedAt
 
-  travelRequest TravelRequest                @relation(fields: [travelRequestId], references: [id])
-  objectives    TravelRequestTripObjective[]
-  expenses      TravelRequestTripExpense?
-  gasoline      TravelRequestTripGasoline?
-  tag           TravelRequestTripTag?
-  files         TravelRequestTripFile[]
+  travelRequest      TravelRequest                @relation(fields: [travelRequestId], references: [id])
+  objectives         TravelRequestTripObjective[]
+  expenses           TravelRequestTripExpense?
+  gasoline           TravelRequestTripGasoline?
+  tag                TravelRequestTripTag?
+  files              TravelRequestTripFile[]
+  tripMovementProofs TripMovementProof[]
 
   @@unique([travelRequestId, tripOrder])
   @@index([travelRequestId])
@@ -295,17 +318,22 @@ model TravelRequestTripTag {
 }
 
 model TravelRequestTripFile {
-  id        Int      @id @default(autoincrement())
-  tripId    Int
-  fileType  String
-  fileUrl   String
-  fileName  String?
-  mimeType  String?
-  createdAt DateTime @default(now())
+  id                  Int                   @id @default(autoincrement())
+  tripId              Int
+  tripMovementProofId Int?
+  fileType            String
+  fileRole            TripMovementFileRole?
+  fileUrl             String
+  fileName            String?
+  mimeType            String?
+  createdAt           DateTime              @default(now())
 
-  trip TravelRequestTrip @relation(fields: [tripId], references: [id])
+  trip              TravelRequestTrip  @relation(fields: [tripId], references: [id])
+  tripMovementProof TripMovementProof? @relation(fields: [tripMovementProofId], references: [id], onDelete: SetNull)
 
   @@index([tripId])
+  @@index([tripMovementProofId])
+  @@index([fileRole])
 }
 
 model GasolineSupplier {
@@ -353,4 +381,29 @@ model TravelRequestReconciliation {
   @@index([createdAt])
   @@index([decidedAt])
   @@index([requestedByUserId])
+}
+
+model TripMovementProof {
+  id               Int                     @id @default(autoincrement())
+  tripId           Int
+  movementSequence Int
+  movementDate     DateTime
+  movementAmount   Decimal                 @db.Decimal(12, 2)
+  movementMemo     String?                 @db.Text
+  proofType        TripMovementProofType
+  status           TripMovementProofStatus @default(submitted)
+  comment          String?                 @db.Text
+  createdByUserId  Int
+  createdAt        DateTime                @default(now())
+  updatedAt        DateTime                @updatedAt
+
+  trip          TravelRequestTrip       @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  createdByUser User                    @relation(fields: [createdByUserId], references: [id])
+  files         TravelRequestTripFile[]
+
+  @@unique([tripId, movementSequence])
+  @@index([tripId])
+  @@index([createdByUserId])
+  @@index([status])
+  @@index([createdAt])
 }

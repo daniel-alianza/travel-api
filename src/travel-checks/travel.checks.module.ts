@@ -8,6 +8,7 @@ import { RequestTravelReconciliationCodeUseCase } from './application/use-cases/
 import { VerifyTravelReconciliationCodeUseCase } from './application/use-cases/verify-travel-reconciliation-code.use-case';
 import { ListPendingTravelReconciliationsUseCase } from './application/use-cases/list-pending-travel-reconciliations.use-case';
 import { DecideTravelReconciliationUseCase } from './application/use-cases/decide-travel-reconciliation.use-case';
+import { SubmitTripMovementProofUseCase } from './application/use-cases/submit-trip-movement-proof.use-case';
 import { TravelChecksPrismaRepository } from './infrastructure/travel-checks-prisma.repository';
 import { TravelChecksSapMovementsService } from './infrastructure/travel-checks-sap-movements.service';
 import { TravelChecksController } from './presentation/travel-checks.controller';
@@ -25,6 +26,7 @@ import { TravelChecksController } from './presentation/travel-checks.controller'
     VerifyTravelReconciliationCodeUseCase,
     ListPendingTravelReconciliationsUseCase,
     DecideTravelReconciliationUseCase,
+    SubmitTripMovementProofUseCase,
     {
       provide: 'TravelChecksRepository',
       useExisting: TravelChecksPrismaRepository,

@@ -4,7 +4,7 @@ const SEED_USER = {
   id: 1,
   name: 'Daniel Ortiz',
   email: 'daniel.ortiz@alianzaelectrica.com',
-  password: 'daniel.ortiz@alianzaelectrica.com',
+  password: 'danielo10',
   companyId: 1,
   branchId: 1,
   roleId: 1,

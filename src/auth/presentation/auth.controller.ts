@@ -19,6 +19,9 @@ import { AuthConfigService } from '../infrastructure/auth-config.service';
 
 class LoginResponseDataDto {
   @ApiProperty()
+  userId: number;
+
+  @ApiProperty()
   accessToken: string;
 
   @ApiProperty()
@@ -102,7 +105,10 @@ export class AuthController {
       areaId: requestBody.areaId,
     });
 
-    return buildSuccessResponse(registeredUser, 'Usuario registrado exitosamente');
+    return buildSuccessResponse(
+      registeredUser,
+      'Usuario registrado exitosamente',
+    );
   }
 
   @Post('login')
@@ -144,6 +150,7 @@ export class AuthController {
 
     return buildSuccessResponse(
       {
+        userId: loginResult.userId,
         accessToken: loginResult.token.accessToken,
         expiresInSeconds: loginResult.token.expiresInSeconds,
       },

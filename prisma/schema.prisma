@@ -31,6 +31,13 @@ enum BranchSource {
   SAP_ALIANZA
 }
 
+enum TravelRequestReconciliationStatus {
+  pending
+  rejected
+  approved
+  verified
+}
+
 datasource db {
   provider = "mysql"
 }
@@ -93,14 +100,16 @@ model User {
   travelRequests         TravelRequest[] @relation("TravelRequestUser")
   approvedTravelRequests TravelRequest[] @relation("TravelRequestApprover")
 
-  company          Company @relation(fields: [companyId], references: [id])
-  branch           Branch  @relation(fields: [branchId], references: [id])
-  area             Area    @relation(fields: [areaId], references: [id])
-  role             Role    @relation(fields: [roleId], references: [id])
-  cards            Card[]
-  createdCards     Card[]  @relation("CardCreatedByUser")
-  assignedCards    Card[]  @relation("CardAssignedByUser")
-  deactivatedCards Card[]  @relation("CardDeactivatedByUser")
+  company                  Company                       @relation(fields: [companyId], references: [id])
+  branch                   Branch                        @relation(fields: [branchId], references: [id])
+  area                     Area                          @relation(fields: [areaId], references: [id])
+  role                     Role                          @relation(fields: [roleId], references: [id])
+  cards                    Card[]
+  createdCards             Card[]                        @relation("CardCreatedByUser")
+  assignedCards            Card[]                        @relation("CardAssignedByUser")
+  deactivatedCards         Card[]                        @relation("CardDeactivatedByUser")
+  requestedReconciliations TravelRequestReconciliation[] @relation("TravelRequestReconciliationRequestedBy")
+  decidedReconciliations   TravelRequestReconciliation[] @relation("TravelRequestReconciliationDecidedBy")
 }
 
 model Card {
@@ -179,12 +188,13 @@ model TravelRequest {
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
 
-  user     User                @relation("TravelRequestUser", fields: [userId], references: [id])
-  company  Company             @relation(fields: [companyId], references: [id])
-  branch   Branch              @relation(fields: [branchId], references: [id])
-  area     Area                @relation(fields: [areaId], references: [id])
-  approver User?               @relation("TravelRequestApprover", fields: [approverId], references: [id])
-  trips    TravelRequestTrip[]
+  user            User                          @relation("TravelRequestUser", fields: [userId], references: [id])
+  company         Company                       @relation(fields: [companyId], references: [id])
+  branch          Branch                        @relation(fields: [branchId], references: [id])
+  area            Area                          @relation(fields: [areaId], references: [id])
+  approver        User?                         @relation("TravelRequestApprover", fields: [approverId], references: [id])
+  trips           TravelRequestTrip[]
+  reconciliations TravelRequestReconciliation[]
 
   @@index([userId])
   @@index([companyId])
@@ -319,4 +329,27 @@ model AccountCode {
 
   @@unique([companyId, code])
   @@index([companyId])
+}
+
+model TravelRequestReconciliation {
+  id                   Int                               @id @default(autoincrement())
+  travelRequestId      Int
+  requestedByUserId    Int
+  status               TravelRequestReconciliationStatus @default(pending)
+  verificationCodeHash String                            @db.VarChar(255)
+  decidedByUserId      Int?
+  decidedAt            DateTime?
+  rejectionReason      String?                           @db.Text
+  codeVerifiedAt       DateTime?
+  createdAt            DateTime                          @default(now())
+  updatedAt            DateTime                          @updatedAt
+  travelRequest        TravelRequest                     @relation(fields: [travelRequestId], references: [id], onDelete: Cascade)
+  requestedBy          User                              @relation("TravelRequestReconciliationRequestedBy", fields: [requestedByUserId], references: [id])
+  decidedBy            User?                             @relation("TravelRequestReconciliationDecidedBy", fields: [decidedByUserId], references: [id])
+
+  @@index([travelRequestId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([decidedAt])
+  @@index([requestedByUserId])
 }

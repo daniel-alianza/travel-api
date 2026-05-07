@@ -1,4 +1,5 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { compare } from 'bcrypt';
 import { timingSafeEqual } from 'node:crypto';
 import { PrismaService } from '../../../infrastructure/prisma/prisma.service';
 import type { AuthConfig } from '../interfaces/auth-config.interface';
@@ -15,6 +16,7 @@ export type LoginCommand = {
 export type LoginResponse = {
   token: AuthTokenResult;
   cookieName: string;
+  userId: number;
 };
 
 type AuthUserRecord = {
@@ -49,7 +51,7 @@ export class LoginUseCase {
       },
     });
 
-    if (!user || !this.isEqual(command.password, user.password)) {
+    if (!user || !(await this.isEqual(command.password, user.password))) {
       throw new UnauthorizedException('Credenciales inválidas');
     }
 
@@ -62,10 +64,15 @@ export class LoginUseCase {
     return {
       token,
       cookieName: this.authConfig.jwtCookieName,
+      userId: user.id,
     };
   }
 
-  private isEqual(input: string, expected: string): boolean {
+  private async isEqual(input: string, expected: string): Promise<boolean> {
+    if (this.isBcryptHash(expected)) {
+      return compare(input, expected);
+    }
+
     const inputBuffer = Buffer.from(input, 'utf-8');
     const expectedBuffer = Buffer.from(expected, 'utf-8');
 
@@ -74,5 +81,9 @@ export class LoginUseCase {
     }
 
     return timingSafeEqual(inputBuffer, expectedBuffer);
+  }
+
+  private isBcryptHash(value: string): boolean {
+    return value.startsWith('$2a$') || value.startsWith('$2b$');
   }
 }

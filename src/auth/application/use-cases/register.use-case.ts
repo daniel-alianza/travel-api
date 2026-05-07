@@ -1,4 +1,5 @@
 import { ConflictException, Injectable } from '@nestjs/common';
+import { hash } from 'bcrypt';
 import { PrismaService } from '../../../infrastructure/prisma/prisma.service';
 
 export type RegisterCommand = {
@@ -61,6 +62,7 @@ export class RegisterUseCase {
 
   async execute(command: RegisterCommand): Promise<RegisterResponse> {
     const normalizedEmail = command.email.trim().toLowerCase();
+    const hashedPassword = await hash(command.password, 10);
     const prismaUserReaderWriter =
       this.prismaService as unknown as PrismaUserReaderWriter;
 
@@ -78,7 +80,7 @@ export class RegisterUseCase {
       data: {
         name: command.name.trim(),
         email: normalizedEmail,
-        password: command.password,
+        password: hashedPassword,
         companyId: command.companyId,
         branchId: command.branchId,
         areaId: command.areaId,

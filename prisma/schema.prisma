@@ -72,13 +72,17 @@ model Company {
   branches          Branch[]
   gasolineSuppliers GasolineSupplier[]
   accountCodes      AccountCode[]
+  distributionRules DistributionRule[]
+  vats              VAT[]
+  viaticCategories  ViaticCategory[]
 }
 
 model Area {
-  id             Int             @id @default(autoincrement())
-  name           String
-  users          User[]
-  travelRequests TravelRequest[]
+  id                Int                @id @default(autoincrement())
+  name              String
+  users             User[]
+  travelRequests    TravelRequest[]
+  distributionRules DistributionRule[]
 }
 
 model Branch {
@@ -406,4 +410,41 @@ model TripMovementProof {
   @@index([createdByUserId])
   @@index([status])
   @@index([createdAt])
+}
+
+model DistributionRule {
+  id        Int    @id @default(autoincrement())
+  code      String
+  name      String
+  companyId Int
+  areaId    Int?
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  area    Area?   @relation(fields: [areaId], references: [id], onDelete: SetNull)
+
+  @@unique([companyId, areaId, code])
+  @@index([companyId])
+  @@index([companyId, areaId])
+}
+
+model VAT {
+  id        Int     @id @default(autoincrement())
+  name      String
+  code      String
+  companyId Int
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, code])
+  @@index([companyId])
+}
+
+model ViaticCategory {
+  id        Int     @id @default(autoincrement())
+  name      String
+  code      String
+  companyId Int
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, code])
+  @@index([companyId])
 }

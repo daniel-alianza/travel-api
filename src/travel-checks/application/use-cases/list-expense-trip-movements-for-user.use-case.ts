@@ -81,7 +81,11 @@ export class ListExpenseTripMovementsForUserUseCase {
 
 function construirMovimientos(
   movimientosSap: readonly SapExpenseMovementRecord[],
-  movementProofs: readonly { movementSequence: number; status: 'submitted' | 'approved' | 'rejected' }[],
+  movementProofs: readonly {
+    movementSequence: number;
+    movementAmount: number;
+    status: 'submitted' | 'approved' | 'rejected';
+  }[],
   tripId: number,
   destination: string,
   corporateCardNumber: string,

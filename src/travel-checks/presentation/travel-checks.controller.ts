@@ -46,6 +46,18 @@ import {
   SubmitTripMovementProofUseCase,
   type SubmitTripMovementProofResponse,
 } from '../application/use-cases/submit-trip-movement-proof.use-case';
+import {
+  ListViaticDistributionRulesUseCase,
+  type ListViaticDistributionRulesResponse,
+} from '../application/use-cases/list-viatic-distribution-rules.use-case';
+import {
+  GetTripMovementCfdiUseCase,
+  type GetTripMovementCfdiResponse,
+} from '../application/use-cases/get-trip-movement-cfdi.use-case';
+import {
+  ListCompanyExpenseCatalogsUseCase,
+  type ListCompanyExpenseCatalogsResponse,
+} from '../application/use-cases/list-company-expense-catalogs.use-case';
 import { CurrentUser } from '../../auth/presentation/decorators/current-user.decorator';
 import { JwtSessionGuard } from '../../auth/presentation/guards/jwt-session.guard';
 import type { AuthTokenVerifiedPayload } from '../../auth/application/interfaces/auth-token.service.interface';
@@ -56,6 +68,9 @@ class DispersedTripCheckItemDto {
 
   @ApiProperty()
   tripOrder: number;
+
+  @ApiProperty()
+  motivoViaje: string;
 
   @ApiProperty()
   destino: string;
@@ -74,6 +89,34 @@ class DispersedTripCheckItemDto {
 
   @ApiProperty()
   totalEstimado: number;
+
+  @ApiProperty()
+  movimientosComprobados: number;
+
+  @ApiProperty()
+  totalComprobadoMovimientos: number;
+
+  @ApiProperty({
+    type: () => [DispersedTripCheckMovementItemDto],
+  })
+  movimientosComprobadosDetalle: DispersedTripCheckMovementItemDto[];
+}
+
+class DispersedTripCheckMovementItemDto {
+  @ApiProperty()
+  movementSequence: number;
+
+  @ApiProperty()
+  movementDate: string;
+
+  @ApiProperty()
+  movementAmount: number;
+
+  @ApiProperty({ nullable: true })
+  movementMemo: string | null;
+
+  @ApiProperty({ nullable: true })
+  movementComment: string | null;
 }
 
 class DispersedCheckUsuarioDto {
@@ -360,6 +403,139 @@ class SubmitTripMovementProofHttpDto {
   message: string;
 }
 
+class ViaticDistributionRuleItemDto {
+  @ApiProperty()
+  id: number;
+
+  @ApiProperty()
+  code: string;
+
+  @ApiProperty()
+  name: string;
+
+  @ApiProperty()
+  companyName: string;
+}
+
+class ListViaticDistributionRulesDataDto {
+  @ApiProperty({ type: [ViaticDistributionRuleItemDto] })
+  distributionRules: ViaticDistributionRuleItemDto[];
+}
+
+class ListViaticDistributionRulesHttpDto {
+  @ApiProperty({ type: ListViaticDistributionRulesDataDto })
+  data: ListViaticDistributionRulesDataDto;
+
+  @ApiProperty()
+  message: string;
+}
+
+class TripMovementCfdiCampoDto {
+  @ApiProperty()
+  campo: string;
+
+  @ApiProperty()
+  valor: string;
+}
+
+class TripMovementCfdiTrasladoDto {
+  @ApiProperty()
+  base: string;
+
+  @ApiProperty()
+  impuesto: string;
+
+  @ApiProperty()
+  tipoFactor: string;
+
+  @ApiProperty()
+  tasaOCuota: string;
+
+  @ApiProperty()
+  importe: string;
+}
+
+class TripMovementCfdiConceptoDto {
+  @ApiProperty()
+  descripcion: string;
+
+  @ApiProperty()
+  cantidad: string;
+
+  @ApiProperty()
+  claveUnidad: string;
+
+  @ApiProperty()
+  valorUnitario: string;
+
+  @ApiProperty()
+  importe: string;
+
+  @ApiProperty()
+  objetoImp: string;
+
+  @ApiProperty({ type: [TripMovementCfdiTrasladoDto] })
+  traslados: TripMovementCfdiTrasladoDto[];
+}
+
+class GetTripMovementCfdiDataDto {
+  @ApiProperty()
+  movementSequence: number;
+
+  @ApiProperty({ nullable: true })
+  xmlFileName: string | null;
+
+  @ApiProperty()
+  xmlRaw: string;
+
+  @ApiProperty({ type: Object })
+  xmlJson: unknown;
+
+  @ApiProperty({ type: [TripMovementCfdiConceptoDto] })
+  conceptos: TripMovementCfdiConceptoDto[];
+
+  @ApiProperty({ type: [TripMovementCfdiCampoDto] })
+  camposXml: TripMovementCfdiCampoDto[];
+}
+
+class GetTripMovementCfdiHttpDto {
+  @ApiProperty({ type: GetTripMovementCfdiDataDto })
+  data: GetTripMovementCfdiDataDto;
+
+  @ApiProperty()
+  message: string;
+}
+
+class CompanyExpenseCatalogItemDto {
+  @ApiProperty()
+  id: number;
+
+  @ApiProperty()
+  code: string;
+
+  @ApiProperty()
+  name: string;
+}
+
+class ListCompanyExpenseCatalogsDataDto {
+  @ApiProperty()
+  companyId: number;
+
+  @ApiProperty({ type: [CompanyExpenseCatalogItemDto] })
+  vatIndicators: CompanyExpenseCatalogItemDto[];
+
+  @ApiProperty({ type: [CompanyExpenseCatalogItemDto] })
+  viaticCategories: CompanyExpenseCatalogItemDto[];
+}
+
+class ListCompanyExpenseCatalogsHttpDto {
+  @ApiProperty({ type: ListCompanyExpenseCatalogsDataDto })
+  data: ListCompanyExpenseCatalogsDataDto;
+
+  @ApiProperty()
+  message: string;
+}
+
 @ApiTags('Travel Checks')
 @Controller('travel-checks')
 @UseGuards(JwtSessionGuard)
@@ -373,6 +549,9 @@ export class TravelChecksController {
     private readonly listPendingTravelReconciliationsUseCase: ListPendingTravelReconciliationsUseCase,
     private readonly decideTravelReconciliationUseCase: DecideTravelReconciliationUseCase,
     private readonly submitTripMovementProofUseCase: SubmitTripMovementProofUseCase,
+    private readonly listViaticDistributionRulesUseCase: ListViaticDistributionRulesUseCase,
+    private readonly getTripMovementCfdiUseCase: GetTripMovementCfdiUseCase,
+    private readonly listCompanyExpenseCatalogsUseCase: ListCompanyExpenseCatalogsUseCase,
   ) {}
   @Get('dispersed')
   @ApiOperation({
@@ -422,7 +601,9 @@ export class TravelChecksController {
     return this.listExpenseTripMovementsForUserUseCase.execute(userId, tripId);
   }
 
-  @Post('expense-trips/:userId/trips/:tripId/movements/:movementSequence/proofs')
+  @Post(
+    'expense-trips/:userId/trips/:tripId/movements/:movementSequence/proofs',
+  )
   @ApiOperation({
     summary: 'Comprobar movimiento con archivos previamente subidos',
   })
@@ -496,6 +677,62 @@ export class TravelChecksController {
       });
     }
     return this.listPendingTravelReconciliationsUseCase.execute();
+  }
+
+  @Get('distribution-rules/viatic')
+  @ApiOperation({
+    summary: 'Normas de reparto de viáticos',
+  })
+  @ApiOkResponse({ type: ListViaticDistributionRulesHttpDto })
+  async listViaticDistributionRules(
+    @CurrentUser() user: AuthTokenVerifiedPayload,
+  ): Promise<ListViaticDistributionRulesResponse> {
+    if (!user.role.includes('administrador')) {
+      throw new ForbiddenException({
+        message:
+          'No tienes permisos para consultar normas de reparto de viáticos.',
+        error: 'Prohibido',
+      });
+    }
+    return this.listViaticDistributionRulesUseCase.execute();
+  }
+
+  @Get('trips/:tripId/movements/:movementSequence/cfdi')
+  @ApiOperation({
+    summary: 'Obtener y parsear XML CFDI de un movimiento comprobado',
+  })
+  @ApiOkResponse({ type: GetTripMovementCfdiHttpDto })
+  async getTripMovementCfdi(
+    @Param('tripId', ParseIntPipe) tripId: number,
+    @Param('movementSequence', ParseIntPipe) movementSequence: number,
+    @CurrentUser() user: AuthTokenVerifiedPayload,
+  ): Promise<GetTripMovementCfdiResponse> {
+    if (!user.role.includes('administrador')) {
+      throw new ForbiddenException({
+        message: 'No tienes permisos para consultar XML de comprobaciones.',
+        error: 'Prohibido',
+      });
+    }
+    return this.getTripMovementCfdiUseCase.execute(tripId, movementSequence);
+  }
+
+  @Get('companies/:companyId/expense-catalogs')
+  @ApiOperation({
+    summary:
+      'Obtener catálogo de categorías viáticos e indicadores de impuesto por compañía',
+  })
+  @ApiOkResponse({ type: ListCompanyExpenseCatalogsHttpDto })
+  async listCompanyExpenseCatalogs(
+    @Param('companyId', ParseIntPipe) companyId: number,
+    @CurrentUser() user: AuthTokenVerifiedPayload,
+  ): Promise<ListCompanyExpenseCatalogsResponse> {
+    if (!user.role.includes('administrador')) {
+      throw new ForbiddenException({
+        message: 'No tienes permisos para consultar catálogos contables.',
+        error: 'Prohibido',
+      });
+    }
+    return this.listCompanyExpenseCatalogsUseCase.execute(companyId);
   }
 
   @Post('reconciliations/:reconciliationId/reject')

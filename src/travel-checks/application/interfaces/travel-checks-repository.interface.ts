@@ -2,6 +2,7 @@ export type DispersedTripForCheckRecord = {
   readonly id: number;
   readonly tripOrder: number;
   readonly destination: string;
+  readonly purpose: string;
   readonly tripApprovalStatus: string;
   readonly departureDate: Date;
   readonly returnDate: Date;
@@ -119,18 +120,33 @@ export type PendingTravelRequestReconciliationRecord = {
   };
 };
 
-export type TripMovementProofStatusRecord = 'submitted' | 'approved' | 'rejected';
+export type TripMovementProofStatusRecord =
+  | 'submitted'
+  | 'approved'
+  | 'rejected';
 
 export type TripMovementProofRecord = {
   readonly id: number;
   readonly tripId: number;
   readonly movementSequence: number;
+  readonly movementDate?: Date;
+  readonly movementAmount: number;
+  readonly movementMemo?: string | null;
+  readonly comment?: string | null;
   readonly status: TripMovementProofStatusRecord;
 };
 
 export interface TravelChecksRepository {
   findDispersedTravelRequestsWithDispersedTrips(): Promise<
     readonly DispersedTravelRequestForCheckRecord[]
+  >;
+  listViaticDistributionRules(): Promise<
+    readonly {
+      id: number;
+      code: string;
+      name: string;
+      companyName: string;
+    }[]
   >;
   findDispersedExpenseTripsForUser(
     userId: number,
@@ -174,7 +190,30 @@ export interface TravelChecksRepository {
     approve: boolean;
     rejectionReason: string | null;
   }): Promise<TravelRequestReconciliationRecord | null>;
-  listTripMovementProofsByTripId(tripId: number): Promise<readonly TripMovementProofRecord[]>;
+  listTripMovementProofsByTripId(
+    tripId: number,
+  ): Promise<readonly TripMovementProofRecord[]>;
+  listVatByCompanyId(companyId: number): Promise<
+    readonly {
+      id: number;
+      code: string;
+      name: string;
+    }[]
+  >;
+  listViaticCategoriesByCompanyId(companyId: number): Promise<
+    readonly {
+      id: number;
+      code: string;
+      name: string;
+    }[]
+  >;
+  findTripMovementProofXmlFile(input: {
+    tripId: number;
+    movementSequence: number;
+  }): Promise<{
+    filePath: string;
+    fileName: string | null;
+  } | null>;
   areTripFilesOwnedByUser(input: {
     tripId: number;
     userId: number;

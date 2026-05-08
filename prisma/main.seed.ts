@@ -8,6 +8,9 @@ import { seedRoles } from './seeds/role.seed';
 import { seedUsers } from './seeds/users.seed';
 import { seedGasolineSuppliers } from './seeds/gasolinesupplier.seed';
 import { seedAccountCodes } from './seeds/accountcode.seed';
+import { seedDistributionRules } from './seeds/distributionrule.seed';
+import { seedVat } from './seeds/vat.seed';
+import { seedViaticCategories } from './seeds/viaticcategory.seed';
 
 type SeederTask = {
   readonly name: string;
@@ -35,6 +38,10 @@ const seederTasks: readonly SeederTask[] = [
     execute: seedAreas,
   },
   {
+    name: 'Normas de reparto',
+    execute: seedDistributionRules,
+  },
+  {
     name: 'Sucursales',
     execute: seedBranches,
   },
@@ -53,6 +60,14 @@ const seederTasks: readonly SeederTask[] = [
   {
     name: 'Account codes',
     execute: seedAccountCodes,
+  },
+  {
+    name: 'IVAs',
+    execute: seedVat,
+  },
+  {
+    name: 'Categorías de viáticos',
+    execute: seedViaticCategories,
   },
 ];
 

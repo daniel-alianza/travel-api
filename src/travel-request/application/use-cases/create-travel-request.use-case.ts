@@ -63,11 +63,13 @@ type CreateTravelRequestData = {
 export type CreateTravelRequestResponse =
   ApiSuccessResponse<CreateTravelRequestData>;
 
-const FOOD_POLICY_EVENT_COST = 250;
 const FOOD_POLICY_EVENTS_PER_DAY = 3;
 const FOOD_POLICY_IVA_RATE = 0.16;
 const FOOD_POLICY_TIP_RATE = 0.1;
 const CAR_RENT_RECOMMENDED_PER_DAY = 850;
+const FOOD_EVENT_COST_ADMINISTRATIVO = 250;
+const FOOD_EVENT_COST_VENTAS = 250;
+const FOOD_EVENT_COST_OPERACIONES = 200;
 
 @Injectable()
 export class CreateTravelRequestUseCase {
@@ -83,23 +85,26 @@ export class CreateTravelRequestUseCase {
       throw new BadRequestException('Debe incluir al menos un viaje.');
     }
 
-    const user = await this.travelRequestRepository.findUserById(command.userId);
+    const user = await this.travelRequestRepository.findUserById(
+      command.userId,
+    );
     if (!user) {
       throw new NotFoundException('No se encontró el usuario solicitante.');
     }
 
-    const area = await this.travelRequestRepository.findAreaById(command.areaId);
+    const area = await this.travelRequestRepository.findAreaById(
+      command.areaId,
+    );
     if (!area) {
       throw new NotFoundException('No se encontró el área del solicitante.');
     }
 
-    const normalizedAreaName = normalizeText(area.name);
-    const foodPolicyApplies =
-      normalizedAreaName.includes('ventas') ||
-      normalizedAreaName.includes('administracion');
+    const foodPolicy = resolveFoodPolicyByAreaName(area.name);
 
-    const repositoryInputTrips: CreateTravelRequestRepositoryInput['trips'][number][] = [];
+    const repositoryInputTrips: CreateTravelRequestRepositoryInput['trips'][number][] =
+      [];
     for (const [tripIndex, trip] of command.trips.entries()) {
+      assertTravelRequestTripCommandValid(trip, tripIndex + 1);
       const departureDate = parseDateOrThrow(
         trip.fechaSalida,
         `fechaSalida del viaje ${tripIndex + 1}`,
@@ -141,15 +146,21 @@ export class CreateTravelRequestUseCase {
         }
       }
 
-      const foodPolicyRecommendedTotal = foodPolicyApplies
+      const foodPolicyRecommendedTotal = foodPolicy.applies
         ? roundToTwo(
             tripDays *
               FOOD_POLICY_EVENTS_PER_DAY *
-              FOOD_POLICY_EVENT_COST *
-              (1 + FOOD_POLICY_IVA_RATE + FOOD_POLICY_TIP_RATE),
+              foodPolicy.eventCost *
+              (1 + FOOD_POLICY_IVA_RATE) *
+              (1 + FOOD_POLICY_TIP_RATE),
           )
         : 0;
-      void foodPolicyRecommendedTotal;
+      validateFoodExpenseCapOrThrow({
+        tripIndex: tripIndex + 1,
+        foodPolicyApplies: foodPolicy.applies,
+        requestedFoodAmount: toSafeNumber(trip.gastos.alimentos),
+        maximumAllowedAmount: foodPolicyRecommendedTotal,
+      });
       const carRentPolicyRecommendedTotal = roundToTwo(
         tripDays * CAR_RENT_RECOMMENDED_PER_DAY,
       );
@@ -195,16 +206,17 @@ export class CreateTravelRequestUseCase {
       void tagTotal;
     }
 
-    const createdRequest = await this.travelRequestRepository.createTravelRequest({
-      userId: command.userId,
-      companyId: command.companyId,
-      branchId: command.branchId,
-      areaId: command.areaId,
-      approverId: user.managerId,
-      employeeName: command.employeeName.trim(),
-      corporateCardNumber: command.corporateCardNumber?.trim() ?? null,
-      trips: repositoryInputTrips,
-    });
+    const createdRequest =
+      await this.travelRequestRepository.createTravelRequest({
+        userId: command.userId,
+        companyId: command.companyId,
+        branchId: command.branchId,
+        areaId: command.areaId,
+        approverId: user.managerId,
+        employeeName: command.employeeName.trim(),
+        corporateCardNumber: command.corporateCardNumber?.trim() ?? null,
+        trips: repositoryInputTrips,
+      });
 
     return buildSuccessResponse(
       {
@@ -235,7 +247,9 @@ function sumTripExpenses(
 function parseDateOrThrow(value: string, fieldName: string): Date {
   const parsedDate = new Date(value);
   if (Number.isNaN(parsedDate.getTime())) {
-    throw new BadRequestException(`El campo ${fieldName} no tiene una fecha válida.`);
+    throw new BadRequestException(
+      `El campo ${fieldName} no tiene una fecha válida.`,
+    );
   }
   return parsedDate;
 }
@@ -263,8 +277,156 @@ function toSafeNumber(value: number | null | undefined): number {
   return value;
 }
 
+export function assertTravelRequestTripCommandValid(
+  trip: CreateTravelRequestTripCommand,
+  tripIndexOneBased: number,
+): void {
+  const prefix = `Viaje ${tripIndexOneBased}:`;
+  if (!trip.destinoViaje.trim()) {
+    throw new BadRequestException(`${prefix} el destino es obligatorio.`);
+  }
+  if (!trip.motivoViaje.trim()) {
+    throw new BadRequestException(
+      `${prefix} el motivo o las actividades son obligatorios.`,
+    );
+  }
+  if (
+    !trip.fechaSalida.trim() ||
+    !trip.fechaRegreso.trim() ||
+    !trip.fechaDispersion.trim()
+  ) {
+    throw new BadRequestException(
+      `${prefix} las fechas de salida, regreso y dispersión son obligatorias.`,
+    );
+  }
+  const objetivosContados = trip.objetivos
+    .map((objective) => objective.trim())
+    .filter((objective) => objective.length > 0);
+  if (objetivosContados.length < 3) {
+    throw new BadRequestException(
+      `${prefix} debes registrar al menos 3 objetivos con descripción.`,
+    );
+  }
+  if (sumTripExpenses(trip.gastos) <= 0) {
+    throw new BadRequestException(
+      `${prefix} debes registrar al menos un gasto estimado mayor a cero.`,
+    );
+  }
+  if (trip.gasolina.necesitaGasolina) {
+    const cardId = trip.gasolina.cardId;
+    if (
+      cardId === null ||
+      cardId === undefined ||
+      !Number.isFinite(cardId) ||
+      cardId < 1
+    ) {
+      throw new BadRequestException(
+        `${prefix} selecciona una tarjeta de gasolina válida.`,
+      );
+    }
+    if (!trip.gasolina.placa?.trim()) {
+      throw new BadRequestException(
+        `${prefix} la placa es obligatoria si solicitas gasolina.`,
+      );
+    }
+    const kilometraje = trip.gasolina.kilometrajeActualKm;
+    if (
+      kilometraje === null ||
+      kilometraje === undefined ||
+      !Number.isFinite(kilometraje) ||
+      kilometraje < 0
+    ) {
+      throw new BadRequestException(
+        `${prefix} indica el kilometraje actual del vehículo.`,
+      );
+    }
+    const montoGasolina = toSafeNumber(trip.gasolina.montoSolicitado);
+    if (montoGasolina <= 0) {
+      throw new BadRequestException(
+        `${prefix} indica el monto solicitado de gasolina.`,
+      );
+    }
+    const distanciaKm = toSafeNumber(trip.gasolina.distanciaKm);
+    if (distanciaKm <= 0) {
+      throw new BadRequestException(
+        `${prefix} indica la distancia a recorrer en kilómetros.`,
+      );
+    }
+  }
+  if (trip.tag.necesitaTag) {
+    const montoTag = toSafeNumber(trip.tag.montoSolicitado);
+    if (montoTag <= 0) {
+      throw new BadRequestException(
+        `${prefix} indica el monto solicitado para TAG.`,
+      );
+    }
+  }
+}
+
 function roundToTwo(value: number): number {
   return Math.round(value * 100) / 100;
+}
+
+function resolveFoodPolicyByAreaName(areaName: string): {
+  readonly applies: boolean;
+  readonly eventCost: number;
+} {
+  const normalizedAreaName = normalizeText(areaName);
+  if (normalizedAreaName === 'direccion') {
+    return {
+      applies: false,
+      eventCost: 0,
+    };
+  }
+
+  const administrativeAreas = new Set<string>([
+    'administracion',
+    'contabilidad',
+    'recursos humanos',
+    'tecnologias de la informacion',
+  ]);
+  if (administrativeAreas.has(normalizedAreaName)) {
+    return {
+      applies: true,
+      eventCost: FOOD_EVENT_COST_ADMINISTRATIVO,
+    };
+  }
+
+  const salesAreas = new Set<string>([
+    'atencion a clientes',
+    'compras',
+    'mercadotecnia',
+    'ventas',
+  ]);
+  if (salesAreas.has(normalizedAreaName)) {
+    return {
+      applies: true,
+      eventCost: FOOD_EVENT_COST_VENTAS,
+    };
+  }
+
+  const operationAreas = new Set<string>([
+    'almacen',
+    'logistica',
+    'auditoria externa',
+    'auditoria interna',
+    'calidad',
+    'ingenieria',
+    'mantenimiento',
+    'manufactura',
+    'produccion',
+    'seguridad e higiene',
+  ]);
+  if (operationAreas.has(normalizedAreaName)) {
+    return {
+      applies: true,
+      eventCost: FOOD_EVENT_COST_OPERACIONES,
+    };
+  }
+
+  throw new BadRequestException(
+    `No hay política de alimentos configurada para el área ${areaName}.`,
+  );
 }
 
 function normalizeText(value: string): string {
@@ -273,4 +435,29 @@ function normalizeText(value: string): string {
     .toLowerCase()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '');
+}
+
+function validateFoodExpenseCapOrThrow(input: {
+  readonly tripIndex: number;
+  readonly foodPolicyApplies: boolean;
+  readonly requestedFoodAmount: number;
+  readonly maximumAllowedAmount: number;
+}): void {
+  if (!input.foodPolicyApplies) {
+    return;
+  }
+  if (input.requestedFoodAmount <= input.maximumAllowedAmount) {
+    return;
+  }
+
+  throw new BadRequestException({
+    message: `El monto de alimentos del viaje ${input.tripIndex} excede el tope permitido por política.`,
+    error: {
+      code: 'TRAVEL_REQUEST_POLICY_LIMIT_EXCEEDED',
+      tripIndex: input.tripIndex,
+      field: 'alimentos',
+      requestedAmount: roundToTwo(input.requestedFoodAmount),
+      maximumAllowedAmount: roundToTwo(input.maximumAllowedAmount),
+    },
+  });
 }

@@ -7,6 +7,8 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -117,7 +119,8 @@ export class TravelRequestController {
     summary: 'Obtener datos precargados de solicitud',
   })
   @ApiOkResponse({
-    description: 'Datos bloqueados para empresa/sucursal/área y tarjetas viatic del usuario.',
+    description:
+      'Datos bloqueados para empresa/sucursal/área y tarjetas viatic del usuario.',
   })
   async getFormData(
     @Param('userId', ParseIntPipe) userId: number,
@@ -165,7 +168,10 @@ export class TravelRequestController {
     @Param('travelRequestId', ParseIntPipe) travelRequestId: number,
     @Param('userId', ParseIntPipe) userId: number,
   ): Promise<GetTravelRequestDetailForUserResponse> {
-    return this.getTravelRequestDetailForUserUseCase.execute(travelRequestId, userId);
+    return this.getTravelRequestDetailForUserUseCase.execute(
+      travelRequestId,
+      userId,
+    );
   }
 
   @Get('approval-list')
@@ -174,7 +180,8 @@ export class TravelRequestController {
     summary: 'Listar solicitudes para aprobación',
   })
   @ApiOkResponse({
-    description: 'Listado de solicitudes con viajes y conceptos para pantalla de aprobación.',
+    description:
+      'Listado de solicitudes con viajes y conceptos para pantalla de aprobación.',
   })
   async getApprovalList(): Promise<GetApprovalRequestsResponse> {
     return this.getApprovalRequestsUseCase.execute();
@@ -231,7 +238,8 @@ export class TravelRequestController {
   })
   @ApiBody({ type: ApproveTravelRequestTripDto, required: false })
   @ApiOkResponse({
-    description: 'El viaje pasa a aprobado y se recalcula el estado de la solicitud.',
+    description:
+      'El viaje pasa a aprobado y se recalcula el estado de la solicitud.',
   })
   async approveTrip(
     @Param('tripId', ParseIntPipe) tripId: number,
@@ -251,7 +259,8 @@ export class TravelRequestController {
   })
   @ApiBody({ type: RejectTravelRequestTripDto })
   @ApiOkResponse({
-    description: 'El viaje pasa a rechazado con comentario y la solicitud puede quedar en corrección.',
+    description:
+      'El viaje pasa a rechazado con comentario y la solicitud puede quedar en corrección.',
   })
   async rejectTrip(
     @Param('tripId', ParseIntPipe) tripId: number,
@@ -266,12 +275,19 @@ export class TravelRequestController {
 
   @Patch('viajes/:tripId/corregir')
   @HttpCode(200)
+  @UsePipes(
+    new ValidationPipe({
+      transform: true,
+      transformOptions: { enableImplicitConversion: true },
+    }),
+  )
   @ApiOperation({
     summary: 'Corregir un viaje rechazado y reenviarlo a revisión',
   })
   @ApiBody({ type: CorrectTravelRequestTripDto })
   @ApiOkResponse({
-    description: 'El viaje queda pendiente y se recalcula el estado de la solicitud.',
+    description:
+      'El viaje queda pendiente y se recalcula el estado de la solicitud.',
   })
   async corregirViajeRechazado(
     @Param('tripId', ParseIntPipe) tripId: number,
@@ -384,6 +400,12 @@ export class TravelRequestController {
 
   @Post()
   @HttpCode(201)
+  @UsePipes(
+    new ValidationPipe({
+      transform: true,
+      transformOptions: { enableImplicitConversion: true },
+    }),
+  )
   @ApiOperation({
     summary: 'Crear solicitud de viaje',
   })

@@ -44,6 +44,12 @@ class LoginResponseDataDto {
 
   @ApiProperty()
   expiresInSeconds: number;
+
+  @ApiProperty({
+    description: 'Nombre del rol del usuario (coincide con el claim JWT)',
+    example: 'colaborador',
+  })
+  role: string;
 }
 
 class LoginHttpResponseDto {
@@ -318,6 +324,7 @@ export class AuthController {
         userId: loginResult.userId,
         accessToken: loginResult.token.accessToken,
         expiresInSeconds: loginResult.token.expiresInSeconds,
+        role: loginResult.role,
       },
       'Login exitoso',
     );

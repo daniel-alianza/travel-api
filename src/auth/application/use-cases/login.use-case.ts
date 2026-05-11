@@ -17,6 +17,7 @@ export type LoginResponse = {
   token: AuthTokenResult;
   cookieName: string;
   userId: number;
+  role: string;
 };
 
 type AuthUserRecord = {
@@ -80,6 +81,7 @@ export class LoginUseCase {
       token,
       cookieName: this.authConfig.jwtCookieName,
       userId: user.id,
+      role: user.role.name,
     };
   }
 

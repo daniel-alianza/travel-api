@@ -1,4 +1,7 @@
 import { Module } from '@nestjs/common';
+import { ChangePasswordUseCase } from './application/use-cases/change-password.use-case';
+import { GetCurrentUserProfileUseCase } from './application/use-cases/get-current-user-profile.use-case';
+import { ListManagerCandidateUsersUseCase } from './application/use-cases/list-manager-candidate-users.use-case';
 import { LoginUseCase } from './application/use-cases/login.use-case';
 import { RegisterUseCase } from './application/use-cases/register.use-case';
 import { AuthConfigService } from './infrastructure/auth-config.service';
@@ -12,6 +15,9 @@ import { JwtSessionGuard } from './presentation/guards/jwt-session.guard';
     AuthConfigService,
     LoginUseCase,
     RegisterUseCase,
+    GetCurrentUserProfileUseCase,
+    ChangePasswordUseCase,
+    ListManagerCandidateUsersUseCase,
     {
       provide: 'AUTH_CONFIG',
       inject: [AuthConfigService],

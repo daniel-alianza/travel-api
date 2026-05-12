@@ -1,6 +1,7 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { compare } from 'bcrypt';
 import { timingSafeEqual } from 'node:crypto';
+import { resolveUserIamPermissionCodes } from '../helpers/resolve-user-iam-permission-codes';
 import { PrismaService } from '../../../infrastructure/prisma/prisma.service';
 import type { AuthConfig } from '../interfaces/auth-config.interface';
 import type {
@@ -18,12 +19,14 @@ export type LoginResponse = {
   cookieName: string;
   userId: number;
   role: string;
+  permisos: readonly string[];
 };
 
 type AuthUserRecord = {
   id: number;
   email: string;
   password: string;
+  roleId: number;
   role: {
     name: string;
   };
@@ -37,6 +40,7 @@ type PrismaUserReader = {
         id: true;
         email: true;
         password: true;
+        roleId: true;
         role: { select: { name: true } };
       };
     }): Promise<AuthUserRecord | null>;
@@ -63,6 +67,7 @@ export class LoginUseCase {
         id: true,
         email: true,
         password: true,
+        roleId: true,
         role: { select: { name: true } },
       },
     });
@@ -71,10 +76,18 @@ export class LoginUseCase {
       throw new UnauthorizedException('Credenciales inválidas');
     }
 
+    const permisos = await resolveUserIamPermissionCodes(
+      this.prismaService,
+      user.id,
+      user.roleId,
+      user.role.name,
+    );
+
     const token = this.authTokenService.signAccessToken({
       sub: user.id.toString(),
       email: normalizedEmail,
       role: user.role.name,
+      iamPermissionCodes: permisos,
     });
 
     return {
@@ -82,6 +95,7 @@ export class LoginUseCase {
       cookieName: this.authConfig.jwtCookieName,
       userId: user.id,
       role: user.role.name,
+      permisos,
     };
   }
 

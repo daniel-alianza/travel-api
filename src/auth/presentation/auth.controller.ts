@@ -50,6 +50,13 @@ class LoginResponseDataDto {
     example: 'colaborador',
   })
   role: string;
+
+  @ApiProperty({
+    type: [String],
+    description:
+      'Permisos IAM efectivos (rol por defecto + extras). Misma lógica que en el token.',
+  })
+  permisos: readonly string[];
 }
 
 class LoginHttpResponseDto {
@@ -325,6 +332,7 @@ export class AuthController {
         accessToken: loginResult.token.accessToken,
         expiresInSeconds: loginResult.token.expiresInSeconds,
         role: loginResult.role,
+        permisos: loginResult.permisos,
       },
       'Login exitoso',
     );

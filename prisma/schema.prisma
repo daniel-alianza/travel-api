@@ -100,9 +100,10 @@ model Branch {
 }
 
 model Role {
-  id    Int    @id @default(autoincrement())
-  name  String
-  users User[]
+  id                     Int                     @id @default(autoincrement())
+  name                   String
+  users                  User[]
+  roleDefaultPermissions RoleDefaultPermission[]
 }
 
 model User {
@@ -136,6 +137,7 @@ model User {
   requestedReconciliations TravelRequestReconciliation[] @relation("TravelRequestReconciliationRequestedBy")
   decidedReconciliations   TravelRequestReconciliation[] @relation("TravelRequestReconciliationDecidedBy")
   movementProofs           TripMovementProof[]
+  userExtraPermissions     UserExtraPermission[]
 }
 
 model Card {
@@ -447,4 +449,26 @@ model ViaticCategory {
 
   @@unique([companyId, code])
   @@index([companyId])
+}
+
+model RoleDefaultPermission {
+  id             Int    @id @default(autoincrement())
+  roleId         Int
+  permissionCode String @db.VarChar(64)
+
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, permissionCode])
+  @@index([permissionCode])
+}
+
+model UserExtraPermission {
+  id             Int    @id @default(autoincrement())
+  userId         Int
+  permissionCode String @db.VarChar(64)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, permissionCode])
+  @@index([permissionCode])
 }

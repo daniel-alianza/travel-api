@@ -84,11 +84,22 @@ export class HmacJwtService implements AuthTokenService {
       ) {
         return null;
       }
+      const rawCodes = (payload as { iamPermissionCodes?: unknown })
+        .iamPermissionCodes;
+      const iamPermissionCodes: string[] =
+        Array.isArray(rawCodes) &&
+        rawCodes.length > 0 &&
+        rawCodes.every((item) => typeof item === 'string')
+          ? [...rawCodes]
+          : [];
       const nowSeconds = Math.floor(Date.now() / 1000);
       if (payload.exp <= nowSeconds) {
         return null;
       }
-      return payload;
+      return {
+        ...payload,
+        iamPermissionCodes,
+      };
     } catch {
       return null;
     }

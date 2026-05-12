@@ -8,6 +8,7 @@ import { CardsModule } from './cards/cards.module';
 import { TravelChecksModule } from './travel-checks/travel.checks.module';
 import { SapConnectionModule } from './infrastructure/SL/sap-connection.module';
 import { DmsModule } from './dms/dms.module';
+import { IamModule } from './iam/iam.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { DmsModule } from './dms/dms.module';
     TravelChecksModule,
     SapConnectionModule,
     DmsModule,
+    IamModule,
   ],
   controllers: [],
   providers: [],

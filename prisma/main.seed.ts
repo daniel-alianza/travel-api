@@ -11,6 +11,7 @@ import { seedAccountCodes } from './seeds/accountcode.seed';
 import { seedDistributionRules } from './seeds/distributionrule.seed';
 import { seedVat } from './seeds/vat.seed';
 import { seedViaticCategories } from './seeds/viaticcategory.seed';
+import { seedRoleDefaultPermissions } from './seeds/role-default-permission.seed';
 
 type SeederTask = {
   readonly name: string;
@@ -68,6 +69,10 @@ const seederTasks: readonly SeederTask[] = [
   {
     name: 'Categorías de viáticos',
     execute: seedViaticCategories,
+  },
+  {
+    name: 'Permisos por defecto de roles',
+    execute: seedRoleDefaultPermissions,
   },
 ];
 

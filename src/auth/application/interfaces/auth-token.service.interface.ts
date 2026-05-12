@@ -2,6 +2,8 @@ export type AuthTokenPayload = {
   sub: string;
   email: string;
   role: string;
+  /** Códigos IAM efectivos al iniciar sesión (para guards sin consultar BD). */
+  iamPermissionCodes: readonly string[];
 };
 
 export type AuthTokenResult = {

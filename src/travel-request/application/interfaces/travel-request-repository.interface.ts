@@ -118,11 +118,17 @@ export type ApprovalRequestRecord = {
   readonly approver: {
     readonly name: string;
   } | null;
+  readonly dispersedBy: {
+    readonly name: string;
+  } | null;
   readonly trips: readonly {
     readonly id: number;
     readonly tripOrder: number;
     readonly tripApprovalStatus: string;
     readonly approverComment: string | null;
+    readonly approvedBy: {
+      readonly name: string;
+    } | null;
     readonly destination: string;
     readonly purpose: string;
     readonly departureDate: Date;
@@ -159,6 +165,7 @@ export type ResolveTravelRequestTripRepositoryInput = {
   readonly tripId: number;
   readonly resolution: 'approve' | 'reject';
   readonly comment: string | null;
+  readonly actorUserId: number;
 };
 
 export type TripResolutionResult = 'ok' | 'not_found' | 'invalid_status';
@@ -253,6 +260,7 @@ export interface TravelRequestRepository {
     readonly travelRequestId: number;
     readonly dispersedTotal: number;
     readonly dispersionComment: string | null;
+    readonly dispersedByUserId: number;
   }): Promise<ConfirmTravelRequestDispersionResult>;
   findApprovalFilterCatalog(): Promise<ApprovalFilterCatalogRecord>;
   createTravelRequest(

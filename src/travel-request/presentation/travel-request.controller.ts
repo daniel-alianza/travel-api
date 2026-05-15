@@ -7,11 +7,14 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UnauthorizedException,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import {
   ApiBody,
+  ApiCookieAuth,
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
@@ -61,6 +64,14 @@ import {
   CorrectRejectedTravelRequestTripUseCase,
   type CorrectRejectedTravelRequestTripResponse,
 } from '../application/use-cases/correct-rejected-travel-request-trip.use-case';
+import {
+  ValidateTripFoodExpenseUseCase,
+  type ValidateTripFoodExpenseResponse,
+} from '../application/use-cases/validate-trip-food-expense.use-case';
+import {
+  ValidateTripLodgingExpenseUseCase,
+  type ValidateTripLodgingExpenseResponse,
+} from '../application/use-cases/validate-trip-lodging-expense.use-case';
 import { ApproveTravelRequestTripDto } from './dtos/approve-travel-request-trip.dto';
 import {
   CorrectTravelRequestTripDto,
@@ -68,6 +79,19 @@ import {
 } from './dtos/create-travel-request.dto';
 import { RejectTravelRequestTripDto } from './dtos/reject-travel-request-trip.dto';
 import { ConfirmDispersionDto } from './dtos/confirm-dispersion.dto';
+import { ValidateTripFoodExpenseDto } from './dtos/validate-trip-food-expense.dto';
+import { ValidateTripLodgingExpenseDto } from './dtos/validate-trip-lodging-expense.dto';
+import { JwtSessionGuard } from '../../auth/presentation/guards/jwt-session.guard';
+import { CurrentUser } from '../../auth/presentation/decorators/current-user.decorator';
+import type { AuthTokenVerifiedPayload } from '../../auth/application/interfaces/auth-token.service.interface';
+
+function parseJwtSubToUserId(user: AuthTokenVerifiedPayload): number {
+  const userId = Number.parseInt(user.sub, 10);
+  if (!Number.isFinite(userId) || userId < 1) {
+    throw new UnauthorizedException('Sesión inválida.');
+  }
+  return userId;
+}
 
 type TravelRequestPoliciesResponse = {
   readonly data: {
@@ -111,6 +135,8 @@ export class TravelRequestController {
     private readonly getMyTravelRequestsUseCase: GetMyTravelRequestsUseCase,
     private readonly getTravelRequestDetailForUserUseCase: GetTravelRequestDetailForUserUseCase,
     private readonly correctRejectedTravelRequestTripUseCase: CorrectRejectedTravelRequestTripUseCase,
+    private readonly validateTripFoodExpenseUseCase: ValidateTripFoodExpenseUseCase,
+    private readonly validateTripLodgingExpenseUseCase: ValidateTripLodgingExpenseUseCase,
   ) {}
 
   @Get('form-data/:userId')
@@ -145,10 +171,11 @@ export class TravelRequestController {
   @Get('solicitudes-propias/:userId')
   @HttpCode(200)
   @ApiOperation({
-    summary: 'Listar solicitudes de viaje del usuario',
+    summary: 'Listar solicitudes dispersadas del usuario (comprobación de gastos)',
   })
   @ApiOkResponse({
-    description: 'Solicitudes del colaborador con estado por viaje.',
+    description:
+      'Solicitudes en estado dispersado con al menos un viaje dispersado.',
   })
   async getSolicitudesPropias(
     @Param('userId', ParseIntPipe) userId: number,
@@ -212,6 +239,8 @@ export class TravelRequestController {
   }
 
   @Patch(':travelRequestId/disperse')
+  @UseGuards(JwtSessionGuard)
+  @ApiCookieAuth('travel_session')
   @HttpCode(200)
   @ApiOperation({
     summary: 'Confirmar dispersión de una solicitud aprobada',
@@ -223,15 +252,19 @@ export class TravelRequestController {
   async confirmDispersion(
     @Param('travelRequestId', ParseIntPipe) travelRequestId: number,
     @Body() requestBody: ConfirmDispersionDto,
+    @CurrentUser() user: AuthTokenVerifiedPayload,
   ): Promise<ConfirmTravelRequestDispersionResponse> {
     return this.confirmTravelRequestDispersionUseCase.execute({
       travelRequestId,
       dispersedTotal: requestBody.dispersedTotal,
       comment: requestBody.comment ?? null,
+      dispersedByUserId: parseJwtSubToUserId(user),
     });
   }
 
   @Patch('trips/:tripId/approve')
+  @UseGuards(JwtSessionGuard)
+  @ApiCookieAuth('travel_session')
   @HttpCode(200)
   @ApiOperation({
     summary: 'Aprobar un viaje pendiente',
@@ -243,16 +276,20 @@ export class TravelRequestController {
   })
   async approveTrip(
     @Param('tripId', ParseIntPipe) tripId: number,
-    @Body() requestBody?: ApproveTravelRequestTripDto,
+    @Body() requestBody: ApproveTravelRequestTripDto | undefined,
+    @CurrentUser() user: AuthTokenVerifiedPayload,
   ): Promise<ResolveTravelRequestTripResponse> {
     return this.resolveTravelRequestTripUseCase.execute({
       tripId,
       resolution: 'approve',
       comment: requestBody?.comment ?? null,
+      actorUserId: parseJwtSubToUserId(user),
     });
   }
 
   @Patch('trips/:tripId/reject')
+  @UseGuards(JwtSessionGuard)
+  @ApiCookieAuth('travel_session')
   @HttpCode(200)
   @ApiOperation({
     summary: 'Rechazar un viaje pendiente',
@@ -265,11 +302,13 @@ export class TravelRequestController {
   async rejectTrip(
     @Param('tripId', ParseIntPipe) tripId: number,
     @Body() requestBody: RejectTravelRequestTripDto,
+    @CurrentUser() user: AuthTokenVerifiedPayload,
   ): Promise<ResolveTravelRequestTripResponse> {
     return this.resolveTravelRequestTripUseCase.execute({
       tripId,
       resolution: 'reject',
       comment: requestBody.comment,
+      actorUserId: parseJwtSubToUserId(user),
     });
   }
 
@@ -396,6 +435,62 @@ export class TravelRequestController {
       },
       message: 'Políticas cargadas correctamente.',
     };
+  }
+
+  @Post('validate-trip-food-expense')
+  @HttpCode(200)
+  @UsePipes(
+    new ValidationPipe({
+      transform: true,
+      transformOptions: { enableImplicitConversion: true },
+    }),
+  )
+  @ApiOperation({
+    summary:
+      'Validar monto de alimentos frente a política (prechequeo sin guardar solicitud)',
+  })
+  @ApiBody({ type: ValidateTripFoodExpenseDto })
+  @ApiOkResponse({
+    description:
+      'Indica si aplica tope de alimentos y si el monto está dentro del máximo permitido.',
+  })
+  async validateTripFoodExpense(
+    @Body() requestBody: ValidateTripFoodExpenseDto,
+  ): Promise<ValidateTripFoodExpenseResponse> {
+    return this.validateTripFoodExpenseUseCase.execute({
+      areaId: requestBody.areaId,
+      fechaSalida: requestBody.fechaSalida,
+      fechaRegreso: requestBody.fechaRegreso,
+      alimentos: requestBody.alimentos,
+    });
+  }
+
+  @Post('validate-trip-lodging-expense')
+  @HttpCode(200)
+  @UsePipes(
+    new ValidationPipe({
+      transform: true,
+      transformOptions: { enableImplicitConversion: true },
+    }),
+  )
+  @ApiOperation({
+    summary:
+      'Validar monto de hospedaje nacional frente a política (prechequeo sin guardar solicitud)',
+  })
+  @ApiBody({ type: ValidateTripLodgingExpenseDto })
+  @ApiOkResponse({
+    description:
+      'Indica si aplica tope de hospedaje nacional y si el monto está dentro del máximo permitido.',
+  })
+  async validateTripLodgingExpense(
+    @Body() requestBody: ValidateTripLodgingExpenseDto,
+  ): Promise<ValidateTripLodgingExpenseResponse> {
+    return this.validateTripLodgingExpenseUseCase.execute({
+      areaId: requestBody.areaId,
+      fechaSalida: requestBody.fechaSalida,
+      fechaRegreso: requestBody.fechaRegreso,
+      hospedaje: requestBody.hospedaje,
+    });
   }
 
   @Post()

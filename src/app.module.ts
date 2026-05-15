@@ -9,6 +9,8 @@ import { TravelChecksModule } from './travel-checks/travel.checks.module';
 import { SapConnectionModule } from './infrastructure/SL/sap-connection.module';
 import { DmsModule } from './dms/dms.module';
 import { IamModule } from './iam/iam.module';
+import { SapPurchaseInvoicesModule } from './sappurchaseinvoices/sappurchaseinvoices.module';
+import { AccountingInvoiceModule } from './accounting-invoice/accounting-invoice.module';
 
 @Module({
   imports: [
@@ -25,6 +27,8 @@ import { IamModule } from './iam/iam.module';
     SapConnectionModule,
     DmsModule,
     IamModule,
+    SapPurchaseInvoicesModule,
+    AccountingInvoiceModule,
   ],
   controllers: [],
   providers: [],

@@ -50,7 +50,7 @@ export class GetMyTravelRequestsUseCase {
           })),
         })),
       },
-      'Solicitudes del usuario cargadas correctamente.',
+      'Solicitudes dispersadas del usuario cargadas correctamente.',
     );
   }
 }

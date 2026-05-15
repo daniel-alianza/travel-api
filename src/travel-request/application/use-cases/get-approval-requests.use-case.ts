@@ -1,7 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { buildSuccessResponse } from '../../../common/exceptions/builders/success-response.builder';
 import type { ApiSuccessResponse } from '../../../common/exceptions/interfaces/api-success-response.interface';
-import type { TravelRequestRepository } from '../interfaces/travel-request-repository.interface';
+import type {
+  ApprovalRequestRecord,
+  TravelRequestRepository,
+} from '../interfaces/travel-request-repository.interface';
 
 export type ApprovalTripConcept = {
   readonly concepto: string;
@@ -73,9 +76,12 @@ export class GetApprovalRequestsUseCase {
             : request.rejectedAt !== null
               ? formatDateToIsoDay(request.rejectedAt)
               : null,
-        autorizadoPor: request.approver?.name ?? null,
-        dispersadoPor: null,
-        comentarioResolucion: request.approverComment,
+        autorizadoPor: resolveAutorizadoPor(request),
+        dispersadoPor: request.dispersedBy?.name ?? null,
+        comentarioResolucion: pickApprovalResolutionComment(
+          request.approverComment,
+          request.trips,
+        ),
         viajes: request.trips
           .slice()
           .sort((left, right) => left.tripOrder - right.tripOrder)
@@ -111,6 +117,50 @@ type TripExpensesRecord = {
   readonly shipping: number;
   readonly miscellaneous: number;
 } | null;
+
+function resolveAutorizadoPor(request: ApprovalRequestRecord): string | null {
+  const names = new Set<string>();
+  for (const trip of request.trips) {
+    if (
+      trip.tripApprovalStatus === 'approved' ||
+      trip.tripApprovalStatus === 'dispersed'
+    ) {
+      const label = trip.approvedBy?.name?.trim();
+      if (label !== undefined && label.length > 0) {
+        names.add(label);
+      }
+    }
+  }
+  if (names.size > 0) {
+    return Array.from(names).sort((left, right) => left.localeCompare(right)).join(' · ');
+  }
+  return request.approver?.name ?? null;
+}
+
+function pickApprovalResolutionComment(
+  requestApproverComment: string | null,
+  trips: readonly {
+    readonly tripOrder: number;
+    readonly tripApprovalStatus: string;
+    readonly approverComment: string | null;
+  }[],
+): string | null {
+  if (requestApproverComment !== null && requestApproverComment.trim().length > 0) {
+    return requestApproverComment.trim();
+  }
+  const ordered = trips.slice().sort((left, right) => left.tripOrder - right.tripOrder);
+  for (const trip of ordered) {
+    if (
+      (trip.tripApprovalStatus === 'approved' ||
+        trip.tripApprovalStatus === 'dispersed') &&
+      trip.approverComment !== null &&
+      trip.approverComment.trim().length > 0
+    ) {
+      return trip.approverComment.trim();
+    }
+  }
+  return null;
+}
 
 function mapTripConcepts(expenses: TripExpensesRecord): readonly ApprovalTripConcept[] {
   if (!expenses) {

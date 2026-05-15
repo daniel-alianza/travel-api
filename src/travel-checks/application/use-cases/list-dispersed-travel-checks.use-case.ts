@@ -11,6 +11,7 @@ type ListDispersedTravelChecksData = {
     readonly tarjetaCorporativaEnmascarada: string;
     readonly dispersadoEn: string | null;
     readonly montoDispersado: number | null;
+    readonly expenseCatalogCompanyId: number;
     readonly usuario: {
       readonly id: number;
       readonly nombre: string;
@@ -32,11 +33,14 @@ type ListDispersedTravelChecksData = {
       readonly movimientosComprobados: number;
       readonly totalComprobadoMovimientos: number;
       readonly movimientosComprobadosDetalle: readonly {
+        readonly tripMovementProofId: number;
         readonly movementSequence: number;
         readonly movementDate: string;
         readonly movementAmount: number;
         readonly movementMemo: string | null;
         readonly movementComment: string | null;
+        readonly proofStatus: 'submitted' | 'approved' | 'rejected';
+        readonly proofType: 'ticket' | 'invoice';
       }[];
     }[];
   }[];
@@ -65,6 +69,7 @@ export class ListDispersedTravelChecksUseCase {
         ),
         dispersadoEn: solicitud.dispersedAt?.toISOString() ?? null,
         montoDispersado: solicitud.dispersedTotal,
+        expenseCatalogCompanyId: solicitud.expenseCatalogCompanyId,
         usuario: {
           id: solicitud.user.id,
           nombre: solicitud.user.name,
@@ -111,6 +116,7 @@ export class ListDispersedTravelChecksUseCase {
               totalComprobadoMovimientos,
               movimientosComprobadosDetalle: movementProofsComprobados.map(
                 (proof) => ({
+                  tripMovementProofId: proof.id,
                   movementSequence: proof.movementSequence,
                   movementDate: (
                     proof.movementDate ?? viaje.returnDate
@@ -118,6 +124,8 @@ export class ListDispersedTravelChecksUseCase {
                   movementAmount: proof.movementAmount,
                   movementMemo: proof.movementMemo ?? null,
                   movementComment: proof.comment ?? null,
+                  proofStatus: proof.status,
+                  proofType: proof.proofType,
                 }),
               ),
             };

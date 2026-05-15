@@ -3,12 +3,17 @@ import {
   Controller,
   ForbiddenException,
   Get,
+  HttpCode,
   Param,
   ParseIntPipe,
   Post,
+  UploadedFiles,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import {
+  ApiConsumes,
   ApiOkResponse,
   ApiOperation,
   ApiProperty,
@@ -47,6 +52,11 @@ import {
   type SubmitTripMovementProofResponse,
 } from '../application/use-cases/submit-trip-movement-proof.use-case';
 import {
+  ValidateTripMovementInvoiceProofDraftUseCase,
+  type ValidateTripMovementInvoiceProofDraftFileBuffers,
+  type ValidateTripMovementInvoiceProofDraftResponse,
+} from '../application/use-cases/validate-trip-movement-invoice-proof-draft.use-case';
+import {
   ListViaticDistributionRulesUseCase,
   type ListViaticDistributionRulesResponse,
 } from '../application/use-cases/list-viatic-distribution-rules.use-case';
@@ -62,6 +72,62 @@ import { CurrentUser } from '../../auth/presentation/decorators/current-user.dec
 import { JwtSessionGuard } from '../../auth/presentation/guards/jwt-session.guard';
 import type { AuthTokenVerifiedPayload } from '../../auth/application/interfaces/auth-token.service.interface';
 import { SubmitTripMovementProofDto } from './dtos/submit-trip-movement-proof.dto';
+import { memoryStorage } from 'multer';
+
+const validateInvoiceDraftUpload = FileFieldsInterceptor(
+  [
+    { name: 'invoice_xml', maxCount: 1 },
+    { name: 'invoice_pdf', maxCount: 1 },
+    { name: 'invoice_xml_outbound', maxCount: 1 },
+    { name: 'invoice_pdf_outbound', maxCount: 1 },
+    { name: 'invoice_xml_return', maxCount: 1 },
+    { name: 'invoice_pdf_return', maxCount: 1 },
+  ],
+  {
+    storage: memoryStorage(),
+    limits: { fileSize: 25 * 1024 * 1024 },
+  },
+);
+
+type MulterMemoryFile = {
+  readonly buffer: Buffer;
+};
+
+type InvoiceDraftMulterFiles = {
+  readonly invoice_xml?: MulterMemoryFile[];
+  readonly invoice_pdf?: MulterMemoryFile[];
+  readonly invoice_xml_outbound?: MulterMemoryFile[];
+  readonly invoice_pdf_outbound?: MulterMemoryFile[];
+  readonly invoice_xml_return?: MulterMemoryFile[];
+  readonly invoice_pdf_return?: MulterMemoryFile[];
+};
+
+function mapInvoiceDraftMulterToBuffers(
+  files: InvoiceDraftMulterFiles | undefined,
+): ValidateTripMovementInvoiceProofDraftFileBuffers {
+  return {
+    invoice_xml: pickFirstFileBuffer(files?.invoice_xml),
+    invoice_pdf: pickFirstFileBuffer(files?.invoice_pdf),
+    invoice_xml_outbound: pickFirstFileBuffer(files?.invoice_xml_outbound),
+    invoice_pdf_outbound: pickFirstFileBuffer(files?.invoice_pdf_outbound),
+    invoice_xml_return: pickFirstFileBuffer(files?.invoice_xml_return),
+    invoice_pdf_return: pickFirstFileBuffer(files?.invoice_pdf_return),
+  };
+}
+
+function pickFirstFileBuffer(
+  fileList: MulterMemoryFile[] | undefined,
+): Buffer | undefined {
+  const file = fileList?.[0];
+  if (file?.buffer === undefined || !Buffer.isBuffer(file.buffer)) {
+    return undefined;
+  }
+  if (file.buffer.length === 0) {
+    return undefined;
+  }
+  return file.buffer;
+}
+
 class DispersedTripCheckItemDto {
   @ApiProperty()
   tripId: number;
@@ -104,6 +170,9 @@ class DispersedTripCheckItemDto {
 
 class DispersedTripCheckMovementItemDto {
   @ApiProperty()
+  tripMovementProofId: number;
+
+  @ApiProperty()
   movementSequence: number;
 
   @ApiProperty()
@@ -117,6 +186,12 @@ class DispersedTripCheckMovementItemDto {
 
   @ApiProperty({ nullable: true })
   movementComment: string | null;
+
+  @ApiProperty({ enum: ['submitted', 'approved', 'rejected'] })
+  proofStatus: 'submitted' | 'approved' | 'rejected';
+
+  @ApiProperty({ enum: ['ticket', 'invoice'] })
+  proofType: 'ticket' | 'invoice';
 }
 
 class DispersedCheckUsuarioDto {
@@ -156,6 +231,12 @@ class DispersedTravelCheckSolicitudDto {
 
   @ApiProperty({ nullable: true })
   montoDispersado: number | null;
+
+  @ApiProperty({
+    description:
+      'CompanyId para catálogos contables (cuenta / IVA) y moneda SAP según la tarjeta corporativa; puede diferir de compania.id.',
+  })
+  expenseCatalogCompanyId: number;
 
   @ApiProperty({ type: DispersedCheckUsuarioDto })
   usuario: DispersedCheckUsuarioDto;
@@ -549,6 +630,7 @@ export class TravelChecksController {
     private readonly listPendingTravelReconciliationsUseCase: ListPendingTravelReconciliationsUseCase,
     private readonly decideTravelReconciliationUseCase: DecideTravelReconciliationUseCase,
     private readonly submitTripMovementProofUseCase: SubmitTripMovementProofUseCase,
+    private readonly validateTripMovementInvoiceProofDraftUseCase: ValidateTripMovementInvoiceProofDraftUseCase,
     private readonly listViaticDistributionRulesUseCase: ListViaticDistributionRulesUseCase,
     private readonly getTripMovementCfdiUseCase: GetTripMovementCfdiUseCase,
     private readonly listCompanyExpenseCatalogsUseCase: ListCompanyExpenseCatalogsUseCase,
@@ -599,6 +681,40 @@ export class TravelChecksController {
       });
     }
     return this.listExpenseTripMovementsForUserUseCase.execute(userId, tripId);
+  }
+
+  @Post(
+    'expense-trips/:userId/trips/:tripId/movements/:movementSequence/proofs/validate-invoice-draft',
+  )
+  @HttpCode(200)
+  @UseInterceptors(validateInvoiceDraftUpload)
+  @ApiConsumes('multipart/form-data')
+  @ApiOperation({
+    summary:
+      'Validar factura CFDI (XML+PDF) antes de subir al almacén: fechas del viaje, UUID único y cruce PDF',
+  })
+  @ApiOkResponse({ description: 'Archivos válidos para continuar con la subida.' })
+  async validateInvoiceProofDraft(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Param('tripId', ParseIntPipe) tripId: number,
+    @Param('movementSequence', ParseIntPipe) movementSequence: number,
+    @UploadedFiles()
+    uploaded: InvoiceDraftMulterFiles | undefined,
+    @CurrentUser() user: AuthTokenVerifiedPayload,
+  ): Promise<ValidateTripMovementInvoiceProofDraftResponse> {
+    if (Number(user.sub) !== userId) {
+      throw new ForbiddenException({
+        message: 'No puedes validar comprobaciones de otro usuario.',
+        error: 'Prohibido',
+      });
+    }
+    const buffers = mapInvoiceDraftMulterToBuffers(uploaded);
+    return this.validateTripMovementInvoiceProofDraftUseCase.execute({
+      userId,
+      tripId,
+      movementSequence,
+      files: buffers,
+    });
   }
 
   @Post(

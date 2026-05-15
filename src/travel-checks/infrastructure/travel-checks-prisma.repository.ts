@@ -11,11 +11,25 @@ import type {
   ReconciliationTripOwnershipRecord,
   TravelRequestReconciliationRecord,
   PendingTravelRequestReconciliationRecord,
+  TripFileForProofValidationRecord,
+  TripMovementProofInvoiceCfdiPersistInput,
+  TripMovementProofRecord,
+  TripMovementProofAccountingSnapshot,
 } from '../application/interfaces/travel-checks-repository.interface';
 
 @Injectable()
 export class TravelChecksPrismaRepository implements TravelChecksRepository {
   constructor(private readonly prisma: PrismaService) {}
+
+  async resolveExpenseCatalogCompanyId(
+    corporateCardNumber: string | null,
+    travelRequestCompanyId: number,
+  ): Promise<number> {
+    return this.resolveCompanyIdForSapExpenseMovements(
+      corporateCardNumber,
+      travelRequestCompanyId,
+    );
+  }
 
   async listViaticDistributionRules(): Promise<
     readonly {
@@ -121,7 +135,17 @@ export class TravelChecksPrismaRepository implements TravelChecksRepository {
       },
     });
 
-    return rows.map((row) => mapRow(row));
+    return Promise.all(
+      rows.map(async (row) => {
+        const mapped = mapRow(row);
+        const expenseCatalogCompanyId =
+          await this.resolveCompanyIdForSapExpenseMovements(
+            row.corporateCardNumber,
+            row.company.id,
+          );
+        return { ...mapped, expenseCatalogCompanyId };
+      }),
+    );
   }
 
   async findDispersedExpenseTripsForUser(
@@ -284,6 +308,11 @@ export class TravelChecksPrismaRepository implements TravelChecksRepository {
       return null;
     }
 
+    const sapCompanyId = await this.resolveCompanyIdForSapExpenseMovements(
+      trip.travelRequest.corporateCardNumber,
+      trip.travelRequest.companyId,
+    );
+
     const prismaWithAccountCode = this.prisma as PrismaService & {
       readonly accountCode: {
         findMany(args: {
@@ -294,7 +323,7 @@ export class TravelChecksPrismaRepository implements TravelChecksRepository {
     };
 
     const accountCodes = await prismaWithAccountCode.accountCode.findMany({
-      where: { companyId: trip.travelRequest.companyId, isActive: true },
+      where: { companyId: sapCompanyId, isActive: true },
       select: { code: true },
     });
 
@@ -303,10 +332,40 @@ export class TravelChecksPrismaRepository implements TravelChecksRepository {
       destination: trip.destination,
       departureDate: trip.departureDate,
       returnDate: trip.returnDate,
-      companyId: trip.travelRequest.companyId,
+      companyId: sapCompanyId,
       corporateCardNumber: trip.travelRequest.corporateCardNumber,
       accountCodes: accountCodes.map((row) => row.code),
     };
+  }
+
+  private async resolveCompanyIdForSapExpenseMovements(
+    corporateCardNumber: string | null,
+    travelRequestCompanyId: number,
+  ): Promise<number> {
+    if (corporateCardNumber === null || corporateCardNumber.trim() === '') {
+      return travelRequestCompanyId;
+    }
+
+    const trimmed = corporateCardNumber.trim();
+    const digitsOnly = trimmed.replace(/\D/g, '');
+    const cardNumberOr: { cardNumber: string }[] = [{ cardNumber: trimmed }];
+    if (digitsOnly.length > 0 && digitsOnly !== trimmed) {
+      cardNumberOr.push({ cardNumber: digitsOnly });
+    }
+
+    const card = await this.prisma.card.findFirst({
+      where: {
+        type: 'VIATIC',
+        OR: cardNumberOr,
+      },
+      select: { companyId: true },
+    });
+
+    if (card !== null && card.companyId !== null) {
+      return card.companyId;
+    }
+
+    return travelRequestCompanyId;
   }
 
   async findReconciliationTripOwnership(
@@ -460,18 +519,55 @@ export class TravelChecksPrismaRepository implements TravelChecksRepository {
     });
   }
 
-  async listTripMovementProofsByTripId(tripId: number): Promise<
-    readonly {
-      movementSequence: number;
-      movementDate: Date;
-      movementAmount: number;
-      movementMemo: string | null;
-      comment: string | null;
-      status: 'submitted' | 'approved' | 'rejected';
-      id: number;
-      tripId: number;
-    }[]
-  > {
+  async findTripMovementProofAccountingSnapshot(
+    proofId: number,
+  ): Promise<TripMovementProofAccountingSnapshot | null> {
+    const row = await this.prisma.tripMovementProof.findUnique({
+      where: { id: proofId },
+      select: {
+        id: true,
+        tripId: true,
+        movementSequence: true,
+        status: true,
+        proofType: true,
+        movementMemo: true,
+        comment: true,
+        trip: {
+          select: {
+            travelRequest: {
+              select: { companyId: true, corporateCardNumber: true },
+            },
+          },
+        },
+      },
+    });
+    if (row === null) {
+      return null;
+    }
+    return {
+      id: row.id,
+      tripId: row.tripId,
+      movementSequence: row.movementSequence,
+      status: row.status,
+      proofType: row.proofType,
+      companyId: row.trip.travelRequest.companyId,
+      corporateCardNumber: row.trip.travelRequest.corporateCardNumber,
+      movementMemo: row.movementMemo,
+      proofComment: row.comment,
+    };
+  }
+
+  async markTripMovementProofApprovedIfSubmitted(proofId: number): Promise<boolean> {
+    const resultado = await this.prisma.tripMovementProof.updateMany({
+      where: { id: proofId, status: 'submitted' },
+      data: { status: 'approved' },
+    });
+    return resultado.count > 0;
+  }
+
+  async listTripMovementProofsByTripId(
+    tripId: number,
+  ): Promise<readonly TripMovementProofRecord[]> {
     const prismaWithMovementProof = this.prisma as PrismaService & {
       readonly tripMovementProof: {
         findMany(args: {
@@ -485,6 +581,7 @@ export class TravelChecksPrismaRepository implements TravelChecksRepository {
             movementMemo: true;
             comment: true;
             status: true;
+            proofType: true;
           };
         }): Promise<
           readonly {
@@ -496,6 +593,7 @@ export class TravelChecksPrismaRepository implements TravelChecksRepository {
             movementMemo: string | null;
             comment: string | null;
             status: 'submitted' | 'approved' | 'rejected';
+            proofType: 'ticket' | 'invoice';
           }[]
         >;
       };
@@ -512,6 +610,7 @@ export class TravelChecksPrismaRepository implements TravelChecksRepository {
         movementMemo: true,
         comment: true,
         status: true,
+        proofType: true,
       },
     });
     return proofs.map((proof) => ({
@@ -523,6 +622,7 @@ export class TravelChecksPrismaRepository implements TravelChecksRepository {
       movementMemo: proof.movementMemo,
       comment: proof.comment,
       status: proof.status,
+      proofType: proof.proofType,
     }));
   }
 
@@ -590,6 +690,67 @@ export class TravelChecksPrismaRepository implements TravelChecksRepository {
     return count === input.fileIds.length;
   }
 
+  async findTripFilesForProofByIds(input: {
+    tripId: number;
+    userId: number;
+    fileIds: readonly number[];
+  }): Promise<readonly TripFileForProofValidationRecord[]> {
+    if (input.fileIds.length === 0) {
+      return [];
+    }
+
+    return this.prisma.travelRequestTripFile.findMany({
+      where: {
+        id: { in: [...input.fileIds] },
+        tripId: input.tripId,
+        trip: {
+          travelRequest: { userId: input.userId },
+        },
+      },
+      select: {
+        id: true,
+        fileUrl: true,
+        fileRole: true,
+      },
+    });
+  }
+
+  async findTripMovementProofIdByTripAndSequence(input: {
+    tripId: number;
+    movementSequence: number;
+  }): Promise<number | null> {
+    const row = await this.prisma.tripMovementProof.findUnique({
+      where: {
+        tripId_movementSequence: {
+          tripId: input.tripId,
+          movementSequence: input.movementSequence,
+        },
+      },
+      select: { id: true },
+    });
+    return row?.id ?? null;
+  }
+
+  async hasTripMovementProofCfdiUuidConflict(input: {
+    cfdiUuid: string;
+    excludeTripMovementProofId: number | null;
+  }): Promise<boolean> {
+    const row = await this.prisma.tripMovementProofCfdi.findFirst({
+      where: {
+        cfdiUuid: input.cfdiUuid,
+        ...(input.excludeTripMovementProofId === null
+          ? {}
+          : {
+              tripMovementProofId: {
+                not: input.excludeTripMovementProofId,
+              },
+            }),
+      },
+      select: { id: true },
+    });
+    return row !== null;
+  }
+
   async createTripMovementProof(input: {
     tripId: number;
     movementSequence: number;
@@ -610,63 +771,13 @@ export class TravelChecksPrismaRepository implements TravelChecksRepository {
         | 'invoice_xml_return'
         | 'invoice_pdf_return';
     }[];
-  }): Promise<{
-    id: number;
-    tripId: number;
-    movementSequence: number;
-    movementAmount: number;
-    status: 'submitted' | 'approved' | 'rejected';
-  }> {
-    const prismaWithMovementProof = this.prisma as PrismaService & {
-      readonly tripMovementProof: {
-        upsert(args: {
-          where: {
-            tripId_movementSequence: {
-              tripId: number;
-              movementSequence: number;
-            };
-          };
-          create: {
-            tripId: number;
-            movementSequence: number;
-            movementDate: Date;
-            movementAmount: number;
-            movementMemo: string;
-            proofType: 'ticket' | 'invoice';
-            status: 'submitted';
-            comment: string | null;
-            createdByUserId: number;
-          };
-          update: {
-            movementDate: Date;
-            movementAmount: number;
-            movementMemo: string;
-            proofType: 'ticket' | 'invoice';
-            status: 'submitted';
-            comment: string | null;
-            createdByUserId: number;
-          };
-          select: {
-            id: true;
-            tripId: true;
-            movementSequence: true;
-            movementAmount: true;
-            status: true;
-          };
-        }): Promise<{
-          id: number;
-          tripId: number;
-          movementSequence: number;
-          movementAmount: { toNumber(): number };
-          status: 'submitted' | 'approved' | 'rejected';
-        }>;
-      };
-    };
+    invoiceCfdi: TripMovementProofInvoiceCfdiPersistInput | null;
+  }): Promise<TripMovementProofRecord> {
+    const crossPassed = input.invoiceCfdi?.cfdiPdfCrosscheckPassed ?? null;
+    const crossAt = input.invoiceCfdi?.cfdiPdfCrosscheckAt ?? null;
 
     return this.prisma.$transaction(async (transaction) => {
-      const txWithMovementProof = transaction as typeof prismaWithMovementProof;
-
-      const proof = await txWithMovementProof.tripMovementProof.upsert({
+      const proof = await transaction.tripMovementProof.upsert({
         where: {
           tripId_movementSequence: {
             tripId: input.tripId,
@@ -683,6 +794,8 @@ export class TravelChecksPrismaRepository implements TravelChecksRepository {
           status: 'submitted',
           comment: input.comment,
           createdByUserId: input.createdByUserId,
+          cfdiPdfCrosscheckPassed: crossPassed,
+          cfdiPdfCrosscheckAt: crossAt,
         },
         update: {
           movementDate: input.movementDate,
@@ -692,14 +805,24 @@ export class TravelChecksPrismaRepository implements TravelChecksRepository {
           status: 'submitted',
           comment: input.comment,
           createdByUserId: input.createdByUserId,
+          cfdiPdfCrosscheckPassed: crossPassed,
+          cfdiPdfCrosscheckAt: crossAt,
         },
         select: {
           id: true,
           tripId: true,
           movementSequence: true,
+          movementDate: true,
           movementAmount: true,
+          movementMemo: true,
+          comment: true,
           status: true,
+          proofType: true,
         },
+      });
+
+      await transaction.tripMovementProofCfdi.deleteMany({
+        where: { tripMovementProofId: proof.id },
       });
 
       await transaction.travelRequestTripFile.updateMany({
@@ -723,12 +846,30 @@ export class TravelChecksPrismaRepository implements TravelChecksRepository {
         });
       }
 
+      if (input.invoiceCfdi !== null) {
+        for (const row of input.invoiceCfdi.cfdiRecords) {
+          await transaction.tripMovementProofCfdi.create({
+            data: {
+              tripMovementProofId: proof.id,
+              tripFileId: row.tripFileId,
+              cfdiUuid: row.cfdiUuid,
+              fechaEmision: row.fechaEmision,
+              xmlFileRole: row.xmlFileRole,
+            },
+          });
+        }
+      }
+
       return {
         id: proof.id,
         tripId: proof.tripId,
         movementSequence: proof.movementSequence,
+        movementDate: proof.movementDate,
         movementAmount: proof.movementAmount.toNumber(),
+        movementMemo: proof.movementMemo,
+        comment: proof.comment,
         status: proof.status,
+        proofType: proof.proofType,
       };
     });
   }
@@ -785,7 +926,9 @@ type TravelRequestRow = {
   }[];
 };
 
-function mapRow(row: TravelRequestRow): DispersedTravelRequestForCheckRecord {
+function mapRow(
+  row: TravelRequestRow,
+): Omit<DispersedTravelRequestForCheckRecord, 'expenseCatalogCompanyId'> {
   return {
     id: row.id,
     status: row.status,

@@ -13,6 +13,7 @@ export type ConfirmTravelRequestDispersionCommand = {
   readonly travelRequestId: number;
   readonly dispersedTotal: number;
   readonly comment: string | null;
+  readonly dispersedByUserId: number;
 };
 
 export type ConfirmTravelRequestDispersionResponse =
@@ -43,6 +44,7 @@ export class ConfirmTravelRequestDispersionUseCase {
       travelRequestId: command.travelRequestId,
       dispersedTotal: command.dispersedTotal,
       dispersionComment,
+      dispersedByUserId: command.dispersedByUserId,
     });
 
     if (result === 'not_found') {

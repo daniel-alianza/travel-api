@@ -11,6 +11,7 @@ import { VerifyTravelReconciliationCodeUseCase } from './application/use-cases/v
 import { ListPendingTravelReconciliationsUseCase } from './application/use-cases/list-pending-travel-reconciliations.use-case';
 import { DecideTravelReconciliationUseCase } from './application/use-cases/decide-travel-reconciliation.use-case';
 import { SubmitTripMovementProofUseCase } from './application/use-cases/submit-trip-movement-proof.use-case';
+import { ValidateTripMovementInvoiceProofDraftUseCase } from './application/use-cases/validate-trip-movement-invoice-proof-draft.use-case';
 import { ListViaticDistributionRulesUseCase } from './application/use-cases/list-viatic-distribution-rules.use-case';
 import { GetTripMovementCfdiUseCase } from './application/use-cases/get-trip-movement-cfdi.use-case';
 import { ListCompanyExpenseCatalogsUseCase } from './application/use-cases/list-company-expense-catalogs.use-case';
@@ -32,6 +33,7 @@ import { TravelChecksController } from './presentation/travel-checks.controller'
     ListPendingTravelReconciliationsUseCase,
     DecideTravelReconciliationUseCase,
     SubmitTripMovementProofUseCase,
+    ValidateTripMovementInvoiceProofDraftUseCase,
     ListViaticDistributionRulesUseCase,
     GetTripMovementCfdiUseCase,
     ListCompanyExpenseCatalogsUseCase,
@@ -51,6 +53,22 @@ import { TravelChecksController } from './presentation/travel-checks.controller'
     {
       provide: 'DmsStoragePort',
       useExisting: SupabaseDmsStorageService,
+    },
+  ],
+  exports: [
+    TravelChecksPrismaRepository,
+    {
+      provide: 'TravelChecksRepository',
+      useExisting: TravelChecksPrismaRepository,
+    },
+    SupabaseDmsStorageService,
+    {
+      provide: 'DmsStoragePort',
+      useExisting: SupabaseDmsStorageService,
+    },
+    {
+      provide: 'DMS_BUCKET_CONFIG',
+      useFactory: () => getDmsBucketConfig(),
     },
   ],
 })

@@ -59,6 +59,12 @@ enum TripMovementFileRole {
   invoice_pdf_return
 }
 
+enum TripMovementProofCfdiXmlFileRole {
+  invoice_xml
+  invoice_xml_outbound
+  invoice_xml_return
+}
+
 datasource db {
   provider = "mysql"
 }
@@ -75,6 +81,7 @@ model Company {
   distributionRules DistributionRule[]
   vats              VAT[]
   viaticCategories  ViaticCategory[]
+  currencies        Currency[]
 }
 
 model Area {
@@ -123,8 +130,10 @@ model User {
   manager   User?  @relation("UserManager", fields: [managerId], references: [id])
   reports   User[] @relation("UserManager")
 
-  travelRequests         TravelRequest[] @relation("TravelRequestUser")
-  approvedTravelRequests TravelRequest[] @relation("TravelRequestApprover")
+  travelRequests            TravelRequest[]     @relation("TravelRequestUser")
+  approvedTravelRequests    TravelRequest[]     @relation("TravelRequestApprover")
+  tripsApprovedAsAuthorizer TravelRequestTrip[] @relation("TravelRequestTripApprovedBy")
+  travelRequestsDispersed   TravelRequest[]     @relation("TravelRequestDispersedBy")
 
   company                  Company                       @relation(fields: [companyId], references: [id])
   branch                   Branch                        @relation(fields: [branchId], references: [id])
@@ -213,6 +222,7 @@ model TravelRequest {
   dispersedAt         DateTime?
   dispersedTotal      Decimal?            @db.Decimal(12, 2)
   dispersionComment   String?             @db.Text
+  dispersedById       Int?
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
 
@@ -221,6 +231,7 @@ model TravelRequest {
   branch          Branch                        @relation(fields: [branchId], references: [id])
   area            Area                          @relation(fields: [areaId], references: [id])
   approver        User?                         @relation("TravelRequestApprover", fields: [approverId], references: [id])
+  dispersedBy     User?                         @relation("TravelRequestDispersedBy", fields: [dispersedById], references: [id])
   trips           TravelRequestTrip[]
   reconciliations TravelRequestReconciliation[]
 
@@ -229,6 +240,7 @@ model TravelRequest {
   @@index([branchId])
   @@index([areaId])
   @@index([approverId])
+  @@index([dispersedById])
   @@index([status])
   @@index([createdAt])
 }
@@ -247,10 +259,12 @@ model TravelRequestTrip {
   approvedAt         DateTime?
   rejectedAt         DateTime?
   approverComment    String?                         @db.Text
+  approvedById       Int?
   createdAt          DateTime                        @default(now())
   updatedAt          DateTime                        @updatedAt
 
   travelRequest      TravelRequest                @relation(fields: [travelRequestId], references: [id])
+  approvedBy         User?                        @relation("TravelRequestTripApprovedBy", fields: [approvedById], references: [id])
   objectives         TravelRequestTripObjective[]
   expenses           TravelRequestTripExpense?
   gasoline           TravelRequestTripGasoline?
@@ -262,6 +276,7 @@ model TravelRequestTrip {
   @@index([travelRequestId])
   @@index([tripApprovalStatus])
   @@index([travelRequestId, tripApprovalStatus])
+  @@index([approvedById])
 }
 
 model TravelRequestTripObjective {
@@ -334,8 +349,9 @@ model TravelRequestTripFile {
   mimeType            String?
   createdAt           DateTime              @default(now())
 
-  trip              TravelRequestTrip  @relation(fields: [tripId], references: [id])
-  tripMovementProof TripMovementProof? @relation(fields: [tripMovementProofId], references: [id], onDelete: SetNull)
+  trip                   TravelRequestTrip       @relation(fields: [tripId], references: [id])
+  tripMovementProof      TripMovementProof?      @relation(fields: [tripMovementProofId], references: [id], onDelete: SetNull)
+  tripMovementProofCfdis TripMovementProofCfdi[]
 
   @@index([tripId])
   @@index([tripMovementProofId])
@@ -390,28 +406,49 @@ model TravelRequestReconciliation {
 }
 
 model TripMovementProof {
-  id               Int                     @id @default(autoincrement())
-  tripId           Int
-  movementSequence Int
-  movementDate     DateTime
-  movementAmount   Decimal                 @db.Decimal(12, 2)
-  movementMemo     String?                 @db.Text
-  proofType        TripMovementProofType
-  status           TripMovementProofStatus @default(submitted)
-  comment          String?                 @db.Text
-  createdByUserId  Int
-  createdAt        DateTime                @default(now())
-  updatedAt        DateTime                @updatedAt
+  id                      Int                     @id @default(autoincrement())
+  tripId                  Int
+  movementSequence        Int
+  movementDate            DateTime
+  movementAmount          Decimal                 @db.Decimal(12, 2)
+  movementMemo            String?                 @db.Text
+  proofType               TripMovementProofType
+  status                  TripMovementProofStatus @default(submitted)
+  comment                 String?                 @db.Text
+  createdByUserId         Int
+  createdAt               DateTime                @default(now())
+  updatedAt               DateTime                @updatedAt
+  cfdiPdfCrosscheckPassed Boolean?
+  cfdiPdfCrosscheckAt     DateTime?
 
   trip          TravelRequestTrip       @relation(fields: [tripId], references: [id], onDelete: Cascade)
   createdByUser User                    @relation(fields: [createdByUserId], references: [id])
   files         TravelRequestTripFile[]
+  cfdiRecords   TripMovementProofCfdi[]
 
   @@unique([tripId, movementSequence])
   @@index([tripId])
   @@index([createdByUserId])
   @@index([status])
   @@index([createdAt])
+}
+
+model TripMovementProofCfdi {
+  id                  Int                              @id @default(autoincrement())
+  tripMovementProofId Int
+  tripFileId          Int?
+  cfdiUuid            String                           @db.VarChar(36)
+  fechaEmision        DateTime
+  xmlFileRole         TripMovementProofCfdiXmlFileRole
+  createdAt           DateTime                         @default(now())
+
+  tripMovementProof TripMovementProof      @relation(fields: [tripMovementProofId], references: [id], onDelete: Cascade)
+  tripFile          TravelRequestTripFile? @relation(fields: [tripFileId], references: [id], onDelete: SetNull)
+
+  @@unique([cfdiUuid])
+  @@index([tripMovementProofId])
+  @@index([tripFileId])
+  @@index([fechaEmision])
 }
 
 model DistributionRule {
@@ -471,4 +508,16 @@ model UserExtraPermission {
 
   @@unique([userId, permissionCode])
   @@index([permissionCode])
+}
+
+model Currency {
+  id              Int     @id @default(autoincrement())
+  name            String
+  sapCurrencyCode String
+  companyId       Int
+  company         Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, name])
+  @@unique([companyId, sapCurrencyCode])
+  @@index([companyId])
 }

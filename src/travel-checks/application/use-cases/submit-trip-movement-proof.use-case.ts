@@ -1,7 +1,20 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { buildSuccessResponse } from '../../../common/exceptions/builders/success-response.builder';
 import type { ApiSuccessResponse } from '../../../common/exceptions/interfaces/api-success-response.interface';
-import type { TravelChecksRepository } from '../interfaces/travel-checks-repository.interface';
+import type { DmsBucketConfig } from '../../../config/dms-bucket/dms';
+import type { DmsStoragePort } from '../../../dms/application/interfaces/dms-storage.interface';
+import {
+  INVOICE_CFDI_XML_PDF_PAIRS,
+  mapInvoiceXmlRoleToCfdiEnum,
+  validateInvoiceProofPairsFromBuffers,
+  type InvoiceProofPairBuffersInput,
+} from '../../domain/trip-movement-invoice-cfdi';
+import { extractPlainTextFromPdfBuffer } from '../../infrastructure/extract-plain-text-from-pdf-buffer';
+import type {
+  TravelChecksRepository,
+  TripMovementProofInvoiceCfdiPersistInput,
+  TripMovementProofInvoiceCfdiRecordInput,
+} from '../interfaces/travel-checks-repository.interface';
 import type {
   SapExpenseMovementRecord,
   TravelChecksSapMovementsPort,
@@ -31,6 +44,10 @@ export class SubmitTripMovementProofUseCase {
     private readonly travelChecksRepository: TravelChecksRepository,
     @Inject('TravelChecksSapMovementsPort')
     private readonly travelChecksSapMovementsPort: TravelChecksSapMovementsPort,
+    @Inject('DmsStoragePort')
+    private readonly dmsStoragePort: DmsStoragePort,
+    @Inject('DMS_BUCKET_CONFIG')
+    private readonly dmsBucketConfig: DmsBucketConfig,
   ) {}
 
   async execute(input: {
@@ -77,6 +94,18 @@ export class SubmitTripMovementProofUseCase {
       movementSequence: input.movementSequence,
     });
 
+    let invoiceCfdi: TripMovementProofInvoiceCfdiPersistInput | null = null;
+    if (input.proofType === 'invoice') {
+      invoiceCfdi = await this.buildInvoiceCfdiPersistInput({
+        tripId: input.tripId,
+        userId: input.userId,
+        files: input.files,
+        departureDate: context.departureDate,
+        returnDate: context.returnDate,
+        movementSequence: input.movementSequence,
+      });
+    }
+
     const createdProof = await this.travelChecksRepository.createTripMovementProof({
       tripId: input.tripId,
       movementSequence: input.movementSequence,
@@ -87,12 +116,160 @@ export class SubmitTripMovementProofUseCase {
       createdByUserId: input.userId,
       comment: input.comment,
       files: input.files,
+      invoiceCfdi,
     });
 
     return buildSuccessResponse(
       { id: createdProof.id, status: 'submitted' },
       'Comprobación del movimiento registrada correctamente.',
     );
+  }
+
+  private async buildInvoiceCfdiPersistInput(input: {
+    readonly tripId: number;
+    readonly userId: number;
+    readonly files: readonly { tripFileId: number; fileRole: MovementProofFileRole }[];
+    readonly departureDate: Date;
+    readonly returnDate: Date;
+    readonly movementSequence: number;
+  }): Promise<TripMovementProofInvoiceCfdiPersistInput> {
+    const fileIds = input.files.map((f) => f.tripFileId);
+    const rows = await this.travelChecksRepository.findTripFilesForProofByIds({
+      tripId: input.tripId,
+      userId: input.userId,
+      fileIds,
+    });
+    if (rows.length !== fileIds.length) {
+      throw new BadRequestException({
+        message: 'No se pudieron resolver todos los archivos de la comprobación.',
+        error: 'Archivos inválidos',
+      });
+    }
+
+    const fileById = new Map(rows.map((row) => [row.id, row]));
+    const crosscheckAt = new Date();
+
+    const excludeProofId =
+      await this.travelChecksRepository.findTripMovementProofIdByTripAndSequence({
+        tripId: input.tripId,
+        movementSequence: input.movementSequence,
+      });
+
+    const bufferPairs: InvoiceProofPairBuffersInput[] = [];
+    const xmlTripFileIds: number[] = [];
+
+    for (const pair of INVOICE_CFDI_XML_PDF_PAIRS) {
+      const xmlSpec = input.files.find((f) => f.fileRole === pair.xml);
+      const pdfSpec = input.files.find((f) => f.fileRole === pair.pdf);
+      if (xmlSpec === undefined && pdfSpec === undefined) {
+        continue;
+      }
+      if (xmlSpec === undefined || pdfSpec === undefined) {
+        throw new BadRequestException({
+          message: 'Cada XML de factura debe ir acompañado de su PDF correspondiente.',
+          error: 'CFDI_ARCHIVOS_INCOMPLETOS',
+        });
+      }
+
+      const xmlRow = fileById.get(xmlSpec.tripFileId);
+      const pdfRow = fileById.get(pdfSpec.tripFileId);
+      if (xmlRow === undefined || pdfRow === undefined) {
+        throw new BadRequestException({
+          message: 'No se encontraron rutas de archivo para validar el CFDI.',
+          error: 'Archivo inválido',
+        });
+      }
+
+      const xmlText = await this.descargarTextoDesdeDms(xmlRow.fileUrl);
+      const pdfBuffer = await this.descargarBufferDesdeDms(pdfRow.fileUrl);
+
+      bufferPairs.push({
+        xmlText,
+        pdfBuffer,
+        xmlRole: pair.xml,
+      });
+      xmlTripFileIds.push(xmlSpec.tripFileId);
+    }
+
+    const validated = await validateInvoiceProofPairsFromBuffers({
+      tripDeparture: input.departureDate,
+      tripReturn: input.returnDate,
+      pairs: bufferPairs,
+      extractPdfPlainText: extractPlainTextFromPdfBuffer,
+    });
+
+    for (const row of validated) {
+      const hasConflict = await this.travelChecksRepository.hasTripMovementProofCfdiUuidConflict({
+        cfdiUuid: row.cfdiUuid,
+        excludeTripMovementProofId: excludeProofId,
+      });
+      if (hasConflict) {
+        throw new BadRequestException({
+          message:
+            'El UUID de este CFDI ya fue registrado en otra comprobación; no se puede reutilizar la misma factura.',
+          error: 'CFDI_UUID_DUPLICADO',
+        });
+      }
+    }
+
+    const cfdiRecords: TripMovementProofInvoiceCfdiRecordInput[] = validated.map((row, index) => {
+      const tripFileId = xmlTripFileIds[index];
+      if (tripFileId === undefined) {
+        throw new BadRequestException({
+          message: 'No se pudo asociar el XML del CFDI con el archivo del viaje.',
+          error: 'CFDI_ASOCIACION_INVALIDA',
+        });
+      }
+      return {
+        tripFileId,
+        cfdiUuid: row.cfdiUuid,
+        fechaEmision: row.fechaEmision,
+        xmlFileRole: mapInvoiceXmlRoleToCfdiEnum(row.xmlRole),
+      };
+    });
+
+    if (cfdiRecords.length === 0) {
+      throw new BadRequestException({
+        message: 'No se encontraron XML de factura para validar.',
+        error: 'CFDI_XML_FALTANTE',
+      });
+    }
+
+    return {
+      cfdiPdfCrosscheckPassed: true,
+      cfdiPdfCrosscheckAt: crosscheckAt,
+      cfdiRecords,
+    };
+  }
+
+  private async descargarTextoDesdeDms(filePath: string): Promise<string> {
+    const signed = await this.dmsStoragePort.createSignedDownloadUrl(
+      filePath,
+      this.dmsBucketConfig.signedUrlExpiresInSeconds,
+    );
+    const response = await fetch(signed.signedUrl);
+    if (!response.ok) {
+      throw new BadRequestException({
+        message: 'No se pudo descargar el XML del CFDI para validarlo.',
+        error: `HTTP ${String(response.status)}`,
+      });
+    }
+    return response.text();
+  }
+
+  private async descargarBufferDesdeDms(filePath: string): Promise<Buffer> {
+    const signed = await this.dmsStoragePort.createSignedDownloadUrl(
+      filePath,
+      this.dmsBucketConfig.signedUrlExpiresInSeconds,
+    );
+    const response = await fetch(signed.signedUrl);
+    if (!response.ok) {
+      throw new BadRequestException({
+        message: 'No se pudo descargar el PDF de la factura para validarlo.',
+        error: `HTTP ${String(response.status)}`,
+      });
+    }
+    return Buffer.from(await response.arrayBuffer());
   }
 
   private async findMovement(input: {

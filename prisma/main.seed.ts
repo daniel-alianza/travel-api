@@ -8,6 +8,7 @@ import { seedRoles } from './seeds/role.seed';
 import { seedUsers } from './seeds/users.seed';
 import { seedGasolineSuppliers } from './seeds/gasolinesupplier.seed';
 import { seedAccountCodes } from './seeds/accountcode.seed';
+import { seedCurrencies } from './seeds/currency.seed';
 import { seedDistributionRules } from './seeds/distributionrule.seed';
 import { seedVat } from './seeds/vat.seed';
 import { seedViaticCategories } from './seeds/viaticcategory.seed';
@@ -61,6 +62,10 @@ const seederTasks: readonly SeederTask[] = [
   {
     name: 'Account codes',
     execute: seedAccountCodes,
+  },
+  {
+    name: 'Monedas SAP',
+    execute: seedCurrencies,
   },
   {
     name: 'IVAs',

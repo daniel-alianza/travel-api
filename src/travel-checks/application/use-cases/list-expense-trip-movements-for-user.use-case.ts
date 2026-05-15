@@ -6,7 +6,10 @@ import {
 } from '@nestjs/common';
 import { buildSuccessResponse } from '../../../common/exceptions/builders/success-response.builder';
 import type { ApiSuccessResponse } from '../../../common/exceptions/interfaces/api-success-response.interface';
-import type { TravelChecksRepository } from '../interfaces/travel-checks-repository.interface';
+import type {
+  TravelChecksRepository,
+  TripMovementProofRecord,
+} from '../interfaces/travel-checks-repository.interface';
 import type {
   SapExpenseMovementRecord,
   TravelChecksSapMovementsPort,
@@ -81,11 +84,7 @@ export class ListExpenseTripMovementsForUserUseCase {
 
 function construirMovimientos(
   movimientosSap: readonly SapExpenseMovementRecord[],
-  movementProofs: readonly {
-    movementSequence: number;
-    movementAmount: number;
-    status: 'submitted' | 'approved' | 'rejected';
-  }[],
+  movementProofs: readonly TripMovementProofRecord[],
   tripId: number,
   destination: string,
   corporateCardNumber: string,

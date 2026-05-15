@@ -62,4 +62,29 @@ export class SapHttpService {
       throw error;
     }
   }
+
+  async patch<T = unknown>(
+    url: string,
+    data: unknown,
+    sessionId: string,
+  ): Promise<T> {
+    try {
+      const response = await firstValueFrom(
+        this.httpService.patch<T>(url, data, {
+          httpsAgent: new https.Agent({ rejectUnauthorized: false }),
+          headers: {
+            Cookie: `B1SESSION=${sessionId}`,
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          timeout: 15000,
+        }),
+      );
+
+      return response.data;
+    } catch (error) {
+      handleSapError(error as AxiosError<SapServiceLayerError>);
+      throw error;
+    }
+  }
 }

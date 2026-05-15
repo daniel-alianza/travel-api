@@ -13,6 +13,7 @@ export type ResolveTravelRequestTripCommand = {
   readonly tripId: number;
   readonly resolution: 'approve' | 'reject';
   readonly comment: string | null;
+  readonly actorUserId: number;
 };
 
 export type ResolveTravelRequestTripResponse =
@@ -49,6 +50,7 @@ export class ResolveTravelRequestTripUseCase {
         command.resolution === 'reject'
           ? (command.comment ?? '').trim()
           : trimmedApproveComment,
+      actorUserId: command.actorUserId,
     });
 
     if (result === 'not_found') {

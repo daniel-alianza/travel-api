@@ -136,12 +136,18 @@ type PrismaDelegate = {
         company: { select: { name: true } };
         area: { select: { name: true } };
         approver: { select: { name: true } };
+        dispersedBy: { select: { name: true } };
         trips: {
           select: {
             id: true;
             tripOrder: true;
             tripApprovalStatus: true;
             approverComment: true;
+            approvedBy: {
+              select: {
+                name: true;
+              };
+            };
             destination: true;
             purpose: true;
             departureDate: true;
@@ -202,6 +208,7 @@ type TravelRequestTripTransactionClient = {
         approvedAt: Date | null;
         rejectedAt: Date | null;
         approverComment: string | null;
+        approvedById?: number | null;
       };
     }): Promise<unknown>;
     findMany(args: {
@@ -459,12 +466,22 @@ export class TravelRequestPrismaRepository implements TravelRequestRepository {
             name: true,
           },
         },
+        dispersedBy: {
+          select: {
+            name: true,
+          },
+        },
         trips: {
           select: {
             id: true,
             tripOrder: true,
             tripApprovalStatus: true,
             approverComment: true,
+            approvedBy: {
+              select: {
+                name: true,
+              },
+            },
             destination: true,
             purpose: true,
             departureDate: true,
@@ -532,12 +549,22 @@ export class TravelRequestPrismaRepository implements TravelRequestRepository {
             name: true,
           },
         },
+        dispersedBy: {
+          select: {
+            name: true,
+          },
+        },
         trips: {
           select: {
             id: true,
             tripOrder: true,
             tripApprovalStatus: true,
             approverComment: true,
+            approvedBy: {
+              select: {
+                name: true,
+              },
+            },
             destination: true,
             purpose: true,
             departureDate: true,
@@ -578,6 +605,7 @@ export class TravelRequestPrismaRepository implements TravelRequestRepository {
     readonly travelRequestId: number;
     readonly dispersedTotal: number;
     readonly dispersionComment: string | null;
+    readonly dispersedByUserId: number;
   }): Promise<ConfirmTravelRequestDispersionResult> {
     return this.prismaService.$transaction(async (transaction) => {
       const request = await transaction.travelRequest.findUnique({
@@ -612,6 +640,7 @@ export class TravelRequestPrismaRepository implements TravelRequestRepository {
           dispersedAt: new Date(),
           dispersedTotal: input.dispersedTotal,
           dispersionComment: input.dispersionComment,
+          dispersedById: input.dispersedByUserId,
         },
       });
 
@@ -657,6 +686,7 @@ export class TravelRequestPrismaRepository implements TravelRequestRepository {
             approvedAt: now,
             rejectedAt: null,
             approverComment: notaAprobacion,
+            approvedById: input.actorUserId,
           },
         });
       } else {
@@ -666,6 +696,7 @@ export class TravelRequestPrismaRepository implements TravelRequestRepository {
             tripApprovalStatus: 'rejected',
             rejectedAt: now,
             approvedAt: null,
+            approvedById: null,
             approverComment: input.comment?.trim() ?? '',
           },
         });
@@ -697,13 +728,18 @@ export class TravelRequestPrismaRepository implements TravelRequestRepository {
     const prisma = this.prismaService as unknown as {
       travelRequest: {
         findMany(args: {
-          where: { userId: number };
+          where: {
+            userId: number;
+            status: string;
+            trips?: { some: { tripApprovalStatus: string } };
+          };
           orderBy: { createdAt: 'desc' };
           select: {
             id: true;
             status: true;
             createdAt: true;
             trips: {
+              where?: { tripApprovalStatus: string };
               orderBy: { tripOrder: 'asc' };
               select: {
                 id: true;
@@ -721,13 +757,18 @@ export class TravelRequestPrismaRepository implements TravelRequestRepository {
     };
 
     return prisma.travelRequest.findMany({
-      where: { userId },
+      where: {
+        userId,
+        status: 'dispersed',
+        trips: { some: { tripApprovalStatus: 'dispersed' } },
+      },
       orderBy: { createdAt: 'desc' },
       select: {
         id: true,
         status: true,
         createdAt: true,
         trips: {
+          where: { tripApprovalStatus: 'dispersed' },
           orderBy: { tripOrder: 'asc' },
           select: {
             id: true,
@@ -937,6 +978,7 @@ export class TravelRequestPrismaRepository implements TravelRequestRepository {
           approverComment: null,
           approvedAt: null,
           rejectedAt: null,
+          approvedById: null,
           objectives: {
             create: trip.objetivos.map((objective, objectiveIndex) => ({
               objectiveOrder: objectiveIndex + 1,

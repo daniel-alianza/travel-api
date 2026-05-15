@@ -27,6 +27,8 @@ export type DispersedTravelRequestForCheckRecord = {
   readonly branch: { readonly id: number; readonly name: string };
   readonly area: { readonly id: number; readonly name: string };
   readonly trips: readonly DispersedTripForCheckRecord[];
+  /** Compañía cuyos catálogos (ViaticCategory / VAT) y moneda SAP aplican a la tarjeta corporativa. */
+  readonly expenseCatalogCompanyId: number;
 };
 
 export type ExpenseTripExpenseAmountsRecord = {
@@ -125,6 +127,38 @@ export type TripMovementProofStatusRecord =
   | 'approved'
   | 'rejected';
 
+export type TripMovementProofCfdiXmlFileRoleRecord =
+  | 'invoice_xml'
+  | 'invoice_xml_outbound'
+  | 'invoice_xml_return';
+
+export type TripMovementProofInvoiceCfdiRecordInput = {
+  readonly tripFileId: number;
+  readonly cfdiUuid: string;
+  readonly fechaEmision: Date;
+  readonly xmlFileRole: TripMovementProofCfdiXmlFileRoleRecord;
+};
+
+export type TripMovementProofInvoiceCfdiPersistInput = {
+  readonly cfdiPdfCrosscheckPassed: boolean;
+  readonly cfdiPdfCrosscheckAt: Date;
+  readonly cfdiRecords: readonly TripMovementProofInvoiceCfdiRecordInput[];
+};
+
+export type TripFileForProofValidationRecord = {
+  readonly id: number;
+  readonly fileUrl: string;
+  readonly fileRole:
+    | 'ticket'
+    | 'invoice_xml'
+    | 'invoice_pdf'
+    | 'invoice_xml_outbound'
+    | 'invoice_pdf_outbound'
+    | 'invoice_xml_return'
+    | 'invoice_pdf_return'
+    | null;
+};
+
 export type TripMovementProofRecord = {
   readonly id: number;
   readonly tripId: number;
@@ -134,9 +168,26 @@ export type TripMovementProofRecord = {
   readonly movementMemo?: string | null;
   readonly comment?: string | null;
   readonly status: TripMovementProofStatusRecord;
+  readonly proofType: 'ticket' | 'invoice';
+};
+
+export type TripMovementProofAccountingSnapshot = {
+  readonly id: number;
+  readonly tripId: number;
+  readonly movementSequence: number;
+  readonly status: TripMovementProofStatusRecord;
+  readonly proofType: 'ticket' | 'invoice';
+  readonly companyId: number;
+  readonly corporateCardNumber: string | null;
+  readonly movementMemo: string | null;
+  readonly proofComment: string | null;
 };
 
 export interface TravelChecksRepository {
+  resolveExpenseCatalogCompanyId(
+    corporateCardNumber: string | null,
+    travelRequestCompanyId: number,
+  ): Promise<number>;
   findDispersedTravelRequestsWithDispersedTrips(): Promise<
     readonly DispersedTravelRequestForCheckRecord[]
   >;
@@ -190,6 +241,10 @@ export interface TravelChecksRepository {
     approve: boolean;
     rejectionReason: string | null;
   }): Promise<TravelRequestReconciliationRecord | null>;
+  findTripMovementProofAccountingSnapshot(
+    proofId: number,
+  ): Promise<TripMovementProofAccountingSnapshot | null>;
+  markTripMovementProofApprovedIfSubmitted(proofId: number): Promise<boolean>;
   listTripMovementProofsByTripId(
     tripId: number,
   ): Promise<readonly TripMovementProofRecord[]>;
@@ -219,6 +274,19 @@ export interface TravelChecksRepository {
     userId: number;
     fileIds: readonly number[];
   }): Promise<boolean>;
+  findTripFilesForProofByIds(input: {
+    tripId: number;
+    userId: number;
+    fileIds: readonly number[];
+  }): Promise<readonly TripFileForProofValidationRecord[]>;
+  findTripMovementProofIdByTripAndSequence(input: {
+    tripId: number;
+    movementSequence: number;
+  }): Promise<number | null>;
+  hasTripMovementProofCfdiUuidConflict(input: {
+    cfdiUuid: string;
+    excludeTripMovementProofId: number | null;
+  }): Promise<boolean>;
   createTripMovementProof(input: {
     tripId: number;
     movementSequence: number;
@@ -239,5 +307,6 @@ export interface TravelChecksRepository {
         | 'invoice_xml_return'
         | 'invoice_pdf_return';
     }[];
+    invoiceCfdi: TripMovementProofInvoiceCfdiPersistInput | null;
   }): Promise<TripMovementProofRecord>;
 }

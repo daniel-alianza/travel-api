@@ -13,8 +13,20 @@ import type {
 } from '../interfaces/travel-request-repository.interface';
 import {
   assertTravelRequestTripCommandValid,
+  validateFoodExpenseCapOrThrow,
+  validateLodgingExpenseCapOrThrow,
   type CreateTravelRequestTripCommand,
 } from './create-travel-request.use-case';
+import {
+  calculateTripDaysForFoodPolicy,
+  computeFoodPolicyMaximumAmount,
+  resolveFoodPolicyForAreaName,
+  roundToTwoDecimals,
+} from '../../domain/travel-request-food-policy';
+import {
+  computeLodgingPolicyMaximumAmount,
+  resolveNationalLodgingPolicyForAreaName,
+} from '../../domain/travel-request-lodging-policy';
 
 export type CorrectRejectedTravelRequestTripCommand = {
   readonly userId: number;
@@ -31,13 +43,6 @@ type CorrectRejectedTravelRequestTripData = {
 
 export type CorrectRejectedTravelRequestTripResponse =
   ApiSuccessResponse<CorrectRejectedTravelRequestTripData>;
-
-const FOOD_POLICY_EVENTS_PER_DAY = 3;
-const FOOD_POLICY_IVA_RATE = 0.16;
-const FOOD_POLICY_TIP_RATE = 0.1;
-const FOOD_EVENT_COST_ADMINISTRATIVO = 250;
-const FOOD_EVENT_COST_VENTAS = 250;
-const FOOD_EVENT_COST_OPERACIONES = 200;
 
 @Injectable()
 export class CorrectRejectedTravelRequestTripUseCase {
@@ -59,7 +64,19 @@ export class CorrectRejectedTravelRequestTripUseCase {
     if (!area) {
       throw new NotFoundException('No se encontró el área del solicitante.');
     }
-    const foodPolicy = resolveFoodPolicyByAreaName(area.name);
+    const foodPolicyResolution = resolveFoodPolicyForAreaName(area.name);
+    if (foodPolicyResolution.tag === 'unconfigured') {
+      throw new BadRequestException(
+        `No hay política de alimentos configurada para el área ${foodPolicyResolution.areaName}.`,
+      );
+    }
+    const lodgingPolicyResolution =
+      resolveNationalLodgingPolicyForAreaName(area.name);
+    if (lodgingPolicyResolution.tag === 'unconfigured') {
+      throw new BadRequestException(
+        `No hay política de hospedaje nacional configurada para el área ${lodgingPolicyResolution.areaName}.`,
+      );
+    }
 
     const trip = command.trip;
     assertTravelRequestTripCommandValid(trip, 1);
@@ -81,21 +98,28 @@ export class CorrectRejectedTravelRequestTripUseCase {
         'La fecha de regreso no puede ser menor a la fecha de salida.',
       );
     }
-    const tripDays = calculateTripDays(departureDate, returnDate);
-    const foodPolicyRecommendedTotal = foodPolicy.applies
-      ? roundToTwo(
-          tripDays *
-            FOOD_POLICY_EVENTS_PER_DAY *
-            foodPolicy.eventCost *
-            (1 + FOOD_POLICY_IVA_RATE) *
-            (1 + FOOD_POLICY_TIP_RATE),
-        )
-      : 0;
+    const tripDays = calculateTripDaysForFoodPolicy(departureDate, returnDate);
+    const foodPolicyRecommendedTotal = computeFoodPolicyMaximumAmount(
+      foodPolicyResolution,
+      tripDays,
+    );
     validateFoodExpenseCapOrThrow({
       tripIndex: 1,
-      foodPolicyApplies: foodPolicy.applies,
+      foodPolicyApplies: foodPolicyResolution.tag === 'capped',
       requestedFoodAmount: toSafeNumber(trip.gastos.alimentos),
       maximumAllowedAmount: foodPolicyRecommendedTotal,
+    });
+
+    const lodgingMaximum = computeLodgingPolicyMaximumAmount(
+      lodgingPolicyResolution,
+      departureDate,
+      returnDate,
+    );
+    validateLodgingExpenseCapOrThrow({
+      tripIndex: 1,
+      lodgingPolicyApplies: lodgingPolicyResolution.tag === 'capped',
+      requestedLodgingAmount: toSafeNumber(trip.gastos.hospedaje),
+      maximumAllowedAmount: lodgingMaximum,
     });
 
     const gastosTotal = sumTripExpenses(trip.gastos);
@@ -105,7 +129,7 @@ export class CorrectRejectedTravelRequestTripUseCase {
     const tagTotal = trip.tag.necesitaTag
       ? toSafeNumber(trip.tag.montoSolicitado)
       : 0;
-    const totalEstimado = roundToTwo(gastosTotal + gasolinaTotal + tagTotal);
+    const totalEstimado = roundToTwoDecimals(gastosTotal + gasolinaTotal + tagTotal);
 
     if (trip.gasolina.necesitaGasolina && trip.gasolina.cardId) {
       const card = await this.travelRequestRepository.findFuelCardById(
@@ -199,7 +223,7 @@ export class CorrectRejectedTravelRequestTripUseCase {
 function sumTripExpenses(
   expenses: CreateTravelRequestTripCommand['gastos'],
 ): number {
-  return roundToTwo(
+  return roundToTwoDecimals(
     toSafeNumber(expenses.transporte) +
       toSafeNumber(expenses.peajes) +
       toSafeNumber(expenses.hospedaje) +
@@ -229,114 +253,4 @@ function toSafeNumber(value: number | null | undefined): number {
     return 0;
   }
   return value;
-}
-
-function roundToTwo(value: number): number {
-  return Math.round(value * 100) / 100;
-}
-
-function calculateTripDays(startDate: Date, endDate: Date): number {
-  const normalizedStart = new Date(startDate);
-  normalizedStart.setHours(0, 0, 0, 0);
-  const normalizedEnd = new Date(endDate);
-  normalizedEnd.setHours(0, 0, 0, 0);
-  const millisecondsPerDay = 1000 * 60 * 60 * 24;
-  const dayDifference = Math.floor(
-    (normalizedEnd.getTime() - normalizedStart.getTime()) / millisecondsPerDay,
-  );
-  return Math.max(dayDifference + 1, 1);
-}
-
-function resolveFoodPolicyByAreaName(areaName: string): {
-  readonly applies: boolean;
-  readonly eventCost: number;
-} {
-  const normalizedAreaName = normalizeText(areaName);
-  if (normalizedAreaName === 'direccion') {
-    return {
-      applies: false,
-      eventCost: 0,
-    };
-  }
-
-  const administrativeAreas = new Set<string>([
-    'administracion',
-    'contabilidad',
-    'recursos humanos',
-    'tecnologias de la informacion',
-  ]);
-  if (administrativeAreas.has(normalizedAreaName)) {
-    return {
-      applies: true,
-      eventCost: FOOD_EVENT_COST_ADMINISTRATIVO,
-    };
-  }
-
-  const salesAreas = new Set<string>([
-    'atencion a clientes',
-    'compras',
-    'mercadotecnia',
-    'ventas',
-  ]);
-  if (salesAreas.has(normalizedAreaName)) {
-    return {
-      applies: true,
-      eventCost: FOOD_EVENT_COST_VENTAS,
-    };
-  }
-
-  const operationAreas = new Set<string>([
-    'almacen',
-    'logistica',
-    'auditoria externa',
-    'auditoria interna',
-    'calidad',
-    'ingenieria',
-    'mantenimiento',
-    'manufactura',
-    'produccion',
-    'seguridad e higiene',
-  ]);
-  if (operationAreas.has(normalizedAreaName)) {
-    return {
-      applies: true,
-      eventCost: FOOD_EVENT_COST_OPERACIONES,
-    };
-  }
-
-  throw new BadRequestException(
-    `No hay política de alimentos configurada para el área ${areaName}.`,
-  );
-}
-
-function normalizeText(value: string): string {
-  return value
-    .trim()
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '');
-}
-
-function validateFoodExpenseCapOrThrow(input: {
-  readonly tripIndex: number;
-  readonly foodPolicyApplies: boolean;
-  readonly requestedFoodAmount: number;
-  readonly maximumAllowedAmount: number;
-}): void {
-  if (!input.foodPolicyApplies) {
-    return;
-  }
-  if (input.requestedFoodAmount <= input.maximumAllowedAmount) {
-    return;
-  }
-  throw new BadRequestException({
-    message: `El monto de alimentos del viaje ${input.tripIndex} excede el tope permitido por política.`,
-    error: {
-      code: 'TRAVEL_REQUEST_POLICY_LIMIT_EXCEEDED',
-      tripIndex: input.tripIndex,
-      field: 'alimentos',
-      requestedAmount: roundToTwo(input.requestedFoodAmount),
-      maximumAllowedAmount: roundToTwo(input.maximumAllowedAmount),
-    },
-  });
 }

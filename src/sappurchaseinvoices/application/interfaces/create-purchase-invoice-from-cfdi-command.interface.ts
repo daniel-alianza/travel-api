@@ -94,6 +94,11 @@ export interface CfdiXmlDataCommand {
   readonly Addenda?: CfdiAddendaCommand;
 }
 
+export type SapPurchaseInvoiceDmsDocumentPaths = {
+  readonly xmlFilePath: string;
+  readonly pdfFilePath?: string;
+};
+
 export interface CreatePurchaseInvoiceFromCfdiCommand {
   readonly companyId: number;
   readonly sapSessionCompanyId?: number;
@@ -103,4 +108,5 @@ export interface CreatePurchaseInvoiceFromCfdiCommand {
   readonly costingCode?: string;
   readonly comments?: string;
   readonly xmlData: CfdiXmlDataCommand;
+  readonly sapDmsDocumentPaths?: SapPurchaseInvoiceDmsDocumentPaths;
 }

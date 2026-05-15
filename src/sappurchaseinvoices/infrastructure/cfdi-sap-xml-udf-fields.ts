@@ -61,6 +61,7 @@ export function buildCfdiLineXmlFields(
   const campos: Record<string, string> = {};
 
   asignarCampoSapSiHayValor(campos, 'U_RS_UUID', timbre?.UUID);
+  asignarCampoSapSiHayValor(campos, 'U_UUID', timbre?.UUID);
   asignarCampoSapSiHayValor(campos, 'U_RS_RFC', emisor?.Rfc);
   asignarCampoSapSiHayValor(campos, 'U_SAT_SERIECFD', comprobante.Serie);
   asignarCampoSapSiHayValor(campos, 'U_FECHAEMISION', comprobante.Fecha);

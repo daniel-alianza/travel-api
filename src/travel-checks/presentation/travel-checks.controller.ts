@@ -65,6 +65,10 @@ import {
   type GetTripMovementCfdiResponse,
 } from '../application/use-cases/get-trip-movement-cfdi.use-case';
 import {
+  GetTripMovementPdfUseCase,
+  type GetTripMovementPdfResponse,
+} from '../application/use-cases/get-trip-movement-pdf.use-case';
+import {
   ListCompanyExpenseCatalogsUseCase,
   type ListCompanyExpenseCatalogsResponse,
 } from '../application/use-cases/list-company-expense-catalogs.use-case';
@@ -587,6 +591,28 @@ class GetTripMovementCfdiHttpDto {
   message: string;
 }
 
+class GetTripMovementPdfDataDto {
+  @ApiProperty()
+  movementSequence: number;
+
+  @ApiProperty({ nullable: true })
+  pdfFileName: string | null;
+
+  @ApiProperty()
+  signedUrl: string;
+
+  @ApiProperty()
+  expiresInSeconds: number;
+}
+
+class GetTripMovementPdfHttpDto {
+  @ApiProperty({ type: GetTripMovementPdfDataDto })
+  data: GetTripMovementPdfDataDto;
+
+  @ApiProperty()
+  message: string;
+}
+
 class CompanyExpenseCatalogItemDto {
   @ApiProperty()
   id: number;
@@ -633,6 +659,7 @@ export class TravelChecksController {
     private readonly validateTripMovementInvoiceProofDraftUseCase: ValidateTripMovementInvoiceProofDraftUseCase,
     private readonly listViaticDistributionRulesUseCase: ListViaticDistributionRulesUseCase,
     private readonly getTripMovementCfdiUseCase: GetTripMovementCfdiUseCase,
+    private readonly getTripMovementPdfUseCase: GetTripMovementPdfUseCase,
     private readonly listCompanyExpenseCatalogsUseCase: ListCompanyExpenseCatalogsUseCase,
   ) {}
   @Get('dispersed')
@@ -830,6 +857,25 @@ export class TravelChecksController {
       });
     }
     return this.getTripMovementCfdiUseCase.execute(tripId, movementSequence);
+  }
+
+  @Get('trips/:tripId/movements/:movementSequence/pdf')
+  @ApiOperation({
+    summary: 'Obtener URL firmada de descarga del PDF de factura del movimiento',
+  })
+  @ApiOkResponse({ type: GetTripMovementPdfHttpDto })
+  async getTripMovementPdf(
+    @Param('tripId', ParseIntPipe) tripId: number,
+    @Param('movementSequence', ParseIntPipe) movementSequence: number,
+    @CurrentUser() user: AuthTokenVerifiedPayload,
+  ): Promise<GetTripMovementPdfResponse> {
+    if (!user.role.includes('administrador')) {
+      throw new ForbiddenException({
+        message: 'No tienes permisos para consultar PDF de comprobaciones.',
+        error: 'Prohibido',
+      });
+    }
+    return this.getTripMovementPdfUseCase.execute(tripId, movementSequence);
   }
 
   @Get('companies/:companyId/expense-catalogs')

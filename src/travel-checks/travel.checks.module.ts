@@ -14,6 +14,7 @@ import { SubmitTripMovementProofUseCase } from './application/use-cases/submit-t
 import { ValidateTripMovementInvoiceProofDraftUseCase } from './application/use-cases/validate-trip-movement-invoice-proof-draft.use-case';
 import { ListViaticDistributionRulesUseCase } from './application/use-cases/list-viatic-distribution-rules.use-case';
 import { GetTripMovementCfdiUseCase } from './application/use-cases/get-trip-movement-cfdi.use-case';
+import { GetTripMovementPdfUseCase } from './application/use-cases/get-trip-movement-pdf.use-case';
 import { ListCompanyExpenseCatalogsUseCase } from './application/use-cases/list-company-expense-catalogs.use-case';
 import { TravelChecksPrismaRepository } from './infrastructure/travel-checks-prisma.repository';
 import { TravelChecksSapMovementsService } from './infrastructure/travel-checks-sap-movements.service';
@@ -36,6 +37,7 @@ import { TravelChecksController } from './presentation/travel-checks.controller'
     ValidateTripMovementInvoiceProofDraftUseCase,
     ListViaticDistributionRulesUseCase,
     GetTripMovementCfdiUseCase,
+    GetTripMovementPdfUseCase,
     ListCompanyExpenseCatalogsUseCase,
     SupabaseDmsStorageService,
     {

@@ -40,5 +40,16 @@ import { GetDmsUsageForUserUseCase } from './application/use-cases/get-dms-usage
       useExisting: SupabaseDmsStorageService,
     },
   ],
+  exports: [
+    SupabaseDmsStorageService,
+    {
+      provide: 'DmsStoragePort',
+      useExisting: SupabaseDmsStorageService,
+    },
+    {
+      provide: 'DMS_BUCKET_CONFIG',
+      useFactory: () => getDmsBucketConfig(),
+    },
+  ],
 })
 export class DmsModule {}

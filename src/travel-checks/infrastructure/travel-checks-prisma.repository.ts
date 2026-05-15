@@ -668,6 +668,48 @@ export class TravelChecksPrismaRepository implements TravelChecksRepository {
     };
   }
 
+  async findTripMovementProofPdfFile(input: {
+    tripId: number;
+    movementSequence: number;
+  }): Promise<{
+    filePath: string;
+    fileName: string | null;
+  } | null> {
+    const proof = await this.prisma.tripMovementProof.findUnique({
+      where: {
+        tripId_movementSequence: {
+          tripId: input.tripId,
+          movementSequence: input.movementSequence,
+        },
+      },
+      select: {
+        files: {
+          where: {
+            fileRole: {
+              in: ['invoice_pdf', 'invoice_pdf_outbound', 'invoice_pdf_return'],
+            },
+          },
+          orderBy: { id: 'asc' },
+          select: {
+            fileUrl: true,
+            fileName: true,
+          },
+          take: 1,
+        },
+      },
+    });
+
+    const pdfFile = proof?.files[0];
+    if (pdfFile === undefined) {
+      return null;
+    }
+
+    return {
+      filePath: pdfFile.fileUrl,
+      fileName: pdfFile.fileName,
+    };
+  }
+
   async areTripFilesOwnedByUser(input: {
     tripId: number;
     userId: number;

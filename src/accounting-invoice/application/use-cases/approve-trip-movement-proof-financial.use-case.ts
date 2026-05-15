@@ -95,6 +95,12 @@ export class ApproveTripMovementProofFinancialUseCase {
       });
     }
 
+    const pdfFile =
+      await this.travelChecksRepository.findTripMovementProofPdfFile({
+        tripId: snapshot.tripId,
+        movementSequence: snapshot.movementSequence,
+      });
+
     const signed = await this.dmsStoragePort.createSignedDownloadUrl(
       xmlFile.filePath,
       this.dmsBucketConfig.signedUrlExpiresInSeconds,
@@ -174,6 +180,10 @@ export class ApproveTripMovementProofFinancialUseCase {
             notasRevisor: input.reviewerNotes,
           }),
           xmlData,
+          sapDmsDocumentPaths: {
+            xmlFilePath: xmlFile.filePath,
+            ...(pdfFile !== null ? { pdfFilePath: pdfFile.filePath } : {}),
+          },
         },
         input.decidedByUserId,
       );

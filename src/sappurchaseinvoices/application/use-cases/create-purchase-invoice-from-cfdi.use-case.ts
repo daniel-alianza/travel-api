@@ -6,7 +6,8 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import type { DmsBucketConfig } from '../../../config/dms-bucket/dms';
+import type { DmsStoragePort } from '../../../dms/application/interfaces/dms-storage.interface';
 import { SapAuthAdapter } from '../../../infrastructure/SL/sap-auth.adapter';
 import { PrismaService } from '../../../infrastructure/prisma/prisma.service';
 import { buildSuccessResponse } from '../../../common/exceptions/builders/success-response.builder';
@@ -52,7 +53,10 @@ export class CreatePurchaseInvoiceFromCfdiUseCase {
     private readonly companySapCurrencyResolver: CompanySapCurrencyResolver,
     @Inject('SapPurchaseInvoiceWriter')
     private readonly sapPurchaseInvoiceWriter: SapPurchaseInvoiceWriter,
-    private readonly configService: ConfigService,
+    @Inject('DmsStoragePort')
+    private readonly dmsStoragePort: DmsStoragePort,
+    @Inject('DMS_BUCKET_CONFIG')
+    private readonly dmsBucketConfig: DmsBucketConfig,
   ) {}
 
   async execute(
@@ -155,7 +159,11 @@ export class CreatePurchaseInvoiceFromCfdiUseCase {
         );
         throw error;
       }
-      await this.tryPatchDocumentUrls(sessionId, created.DocEntry);
+      await this.tryPatchDocumentUrls(
+        sessionId,
+        created.DocEntry,
+        command.sapDmsDocumentPaths,
+      );
       return buildSuccessResponse(
         {
           docEntry: created.DocEntry,
@@ -193,26 +201,60 @@ export class CreatePurchaseInvoiceFromCfdiUseCase {
   private async tryPatchDocumentUrls(
     sessionId: string,
     docEntry: number,
+    dmsPaths:
+      | CreatePurchaseInvoiceFromCfdiCommand['sapDmsDocumentPaths']
+      | undefined,
   ): Promise<void> {
-    const docsUrl =
-      this.configService.get<string>('SAP_DOCS_URL') ??
-      this.configService.get<string>('APP_URL');
-    if (docsUrl === undefined || docsUrl.trim().length === 0) {
+    if (dmsPaths === undefined) {
       return;
     }
-    const cleanBase = docsUrl.endsWith('/') ? docsUrl.slice(0, -1) : docsUrl;
-    const xmlUrl = `${cleanBase}/comprobaciones/factura/${docEntry.toString()}/xml`;
-    const pdfUrl = `${cleanBase}/comprobaciones/factura/${docEntry.toString()}/pdf`;
+
+    const expiresIn = this.dmsBucketConfig.sapSignedUrlExpiresInSeconds;
+    let xmlUrl: string | undefined;
+    let pdfUrl: string | undefined;
+
     try {
-      await this.sapPurchaseInvoiceWriter.patchDocumentUrls(
-        sessionId,
-        docEntry,
-        xmlUrl,
-        pdfUrl,
+      const xmlSigned = await this.dmsStoragePort.createSignedDownloadUrl(
+        dmsPaths.xmlFilePath,
+        expiresIn,
       );
-    } catch (error) {
+      xmlUrl = xmlSigned.signedUrl;
+    } catch (error: unknown) {
+      const mensaje = error instanceof Error ? error.message : String(error);
       this.logger.error(
-        `No se pudieron actualizar U_XML/U_PDF en SAP: ${(error as Error).message}`,
+        `No se pudo firmar URL Supabase para U_XML (docEntry=${docEntry.toString()}): ${mensaje}`,
+      );
+    }
+
+    const pdfPath = dmsPaths.pdfFilePath?.trim();
+    if (pdfPath !== undefined && pdfPath.length > 0) {
+      try {
+        const pdfSigned = await this.dmsStoragePort.createSignedDownloadUrl(
+          pdfPath,
+          expiresIn,
+        );
+        pdfUrl = pdfSigned.signedUrl;
+      } catch (error: unknown) {
+        const mensaje = error instanceof Error ? error.message : String(error);
+        this.logger.error(
+          `No se pudo firmar URL Supabase para U_PDF (docEntry=${docEntry.toString()}): ${mensaje}`,
+        );
+      }
+    }
+
+    if (xmlUrl === undefined && pdfUrl === undefined) {
+      return;
+    }
+
+    try {
+      await this.sapPurchaseInvoiceWriter.patchDocumentUrls(sessionId, docEntry, {
+        ...(xmlUrl !== undefined ? { xmlUrl } : {}),
+        ...(pdfUrl !== undefined ? { pdfUrl } : {}),
+      });
+    } catch (error: unknown) {
+      const mensaje = error instanceof Error ? error.message : String(error);
+      this.logger.error(
+        `No se pudieron actualizar U_XML/U_PDF en SAP (docEntry=${docEntry.toString()}): ${mensaje}`,
       );
     }
   }

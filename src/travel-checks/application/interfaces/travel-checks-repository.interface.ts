@@ -269,6 +269,13 @@ export interface TravelChecksRepository {
     filePath: string;
     fileName: string | null;
   } | null>;
+  findTripMovementProofPdfFile(input: {
+    tripId: number;
+    movementSequence: number;
+  }): Promise<{
+    filePath: string;
+    fileName: string | null;
+  } | null>;
   areTripFilesOwnedByUser(input: {
     tripId: number;
     userId: number;

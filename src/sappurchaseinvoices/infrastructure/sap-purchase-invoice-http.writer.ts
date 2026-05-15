@@ -61,17 +61,28 @@ export class SapPurchaseInvoiceHttpWriter implements SapPurchaseInvoiceWriter {
   async patchDocumentUrls(
     sessionId: string,
     docEntry: number,
-    xmlUrl: string,
-    pdfUrl: string,
+    urls: {
+      readonly xmlUrl?: string;
+      readonly pdfUrl?: string;
+    },
   ): Promise<void> {
+    const body: Record<string, string> = {};
+    const xml = urls.xmlUrl?.trim();
+    const pdf = urls.pdfUrl?.trim();
+    if (xml !== undefined && xml.length > 0) {
+      body.U_XML = xml;
+    }
+    if (pdf !== undefined && pdf.length > 0) {
+      body.U_PDF = pdf;
+    }
+    if (Object.keys(body).length === 0) {
+      return;
+    }
     const baseUrl = this.requireBaseUrl();
     const httpPatch = this.sapHttpService as SapHttpPatchClient;
     await httpPatch.patch(
       `${baseUrl}/PurchaseInvoices(${docEntry.toString()})`,
-      {
-        U_XML: xmlUrl,
-        U_PDF: pdfUrl,
-      },
+      body,
       sessionId,
     );
   }

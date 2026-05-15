@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { DmsModule } from '../dms/dms.module';
 import { SapConnectionModule } from '../infrastructure/SL/sap-connection.module';
 import { AuthModule } from '../auth/auth.module';
 import { PrismaModule } from '../infrastructure/prisma/prisma.module';
@@ -11,7 +12,7 @@ import { SapServiceLayerCorporateCardBusinessPartnerResolver } from './infrastru
 import { SapPurchaseInvoicesController } from './presentation/sappurchaseinvoices.controller';
 
 @Module({
-  imports: [SapConnectionModule, AuthModule, PrismaModule],
+  imports: [SapConnectionModule, AuthModule, PrismaModule, DmsModule],
   controllers: [SapPurchaseInvoicesController],
   providers: [
     CreatePurchaseInvoiceFromCfdiUseCase,

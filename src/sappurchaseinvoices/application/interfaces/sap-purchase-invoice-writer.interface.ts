@@ -10,7 +10,9 @@ export interface SapPurchaseInvoiceWriter {
   patchDocumentUrls(
     sessionId: string,
     docEntry: number,
-    xmlUrl: string,
-    pdfUrl: string,
+    urls: {
+      readonly xmlUrl?: string;
+      readonly pdfUrl?: string;
+    },
   ): Promise<void>;
 }

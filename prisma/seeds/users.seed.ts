@@ -1,10 +1,13 @@
+import { hash } from 'bcrypt';
 import type { PrismaClient } from '../../generated/prisma/client';
+
+const BCRYPT_ROUNDS = 10;
 
 const SEED_USER = {
   id: 1,
   name: 'Daniel Ortiz',
   email: 'daniel.ortiz@alianzaelectrica.com',
-  password: 'danielo10',
+  password: 'CEgmWlCpnsQ8VoVg',
   companyId: 1,
   branchId: 1,
   roleId: 1,
@@ -120,12 +123,14 @@ export async function seedUsers(prismaClient: PrismaClient): Promise<number> {
       continue;
     }
 
+    const passwordHash = await hash(seedUser.password, BCRYPT_ROUNDS);
+
     await prismaClientWithUser.user.create({
       data: {
         id: seedUser.id,
         name: seedUser.name,
         email: seedUser.email,
-        password: seedUser.password,
+        password: passwordHash,
         companyId: seedUser.companyId,
         branchId: seedUser.branchId,
         areaId: seedUser.areaId,

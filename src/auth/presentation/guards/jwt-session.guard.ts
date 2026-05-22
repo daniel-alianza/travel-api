@@ -5,16 +5,15 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import type { Request } from 'express';
 import type {
   AuthTokenService,
   AuthTokenVerifiedPayload,
 } from '../../application/interfaces/auth-token.service.interface';
 import { AuthConfigService } from '../../infrastructure/auth-config.service';
+import { extractSessionToken } from './extract-session-token';
+import type { AuthenticatedRequest } from './jwt-session.guard.types';
 
-export type AuthenticatedRequest = Request & {
-  readonly user?: AuthTokenVerifiedPayload;
-};
+export type { AuthenticatedRequest } from './jwt-session.guard.types';
 
 @Injectable()
 export class JwtSessionGuard implements CanActivate {
@@ -26,10 +25,8 @@ export class JwtSessionGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
-    const token = extractTokenFromCookieHeader(
-      request.headers.cookie,
-      this.authConfigService.getConfig().jwtCookieName,
-    );
+    const cookieName = this.authConfigService.getConfig().jwtCookieName;
+    const { token } = extractSessionToken(request, cookieName);
     if (token === null) {
       throw new UnauthorizedException({
         message: 'No se encontró sesión activa.',
@@ -46,23 +43,4 @@ export class JwtSessionGuard implements CanActivate {
     Object.assign(request, { user: payload });
     return true;
   }
-}
-
-function extractTokenFromCookieHeader(
-  cookieHeader: string | undefined,
-  cookieName: string,
-): string | null {
-  if (typeof cookieHeader !== 'string' || cookieHeader.trim().length === 0) {
-    return null;
-  }
-  const cookies = cookieHeader.split(';');
-  for (const cookie of cookies) {
-    const [keyRaw, ...valueParts] = cookie.trim().split('=');
-    const key = keyRaw?.trim();
-    if (key === cookieName) {
-      const value = valueParts.join('=').trim();
-      return value.length > 0 ? value : null;
-    }
-  }
-  return null;
 }

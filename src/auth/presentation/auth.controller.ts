@@ -318,10 +318,11 @@ export class AuthController {
 
     const authConfig = this.authConfigService.getConfig();
 
+    const sameSite = authConfig.isProduction ? 'none' : 'lax';
     response.cookie(loginResult.cookieName, loginResult.token.accessToken, {
       httpOnly: true,
       secure: authConfig.isProduction,
-      sameSite: 'lax',
+      sameSite,
       maxAge: loginResult.token.expiresInSeconds * 1000,
       path: '/',
     });

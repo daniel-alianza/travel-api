@@ -10,6 +10,6 @@ export default defineConfig({
     seed: 'tsx prisma/main.seed.ts',
   },
   datasource: {
-    url: `mysql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT ?? 3306}/${DB_NAME}`,
+    url: `mysql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT ?? 3306}/${DB_NAME}?sslaccept=strict`,
   },
 });

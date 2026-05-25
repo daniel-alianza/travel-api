@@ -256,6 +256,10 @@ export interface TravelRequestRepository {
   ): Promise<TravelRequestFormUserRecord | null>;
   findApprovalRequests(): Promise<readonly ApprovalRequestRecord[]>;
   findDispersionPendingRequests(): Promise<readonly ApprovalRequestRecord[]>;
+  findDispersedRequestsInDateRange(input: {
+    readonly dispersedFrom: Date;
+    readonly dispersedTo: Date;
+  }): Promise<readonly ApprovalRequestRecord[]>;
   confirmTravelRequestDispersion(input: {
     readonly travelRequestId: number;
     readonly dispersedTotal: number;

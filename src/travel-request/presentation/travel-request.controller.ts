@@ -2,16 +2,21 @@ import {
   Body,
   Controller,
   Get,
+  Header,
   HttpCode,
   Param,
   ParseIntPipe,
   Patch,
   Post,
+  Query,
+  Res,
+  StreamableFile,
   UnauthorizedException,
   UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import type { Response } from 'express';
 import {
   ApiBody,
   ApiCookieAuth,
@@ -44,6 +49,7 @@ import {
   GetDispersionQueueUseCase,
   type GetDispersionQueueResponse,
 } from '../application/use-cases/get-dispersion-queue.use-case';
+import { ExportDispersionReportUseCase } from '../application/use-cases/export-dispersion-report.use-case';
 import {
   ConfirmTravelRequestDispersionUseCase,
   type ConfirmTravelRequestDispersionResponse,
@@ -130,6 +136,7 @@ export class TravelRequestController {
     private readonly getApprovalRequestsUseCase: GetApprovalRequestsUseCase,
     private readonly getApprovalFilterCatalogUseCase: GetApprovalFilterCatalogUseCase,
     private readonly getDispersionQueueUseCase: GetDispersionQueueUseCase,
+    private readonly exportDispersionReportUseCase: ExportDispersionReportUseCase,
     private readonly confirmTravelRequestDispersionUseCase: ConfirmTravelRequestDispersionUseCase,
     private readonly resolveTravelRequestTripUseCase: ResolveTravelRequestTripUseCase,
     private readonly getMyTravelRequestsUseCase: GetMyTravelRequestsUseCase,
@@ -236,6 +243,33 @@ export class TravelRequestController {
   })
   async getDispersionQueue(): Promise<GetDispersionQueueResponse> {
     return this.getDispersionQueueUseCase.execute();
+  }
+
+  @Get('dispersion-report/excel')
+  @HttpCode(200)
+  @Header(
+    'Content-Type',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  )
+  @ApiOperation({
+    summary: 'Descargar reporte Excel de dispersiones',
+    description:
+      'Sin fechas: del día 1 del mes actual al día de hoy (zona APP_TIMEZONE). Con fechas: rango inclusivo. Incluye solicitudes ya dispersadas.',
+  })
+  async exportDispersionReportExcel(
+    @Query('from') from: string | undefined,
+    @Query('to') to: string | undefined,
+    @Res({ passthrough: true }) response: Response,
+  ): Promise<StreamableFile> {
+    const resultado = await this.exportDispersionReportUseCase.execute({
+      from,
+      to,
+    });
+    response.setHeader(
+      'Content-Disposition',
+      `attachment; filename="${resultado.fileName}"`,
+    );
+    return new StreamableFile(resultado.buffer);
   }
 
   @Patch(':travelRequestId/disperse')

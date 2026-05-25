@@ -518,6 +518,96 @@ export class TravelRequestPrismaRepository implements TravelRequestRepository {
     });
   }
 
+  async findDispersedRequestsInDateRange(input: {
+    readonly dispersedFrom: Date;
+    readonly dispersedTo: Date;
+  }): Promise<readonly ApprovalRequestRecord[]> {
+    const filas = await this.prismaService.travelRequest.findMany({
+      where: {
+        status: 'dispersed',
+        dispersedAt: {
+          gte: input.dispersedFrom,
+          lte: input.dispersedTo,
+        },
+      },
+      orderBy: {
+        dispersedAt: 'desc',
+      },
+      include: {
+        user: {
+          select: {
+            email: true,
+          },
+        },
+        company: {
+          select: {
+            name: true,
+          },
+        },
+        area: {
+          select: {
+            name: true,
+          },
+        },
+        approver: {
+          select: {
+            name: true,
+          },
+        },
+        dispersedBy: {
+          select: {
+            name: true,
+          },
+        },
+        trips: {
+          select: {
+            id: true,
+            tripOrder: true,
+            tripApprovalStatus: true,
+            approverComment: true,
+            approvedBy: {
+              select: {
+                name: true,
+              },
+            },
+            destination: true,
+            purpose: true,
+            departureDate: true,
+            returnDate: true,
+            disbursementDate: true,
+            estimatedTotal: true,
+            expenses: {
+              select: {
+                transport: true,
+                tolls: true,
+                lodging: true,
+                food: true,
+                freight: true,
+                tools: true,
+                shipping: true,
+                miscellaneous: true,
+              },
+            },
+            gasoline: {
+              select: {
+                requiresGasoline: true,
+                requestedAmount: true,
+              },
+            },
+            tag: {
+              select: {
+                requiresTag: true,
+                requestedAmount: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return filas as unknown as readonly ApprovalRequestRecord[];
+  }
+
   async findDispersionPendingRequests(): Promise<
     readonly ApprovalRequestRecord[]
   > {

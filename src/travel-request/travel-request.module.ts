@@ -6,6 +6,7 @@ import { GetUserFuelCardsUseCase } from './application/use-cases/get-user-fuel-c
 import { GetApprovalRequestsUseCase } from './application/use-cases/get-approval-requests.use-case';
 import { GetApprovalFilterCatalogUseCase } from './application/use-cases/get-approval-filter-catalog.use-case';
 import { GetDispersionQueueUseCase } from './application/use-cases/get-dispersion-queue.use-case';
+import { ExportDispersionReportUseCase } from './application/use-cases/export-dispersion-report.use-case';
 import { ConfirmTravelRequestDispersionUseCase } from './application/use-cases/confirm-travel-request-dispersion.use-case';
 import { ResolveTravelRequestTripUseCase } from './application/use-cases/resolve-travel-request-trip.use-case';
 import { GetMyTravelRequestsUseCase } from './application/use-cases/get-my-travel-requests.use-case';
@@ -27,6 +28,7 @@ import { TravelRequestController } from './presentation/travel-request.controlle
     GetApprovalRequestsUseCase,
     GetApprovalFilterCatalogUseCase,
     GetDispersionQueueUseCase,
+    ExportDispersionReportUseCase,
     ConfirmTravelRequestDispersionUseCase,
     ResolveTravelRequestTripUseCase,
     GetMyTravelRequestsUseCase,

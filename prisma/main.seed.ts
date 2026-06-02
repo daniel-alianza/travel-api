@@ -13,6 +13,8 @@ import { seedDistributionRules } from './seeds/distributionrule.seed';
 import { seedVat } from './seeds/vat.seed';
 import { seedViaticCategories } from './seeds/viaticcategory.seed';
 import { seedRoleDefaultPermissions } from './seeds/role-default-permission.seed';
+import { seedFuelCards } from './seeds/cards-fuel.seed';
+import { seedGasolineNotificationRecipients } from './seeds/gasoline-notification-recipient.seed';
 
 type SeederTask = {
   readonly name: string;
@@ -78,6 +80,14 @@ const seederTasks: readonly SeederTask[] = [
   {
     name: 'Permisos por defecto de roles',
     execute: seedRoleDefaultPermissions,
+  },
+  {
+    name: 'Tarjetas de combustible',
+    execute: seedFuelCards,
+  },
+  {
+    name: 'Destinatarios notificaciones gasolina',
+    execute: seedGasolineNotificationRecipients,
   },
 ];
 

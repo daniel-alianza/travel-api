@@ -39,6 +39,11 @@ class LoginResponseDataDto {
   @ApiProperty()
   userId: number;
 
+  @ApiProperty({
+    description: 'Identificador numérico del rol (filtros de gasolina, IAM)',
+  })
+  roleId: number;
+
   @ApiProperty()
   accessToken: string;
 
@@ -330,6 +335,7 @@ export class AuthController {
     return buildSuccessResponse(
       {
         userId: loginResult.userId,
+        roleId: loginResult.roleId,
         accessToken: loginResult.token.accessToken,
         expiresInSeconds: loginResult.token.expiresInSeconds,
         role: loginResult.role,

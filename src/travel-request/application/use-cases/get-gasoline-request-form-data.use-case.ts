@@ -4,9 +4,8 @@ import type { ApiSuccessResponse } from '../../../common/exceptions/interfaces/a
 import { maskCardNumber } from '../../../common/security/mask-card-number';
 import type { TravelRequestRepository } from '../interfaces/travel-request-repository.interface';
 
-type GetTravelRequestFormDataData = {
+type GetGasolineRequestFormDataData = {
   readonly userId: number;
-  readonly employeeName: string;
   readonly company: {
     readonly id: number;
     readonly name: string;
@@ -19,31 +18,31 @@ type GetTravelRequestFormDataData = {
     readonly id: number;
     readonly name: string;
   };
-  readonly viaticCards: readonly {
+  readonly fuelCards: readonly {
     readonly id: number;
     readonly cardNumber: string;
   }[];
 };
 
-export type GetTravelRequestFormDataResponse =
-  ApiSuccessResponse<GetTravelRequestFormDataData>;
+export type GetGasolineRequestFormDataResponse =
+  ApiSuccessResponse<GetGasolineRequestFormDataData>;
 
 @Injectable()
-export class GetTravelRequestFormDataUseCase {
+export class GetGasolineRequestFormDataUseCase {
   constructor(
     @Inject('TravelRequestRepository')
     private readonly travelRequestRepository: TravelRequestRepository,
   ) {}
 
-  async execute(userId: number): Promise<GetTravelRequestFormDataResponse> {
+  async execute(userId: number): Promise<GetGasolineRequestFormDataResponse> {
     const user = await this.travelRequestRepository.findFormDataByUserId(userId);
 
     if (!user) {
       throw new NotFoundException('No se encontró el usuario para precarga.');
     }
 
-    const viaticCards = user.cards
-      .filter((card) => card.type === 'VIATIC' && card.isActive)
+    const fuelCards = user.cards
+      .filter((card) => card.type === 'FUEL' && card.isActive)
       .map((card) => ({
         id: card.id,
         cardNumber: maskCardNumber(card.cardNumber),
@@ -52,13 +51,12 @@ export class GetTravelRequestFormDataUseCase {
     return buildSuccessResponse(
       {
         userId: user.id,
-        employeeName: user.name,
         company: user.company,
         branch: user.branch,
         area: user.area,
-        viaticCards,
+        fuelCards,
       },
-      'Datos de formulario cargados correctamente.',
+      'Datos de solicitud de gasolina cargados correctamente.',
     );
   }
 }

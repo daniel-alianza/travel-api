@@ -161,6 +161,16 @@ export type ApprovalFilterCatalogRecord = {
   readonly companies: readonly { readonly id: number; readonly name: string }[];
 };
 
+export type RequestFormCatalogRecord = {
+  readonly areas: readonly { readonly id: number; readonly name: string }[];
+  readonly companies: readonly { readonly id: number; readonly name: string }[];
+  readonly branches: readonly {
+    readonly id: number;
+    readonly name: string;
+    readonly companyId: number | null;
+  }[];
+};
+
 export type ResolveTravelRequestTripRepositoryInput = {
   readonly tripId: number;
   readonly resolution: 'approve' | 'reject';
@@ -267,6 +277,7 @@ export interface TravelRequestRepository {
     readonly dispersedByUserId: number;
   }): Promise<ConfirmTravelRequestDispersionResult>;
   findApprovalFilterCatalog(): Promise<ApprovalFilterCatalogRecord>;
+  findRequestFormCatalog(): Promise<RequestFormCatalogRecord>;
   createTravelRequest(
     input: CreateTravelRequestRepositoryInput,
   ): Promise<CreatedTravelRequestRecord>;

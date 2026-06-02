@@ -10,6 +10,7 @@ import type {
   CreateTravelRequestRepositoryInput,
   CreatedTravelRequestRecord,
   MyTravelRequestListRecord,
+  RequestFormCatalogRecord,
   ResolveTravelRequestTripRepositoryInput,
   TravelRequestDetailForUserRecord,
   TravelRequestFormUserRecord,
@@ -59,6 +60,18 @@ type PrismaDelegate = {
       orderBy: { name: 'asc' };
       select: { id: true; name: true };
     }): Promise<readonly { readonly id: number; readonly name: string }[]>;
+  };
+  branch: {
+    findMany(args: {
+      orderBy: { name: 'asc' };
+      select: { id: true; name: true; companyId: true };
+    }): Promise<
+      readonly {
+        readonly id: number;
+        readonly name: string;
+        readonly companyId: number | null;
+      }[]
+    >;
   };
   card: {
     findUnique(args: {
@@ -364,6 +377,26 @@ export class TravelRequestPrismaRepository implements TravelRequestRepository {
     ]);
 
     return { areas, companies };
+  }
+
+  async findRequestFormCatalog(): Promise<RequestFormCatalogRecord> {
+    const prisma = this.prismaService as unknown as PrismaDelegate;
+    const [areas, companies, branches] = await Promise.all([
+      prisma.area.findMany({
+        orderBy: { name: 'asc' },
+        select: { id: true, name: true },
+      }),
+      prisma.company.findMany({
+        orderBy: { name: 'asc' },
+        select: { id: true, name: true },
+      }),
+      prisma.branch.findMany({
+        orderBy: { name: 'asc' },
+        select: { id: true, name: true, companyId: true },
+      }),
+    ]);
+
+    return { areas, companies, branches };
   }
 
   async createTravelRequest(

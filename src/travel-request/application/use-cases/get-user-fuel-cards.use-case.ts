@@ -1,6 +1,7 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { buildSuccessResponse } from '../../../common/exceptions/builders/success-response.builder';
 import type { ApiSuccessResponse } from '../../../common/exceptions/interfaces/api-success-response.interface';
+import { maskCardNumber } from '../../../common/security/mask-card-number';
 import type { TravelRequestRepository } from '../interfaces/travel-request-repository.interface';
 
 type GetUserFuelCardsData = {
@@ -31,7 +32,7 @@ export class GetUserFuelCardsUseCase {
       .filter((card) => card.type === 'FUEL' && card.isActive)
       .map((card) => ({
         id: card.id,
-        cardNumber: card.cardNumber,
+        cardNumber: maskCardNumber(card.cardNumber),
       }));
 
     return buildSuccessResponse(

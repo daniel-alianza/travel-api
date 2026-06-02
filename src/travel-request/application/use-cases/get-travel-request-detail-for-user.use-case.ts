@@ -1,6 +1,7 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { buildSuccessResponse } from '../../../common/exceptions/builders/success-response.builder';
 import type { ApiSuccessResponse } from '../../../common/exceptions/interfaces/api-success-response.interface';
+import { maskCardNumberNullable } from '../../../common/security/mask-card-number';
 import type { TravelRequestRepository } from '../interfaces/travel-request-repository.interface';
 
 type TravelRequestDetailForUserData = {
@@ -77,7 +78,7 @@ export class GetTravelRequestDetailForUserUseCase {
         solicitudId: solicitud.id,
         status: solicitud.status,
         employeeName: solicitud.employeeName,
-        corporateCardNumber: solicitud.corporateCardNumber,
+        corporateCardNumber: maskCardNumberNullable(solicitud.corporateCardNumber),
         company: solicitud.company,
         branch: solicitud.branch,
         area: solicitud.area,
@@ -104,7 +105,7 @@ export class GetTravelRequestDetailForUserUseCase {
           gasolina: {
             necesitaGasolina: viaje.gasoline?.requiresGasoline ?? false,
             cardId: viaje.gasoline?.cardId ?? null,
-            cardNumber: viaje.gasoline?.cardNumber ?? null,
+            cardNumber: maskCardNumberNullable(viaje.gasoline?.cardNumber ?? null),
             placa: viaje.gasoline?.plate ?? null,
             kilometrajeActualKm: viaje.gasoline?.currentMileageKm ?? null,
             montoSolicitado: viaje.gasoline?.requestedAmount ?? null,

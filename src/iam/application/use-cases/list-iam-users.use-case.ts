@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import type { Prisma } from '../../../../generated/prisma/client';
+import type { GasolineNotificationRecipientRepository } from '../../../gasoline/application/interfaces/gasoline-notification-recipient.repository.interface';
 import { ordenarCodigosPermisoIam } from '../iam-known-permission-codes';
 import { iamRoleDbNameToLabel } from '../iam-role-db-to-label.mapper';
 import { PrismaService } from '../../../infrastructure/prisma/prisma.service';
@@ -24,11 +25,17 @@ export type IamUserListItemResponse = {
   permisos: readonly string[];
   /** Códigos otorgados por `RoleDefaultPermission` del rol actual; en UI no se pueden desmarcar. */
   permisosPorDefectoRol: readonly string[];
+  readonly gasolinaTesoreriaAprobador: boolean;
+  readonly gasolinaNotificacionDispersion: boolean;
 };
 
 @Injectable()
 export class ListIamUsersUseCase {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    @Inject('GasolineNotificationRecipientRepository')
+    private readonly gasolineNotificationRecipientRepository: GasolineNotificationRecipientRepository,
+  ) {}
 
   async execute(
     command: ListIamUsersCommand,
@@ -71,16 +78,18 @@ export class ListIamUsersUseCase {
     const roleIds = [...new Set(rows.map((row) => row.roleId))];
     const userIds = rows.map((row) => row.id);
 
-    const [defaultsRows, extrasRows] = await Promise.all([
-      this.prismaService.roleDefaultPermission.findMany({
-        where: { roleId: { in: roleIds } },
-        select: { roleId: true, permissionCode: true },
-      }),
-      this.prismaService.userExtraPermission.findMany({
-        where: { userId: { in: userIds } },
-        select: { userId: true, permissionCode: true },
-      }),
-    ]);
+    const [defaultsRows, extrasRows, gasolineFlagsByUserId] =
+      await Promise.all([
+        this.prismaService.roleDefaultPermission.findMany({
+          where: { roleId: { in: roleIds } },
+          select: { roleId: true, permissionCode: true },
+        }),
+        this.prismaService.userExtraPermission.findMany({
+          where: { userId: { in: userIds } },
+          select: { userId: true, permissionCode: true },
+        }),
+        this.gasolineNotificationRecipientRepository.findFlagsByUserIds(userIds),
+      ]);
 
     const defaultsByRoleId = new Map<number, Set<string>>();
     for (const row of defaultsRows) {
@@ -112,6 +121,11 @@ export class ListIamUsersUseCase {
       const extras = extrasByUserId.get(row.id) ?? new Set<string>();
       const efectivo = new Set<string>([...porDefecto, ...extras]);
 
+      const gasolineFlags = gasolineFlagsByUserId.get(row.id) ?? {
+        treasuryApprover: false,
+        dispersalNotify: false,
+      };
+
       return {
         id: row.id,
         nombres: nombreCompleto,
@@ -126,6 +140,8 @@ export class ListIamUsersUseCase {
         activo: row.isActive,
         permisos: ordenarCodigosPermisoIam(efectivo),
         permisosPorDefectoRol: ordenarCodigosPermisoIam(porDefecto),
+        gasolinaTesoreriaAprobador: gasolineFlags.treasuryApprover,
+        gasolinaNotificacionDispersion: gasolineFlags.dispersalNotify,
       };
     });
   }

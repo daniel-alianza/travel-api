@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from '../auth/auth.module';
 import { CreateTravelRequestUseCase } from './application/use-cases/create-travel-request.use-case';
+import { GetGasolineRequestFormDataUseCase } from './application/use-cases/get-gasoline-request-form-data.use-case';
 import { GetTravelRequestFormDataUseCase } from './application/use-cases/get-travel-request-form-data.use-case';
 import { GetUserFuelCardsUseCase } from './application/use-cases/get-user-fuel-cards.use-case';
 import { GetApprovalRequestsUseCase } from './application/use-cases/get-approval-requests.use-case';
 import { GetApprovalFilterCatalogUseCase } from './application/use-cases/get-approval-filter-catalog.use-case';
+import { GetTravelRequestFormCatalogUseCase } from './application/use-cases/get-travel-request-form-catalog.use-case';
 import { GetDispersionQueueUseCase } from './application/use-cases/get-dispersion-queue.use-case';
 import { ExportDispersionReportUseCase } from './application/use-cases/export-dispersion-report.use-case';
 import { ConfirmTravelRequestDispersionUseCase } from './application/use-cases/confirm-travel-request-dispersion.use-case';
@@ -24,9 +26,11 @@ import { TravelRequestController } from './presentation/travel-request.controlle
     TravelRequestPrismaRepository,
     CreateTravelRequestUseCase,
     GetTravelRequestFormDataUseCase,
+    GetGasolineRequestFormDataUseCase,
     GetUserFuelCardsUseCase,
     GetApprovalRequestsUseCase,
     GetApprovalFilterCatalogUseCase,
+    GetTravelRequestFormCatalogUseCase,
     GetDispersionQueueUseCase,
     ExportDispersionReportUseCase,
     ConfirmTravelRequestDispersionUseCase,

@@ -32,9 +32,11 @@ import {
 } from '../application/use-cases/list-iam-users.use-case';
 import type { IamUserListItemResponse } from '../application/use-cases/list-iam-users.use-case';
 import { SetIamUserExtraPermissionsRequestDto } from './dtos/set-iam-user-extra-permissions-request.dto';
+import { SetIamUserGasolineNotificationsRequestDto } from './dtos/set-iam-user-gasoline-notifications-request.dto';
 import { SetIamUserPasswordRequestDto } from './dtos/set-iam-user-password-request.dto';
 import { SuperAdminGuard } from './guards/super-admin.guard';
 import { SetIamUserExtraPermissionsUseCase } from '../application/use-cases/set-iam-user-extra-permissions.use-case';
+import { SetIamUserGasolineNotificationsUseCase } from '../application/use-cases/set-iam-user-gasoline-notifications.use-case';
 import { SetIamUserPasswordUseCase } from '../application/use-cases/set-iam-user-password.use-case';
 
 class IamUserListItemDto {
@@ -80,6 +82,16 @@ class IamUserListItemDto {
       'Códigos incluidos por el rol (RoleDefaultPermission). No se pueden quitar desde IAM.',
   })
   permisosPorDefectoRol: readonly string[];
+
+  @ApiProperty({
+    description: 'Aprobador tesorería en módulo gasolina.',
+  })
+  gasolinaTesoreriaAprobador: boolean;
+
+  @ApiProperty({
+    description: 'Notificaciones de dispersión de gasolina.',
+  })
+  gasolinaNotificacionDispersion: boolean;
 }
 
 class IamUsersListHttpResponseDto {
@@ -125,6 +137,7 @@ export class IamController {
     private readonly listIamFilterCatalogUseCase: ListIamFilterCatalogUseCase,
     private readonly setIamUserPasswordUseCase: SetIamUserPasswordUseCase,
     private readonly setIamUserExtraPermissionsUseCase: SetIamUserExtraPermissionsUseCase,
+    private readonly setIamUserGasolineNotificationsUseCase: SetIamUserGasolineNotificationsUseCase,
   ) {}
 
   @Get('users')
@@ -224,6 +237,43 @@ export class IamController {
     return buildSuccessResponse(
       null,
       'Permisos extra del usuario actualizados correctamente.',
+    );
+  }
+
+  @Put('users/:userId/gasoline-notifications')
+  @UseGuards(JwtSessionGuard, SuperAdminGuard)
+  @HttpCode(200)
+  @UsePipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  )
+  @ApiOperation({
+    summary: 'Configurar notificaciones y rol tesorería gasolina (IAM)',
+    description:
+      'Define si el usuario aprueba como tesorería y si recibe avisos de dispersión de gasolina.',
+  })
+  @ApiBody({ type: SetIamUserGasolineNotificationsRequestDto })
+  @ApiOkResponse({
+    description: 'Configuración actualizada',
+    type: IamSetPasswordHttpResponseDto,
+  })
+  @ApiUnauthorizedResponse({ description: 'No autenticado' })
+  @ApiForbiddenResponse({ description: 'Sin permisos de super administrador' })
+  async setUserGasolineNotifications(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Body() body: SetIamUserGasolineNotificationsRequestDto,
+  ): Promise<IamSetPasswordHttpResponseDto> {
+    await this.setIamUserGasolineNotificationsUseCase.execute({
+      targetUserId: userId,
+      treasuryApprover: body.treasuryApprover,
+      dispersalNotify: body.dispersalNotify,
+    });
+    return buildSuccessResponse(
+      null,
+      'Notificaciones de gasolina del usuario actualizadas correctamente.',
     );
   }
 

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { maskCardNumber } from '../../common/security/mask-card-number';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
 import { FuelCardSapSyncService } from './fuel-card-sap-sync.service';
 import type {
@@ -23,12 +24,6 @@ type UserListDbRecord = {
     readonly assignedAt: Date;
   }[];
 };
-
-function maskCard(cardNumber: string): string {
-  const clean = cardNumber.replace(/\D/g, '');
-  const lastFour = clean.slice(-4);
-  return `•••• ${lastFour}`;
-}
 
 function pickLatestCardNumberPerType(
   cards: readonly {
@@ -65,8 +60,8 @@ function toCardAssignmentUser(
     correo: record.email,
     compania: record.company.name,
     area: record.area.name,
-    tarjetaViaticosEnmascarada: viatic !== null ? maskCard(viatic) : null,
-    tarjetaGasolinaEnmascarada: fuel !== null ? maskCard(fuel) : null,
+    tarjetaViaticosEnmascarada: viatic !== null ? maskCardNumber(viatic) : null,
+    tarjetaGasolinaEnmascarada: fuel !== null ? maskCardNumber(fuel) : null,
   };
 }
 

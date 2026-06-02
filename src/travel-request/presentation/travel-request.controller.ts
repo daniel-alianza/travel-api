@@ -30,6 +30,10 @@ import {
   type CreateTravelRequestResponse,
 } from '../application/use-cases/create-travel-request.use-case';
 import {
+  GetGasolineRequestFormDataUseCase,
+  type GetGasolineRequestFormDataResponse,
+} from '../application/use-cases/get-gasoline-request-form-data.use-case';
+import {
   GetTravelRequestFormDataUseCase,
   type GetTravelRequestFormDataResponse,
 } from '../application/use-cases/get-travel-request-form-data.use-case';
@@ -45,6 +49,10 @@ import {
   GetApprovalFilterCatalogUseCase,
   type GetApprovalFilterCatalogResponse,
 } from '../application/use-cases/get-approval-filter-catalog.use-case';
+import {
+  GetTravelRequestFormCatalogUseCase,
+  type GetTravelRequestFormCatalogResponse,
+} from '../application/use-cases/get-travel-request-form-catalog.use-case';
 import {
   GetDispersionQueueUseCase,
   type GetDispersionQueueResponse,
@@ -132,9 +140,11 @@ export class TravelRequestController {
   constructor(
     private readonly createTravelRequestUseCase: CreateTravelRequestUseCase,
     private readonly getTravelRequestFormDataUseCase: GetTravelRequestFormDataUseCase,
+    private readonly getGasolineRequestFormDataUseCase: GetGasolineRequestFormDataUseCase,
     private readonly getUserFuelCardsUseCase: GetUserFuelCardsUseCase,
     private readonly getApprovalRequestsUseCase: GetApprovalRequestsUseCase,
     private readonly getApprovalFilterCatalogUseCase: GetApprovalFilterCatalogUseCase,
+    private readonly getTravelRequestFormCatalogUseCase: GetTravelRequestFormCatalogUseCase,
     private readonly getDispersionQueueUseCase: GetDispersionQueueUseCase,
     private readonly exportDispersionReportUseCase: ExportDispersionReportUseCase,
     private readonly confirmTravelRequestDispersionUseCase: ConfirmTravelRequestDispersionUseCase,
@@ -161,6 +171,21 @@ export class TravelRequestController {
     return this.getTravelRequestFormDataUseCase.execute(userId);
   }
 
+  @Get('gasoline-form-data/:userId')
+  @HttpCode(200)
+  @ApiOperation({
+    summary: 'Obtener datos precargados para solicitud de gasolina',
+  })
+  @ApiOkResponse({
+    description:
+      'Empresa, sucursal, área del usuario y tarjetas fuel activas (enmascaradas).',
+  })
+  async getGasolineFormData(
+    @Param('userId', ParseIntPipe) userId: number,
+  ): Promise<GetGasolineRequestFormDataResponse> {
+    return this.getGasolineRequestFormDataUseCase.execute(userId);
+  }
+
   @Get('fuel-cards/:userId')
   @HttpCode(200)
   @ApiOperation({
@@ -178,7 +203,8 @@ export class TravelRequestController {
   @Get('solicitudes-propias/:userId')
   @HttpCode(200)
   @ApiOperation({
-    summary: 'Listar solicitudes dispersadas del usuario (comprobación de gastos)',
+    summary:
+      'Listar solicitudes dispersadas del usuario (comprobación de gastos)',
   })
   @ApiOkResponse({
     description:
@@ -231,6 +257,19 @@ export class TravelRequestController {
   })
   async getApprovalFilterCatalog(): Promise<GetApprovalFilterCatalogResponse> {
     return this.getApprovalFilterCatalogUseCase.execute();
+  }
+
+  @Get('form-catalog')
+  @HttpCode(200)
+  @ApiOperation({
+    summary: 'Obtener catálogo de empresa, sucursal y área para formularios',
+  })
+  @ApiOkResponse({
+    description:
+      'Empresas, sucursales por empresa y áreas para solicitudes (viáticos y gasolina).',
+  })
+  async getFormCatalog(): Promise<GetTravelRequestFormCatalogResponse> {
+    return this.getTravelRequestFormCatalogUseCase.execute();
   }
 
   @Get('dispersion-queue')

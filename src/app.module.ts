@@ -11,6 +11,7 @@ import { DmsModule } from './dms/dms.module';
 import { IamModule } from './iam/iam.module';
 import { SapPurchaseInvoicesModule } from './sappurchaseinvoices/sappurchaseinvoices.module';
 import { AccountingInvoiceModule } from './accounting-invoice/accounting-invoice.module';
+import { GasolineModule } from './gasoline/gasoline.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { AccountingInvoiceModule } from './accounting-invoice/accounting-invoice
     IamModule,
     SapPurchaseInvoicesModule,
     AccountingInvoiceModule,
+    GasolineModule,
   ],
   controllers: [],
   providers: [],

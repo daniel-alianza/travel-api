@@ -1,7 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import type { Prisma } from '../../../../generated/prisma/client';
 import type { GasolineNotificationRecipientRepository } from '../../../gasoline/application/interfaces/gasoline-notification-recipient.repository.interface';
-import { ordenarCodigosPermisoIam } from '../iam-known-permission-codes';
+import {
+  IAM_PERMISOS_UNIVERSALES,
+  ordenarCodigosPermisoIam,
+} from '../iam-known-permission-codes';
 import { iamRoleDbNameToLabel } from '../iam-role-db-to-label.mapper';
 import { PrismaService } from '../../../infrastructure/prisma/prisma.service';
 
@@ -118,8 +121,14 @@ export class ListIamUsersUseCase {
       const nombreCompleto = row.name.trim();
 
       const porDefecto = defaultsByRoleId.get(row.roleId) ?? new Set<string>();
+      for (const codigo of IAM_PERMISOS_UNIVERSALES) {
+        porDefecto.add(codigo);
+      }
       const extras = extrasByUserId.get(row.id) ?? new Set<string>();
       const efectivo = new Set<string>([...porDefecto, ...extras]);
+      for (const codigo of IAM_PERMISOS_UNIVERSALES) {
+        efectivo.add(codigo);
+      }
 
       const gasolineFlags = gasolineFlagsByUserId.get(row.id) ?? {
         treasuryApprover: false,

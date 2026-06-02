@@ -1,5 +1,15 @@
 export const IAM_PERMISO_ADMINISTRACION_USUARIOS = 'admin.usuarios' as const;
 
+export const IAM_PERMISO_AUTOS_RESERVAR = 'autos.reservar' as const;
+
+export const IAM_PERMISO_GASOLINA_SOLICITAR = 'gasolina.solicitar' as const;
+
+/** Siempre efectivos en login, sin depender de extras IAM. */
+export const IAM_PERMISOS_UNIVERSALES = [
+  IAM_PERMISO_AUTOS_RESERVAR,
+  IAM_PERMISO_GASOLINA_SOLICITAR,
+] as const;
+
 export const IAM_KNOWN_PERMISSION_CODES = [
   'viajes.solicitar',
   'viajes.aprobar',
@@ -7,6 +17,12 @@ export const IAM_KNOWN_PERMISSION_CODES = [
   'contabilidad.autorizar',
   'tarjetas.asignar',
   'comprobacion.revisar',
+  'gasolina.solicitar',
+  'gasolina.autorizar',
+  'gasolina.dispersar',
+  'gasolina.reporte',
+  'gasolina.rendimiento',
+  IAM_PERMISO_AUTOS_RESERVAR,
   IAM_PERMISO_ADMINISTRACION_USUARIOS,
 ] as const;
 

@@ -38,6 +38,8 @@ import { SuperAdminGuard } from './guards/super-admin.guard';
 import { SetIamUserExtraPermissionsUseCase } from '../application/use-cases/set-iam-user-extra-permissions.use-case';
 import { SetIamUserGasolineNotificationsUseCase } from '../application/use-cases/set-iam-user-gasoline-notifications.use-case';
 import { SetIamUserPasswordUseCase } from '../application/use-cases/set-iam-user-password.use-case';
+import { UpdateIamUserUseCase } from '../application/use-cases/update-iam-user.use-case';
+import { UpdateIamUserRequestDto } from './dtos/update-iam-user-request.dto';
 
 class IamUserListItemDto {
   @ApiProperty()
@@ -138,7 +140,47 @@ export class IamController {
     private readonly setIamUserPasswordUseCase: SetIamUserPasswordUseCase,
     private readonly setIamUserExtraPermissionsUseCase: SetIamUserExtraPermissionsUseCase,
     private readonly setIamUserGasolineNotificationsUseCase: SetIamUserGasolineNotificationsUseCase,
+    private readonly updateIamUserUseCase: UpdateIamUserUseCase,
   ) {}
+
+  @Put('users/:userId')
+  @UseGuards(JwtSessionGuard, SuperAdminGuard)
+  @HttpCode(200)
+  @UsePipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  )
+  @ApiOperation({
+    summary: 'Actualizar datos de perfil de un usuario (IAM)',
+    description:
+      'Nombre, correo, activo, rol, área, sucursal y jefe directo. Solo super_administrador.',
+  })
+  @ApiBody({ type: UpdateIamUserRequestDto })
+  @ApiOkResponse({
+    description: 'Usuario actualizado',
+    type: IamSetPasswordHttpResponseDto,
+  })
+  @ApiUnauthorizedResponse({ description: 'No autenticado' })
+  @ApiForbiddenResponse({ description: 'Sin permisos de super administrador' })
+  async updateUser(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Body() body: UpdateIamUserRequestDto,
+  ): Promise<IamSetPasswordHttpResponseDto> {
+    await this.updateIamUserUseCase.execute({
+      targetUserId: userId,
+      name: body.name,
+      email: body.email,
+      isActive: body.isActive,
+      roleLabel: body.roleLabel,
+      areaName: body.areaName,
+      branchName: body.branchName,
+      managerUserId: body.managerUserId ?? null,
+    });
+    return buildSuccessResponse(null, 'Usuario actualizado correctamente.');
+  }
 
   @Get('users')
   @UseGuards(JwtSessionGuard, SuperAdminGuard)

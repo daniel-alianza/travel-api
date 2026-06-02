@@ -316,4 +316,66 @@ export interface TravelChecksRepository {
     }[];
     invoiceCfdi: TripMovementProofInvoiceCfdiPersistInput | null;
   }): Promise<TripMovementProofRecord>;
+  resolveAccountingIndicatorsScope(input: {
+    readonly userId: number;
+    readonly consolidated: boolean;
+  }): Promise<{
+    readonly companies: readonly {
+      readonly id: number;
+      readonly name: string;
+    }[];
+  }>;
+  getAccountingMonthIndicatorsByCompanies(input: {
+    readonly companyIds: readonly number[];
+    readonly rangeStart: Date;
+    readonly rangeEnd: Date;
+  }): Promise<
+    readonly {
+      readonly companyId: number;
+      readonly totalDispersadoMes: number;
+      readonly totalComprobadoMes: number;
+      readonly pendienteAutorizarContable: number;
+      readonly solicitudesAbiertas: number;
+    }[]
+  >;
+  findAccountingExpensesReconciliation(input: {
+    readonly companyIds: readonly number[];
+    readonly rangeStart: Date;
+    readonly rangeEnd: Date;
+    readonly timeZone: string;
+  }): Promise<AccountingExpensesReconciliationDataRecord>;
 }
+
+export type AccountingExpensesReconciliationComprobacionDiaRecord = {
+  readonly fechaIso: string;
+  readonly monto: number;
+};
+
+export type AccountingExpensesReconciliationSolicitudRecord = {
+  readonly travelRequestId: number;
+  readonly dispersedAt: Date;
+  readonly dispersedTotal: number;
+  readonly userId: number;
+  readonly employeeName: string;
+  readonly employeeEmail: string;
+  readonly companyId: number;
+  readonly companyName: string;
+  readonly totalComprobado: number;
+  readonly pendienteAutorizarContable: number;
+  readonly movimientosComprobados: number;
+  readonly movimientosPendientes: number;
+  readonly ultimaComprobacionAt: Date | null;
+  readonly comprobacionesPorDia: readonly AccountingExpensesReconciliationComprobacionDiaRecord[];
+};
+
+export type AccountingExpensesReconciliationUserRecord = {
+  readonly id: number;
+  readonly name: string;
+  readonly email: string;
+  readonly companyId: number;
+};
+
+export type AccountingExpensesReconciliationDataRecord = {
+  readonly solicitudes: readonly AccountingExpensesReconciliationSolicitudRecord[];
+  readonly users: readonly AccountingExpensesReconciliationUserRecord[];
+};

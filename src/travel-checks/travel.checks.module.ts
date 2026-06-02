@@ -16,6 +16,8 @@ import { ListViaticDistributionRulesUseCase } from './application/use-cases/list
 import { GetTripMovementCfdiUseCase } from './application/use-cases/get-trip-movement-cfdi.use-case';
 import { GetTripMovementPdfUseCase } from './application/use-cases/get-trip-movement-pdf.use-case';
 import { ListCompanyExpenseCatalogsUseCase } from './application/use-cases/list-company-expense-catalogs.use-case';
+import { GetAccountingMonthIndicatorsUseCase } from './application/use-cases/get-accounting-month-indicators.use-case';
+import { GetAccountingExpensesReconciliationUseCase } from './application/use-cases/get-accounting-expenses-reconciliation.use-case';
 import { TravelChecksPrismaRepository } from './infrastructure/travel-checks-prisma.repository';
 import { TravelChecksSapMovementsService } from './infrastructure/travel-checks-sap-movements.service';
 import { TravelChecksController } from './presentation/travel-checks.controller';
@@ -39,6 +41,8 @@ import { TravelChecksController } from './presentation/travel-checks.controller'
     GetTripMovementCfdiUseCase,
     GetTripMovementPdfUseCase,
     ListCompanyExpenseCatalogsUseCase,
+    GetAccountingMonthIndicatorsUseCase,
+    GetAccountingExpensesReconciliationUseCase,
     SupabaseDmsStorageService,
     {
       provide: 'DMS_BUCKET_CONFIG',

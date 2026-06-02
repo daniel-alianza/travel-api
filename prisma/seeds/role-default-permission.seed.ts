@@ -1,5 +1,7 @@
 import type { PrismaClient } from '../../generated/prisma/client';
 
+const PERMISO_UNIVERSAL_AUTOS = 'autos.reservar';
+
 const PERMISSION_CODES = [
   'viajes.solicitar',
   'viajes.aprobar',
@@ -7,10 +9,24 @@ const PERMISSION_CODES = [
   'contabilidad.autorizar',
   'tarjetas.asignar',
   'comprobacion.revisar',
+  'gasolina.solicitar',
+  'gasolina.autorizar',
+  'gasolina.dispersar',
+  'gasolina.reporte',
+  'gasolina.rendimiento',
+  PERMISO_UNIVERSAL_AUTOS,
   'admin.usuarios',
 ] as const;
 
 type PermissionCode = (typeof PERMISSION_CODES)[number];
+
+const PERMISOS_GASOLINA_OPERATIVOS: readonly PermissionCode[] = [
+  'gasolina.solicitar',
+  'gasolina.autorizar',
+  'gasolina.dispersar',
+  'gasolina.reporte',
+  'gasolina.rendimiento',
+];
 
 type RoleDefaultPermissionRow = {
   readonly roleId: number;
@@ -51,13 +67,25 @@ const DEFAULTS_BY_ROLE_NAME: Readonly<
     'contabilidad.autorizar',
     'tarjetas.asignar',
     'comprobacion.revisar',
+    ...PERMISOS_GASOLINA_OPERATIVOS,
+    PERMISO_UNIVERSAL_AUTOS,
   ],
   'lider/gerente': [
     'viajes.solicitar',
     'viajes.aprobar',
     'comprobacion.revisar',
+    'gasolina.solicitar',
+    'gasolina.autorizar',
+    'gasolina.reporte',
+    'gasolina.rendimiento',
+    PERMISO_UNIVERSAL_AUTOS,
   ],
-  colaborador: ['viajes.solicitar', 'comprobacion.revisar'],
+  colaborador: [
+    'viajes.solicitar',
+    'comprobacion.revisar',
+    'gasolina.solicitar',
+    PERMISO_UNIVERSAL_AUTOS,
+  ],
 };
 
 export async function seedRoleDefaultPermissions(

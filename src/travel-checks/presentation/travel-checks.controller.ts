@@ -7,6 +7,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Query,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
@@ -72,6 +73,14 @@ import {
   ListCompanyExpenseCatalogsUseCase,
   type ListCompanyExpenseCatalogsResponse,
 } from '../application/use-cases/list-company-expense-catalogs.use-case';
+import {
+  GetAccountingMonthIndicatorsUseCase,
+  type GetAccountingMonthIndicatorsResponse,
+} from '../application/use-cases/get-accounting-month-indicators.use-case';
+import {
+  GetAccountingExpensesReconciliationUseCase,
+  type GetAccountingExpensesReconciliationResponse,
+} from '../application/use-cases/get-accounting-expenses-reconciliation.use-case';
 import { CurrentUser } from '../../auth/presentation/decorators/current-user.decorator';
 import { JwtSessionGuard } from '../../auth/presentation/guards/jwt-session.guard';
 import type { AuthTokenVerifiedPayload } from '../../auth/application/interfaces/auth-token.service.interface';
@@ -256,6 +265,156 @@ class DispersedTravelCheckSolicitudDto {
 
   @ApiProperty({ type: [DispersedTripCheckItemDto] })
   viajes: DispersedTripCheckItemDto[];
+}
+
+class AccountingMonthIndicatorsCompanyDto {
+  @ApiProperty()
+  companyId: number;
+
+  @ApiProperty()
+  companyName: string;
+
+  @ApiProperty()
+  totalDispersadoMes: number;
+
+  @ApiProperty()
+  totalComprobadoMes: number;
+
+  @ApiProperty()
+  pendienteAutorizarContable: number;
+
+  @ApiProperty()
+  solicitudesAbiertas: number;
+}
+
+class GetAccountingMonthIndicatorsDataDto {
+  @ApiProperty({ enum: ['consolidated', 'company'] })
+  scope: 'consolidated' | 'company';
+
+  @ApiProperty()
+  monthLabel: string;
+
+  @ApiProperty({ type: [AccountingMonthIndicatorsCompanyDto] })
+  companies: AccountingMonthIndicatorsCompanyDto[];
+
+  @ApiProperty({ type: AccountingMonthIndicatorsCompanyDto, nullable: true })
+  totals: AccountingMonthIndicatorsCompanyDto | null;
+}
+
+class GetAccountingMonthIndicatorsHttpDto {
+  @ApiProperty({ type: GetAccountingMonthIndicatorsDataDto })
+  data: GetAccountingMonthIndicatorsDataDto;
+
+  @ApiProperty()
+  message: string;
+}
+
+class AccountingExpensesReconciliationCompanyDto {
+  @ApiProperty()
+  id: number;
+
+  @ApiProperty()
+  nombre: string;
+}
+
+class AccountingExpensesReconciliationUserDto {
+  @ApiProperty()
+  id: number;
+
+  @ApiProperty()
+  nombre: string;
+
+  @ApiProperty()
+  correo: string;
+
+  @ApiProperty()
+  companyId: number;
+}
+
+class AccountingExpensesReconciliationSolicitudDto {
+  @ApiProperty()
+  solicitudId: number;
+
+  @ApiProperty()
+  folio: string;
+
+  @ApiProperty()
+  companyId: number;
+
+  @ApiProperty()
+  companyName: string;
+
+  @ApiProperty()
+  userId: number;
+
+  @ApiProperty()
+  employeeName: string;
+
+  @ApiProperty()
+  employeeEmail: string;
+
+  @ApiProperty()
+  dispersedAt: string;
+
+  @ApiProperty({ nullable: true })
+  ultimaComprobacionAt: string | null;
+
+  @ApiProperty()
+  totalSolicitado: number;
+
+  @ApiProperty()
+  totalComprobado: number;
+
+  @ApiProperty()
+  pendientePorComprobar: number;
+
+  @ApiProperty()
+  pendienteAutorizarContable: number;
+
+  @ApiProperty()
+  porcentajeComprobado: number;
+
+  @ApiProperty()
+  movimientosComprobados: number;
+
+  @ApiProperty()
+  movimientosPendientes: number;
+
+  @ApiProperty({
+    enum: ['sin_comprobacion', 'parcial', 'completa', 'excedente'],
+  })
+  estado: string;
+}
+
+class GetAccountingExpensesReconciliationDataDto {
+  @ApiProperty({ enum: ['consolidated', 'company'] })
+  scope: 'consolidated' | 'company';
+
+  @ApiProperty()
+  periodLabel: string;
+
+  @ApiProperty()
+  fromIso: string;
+
+  @ApiProperty()
+  toIso: string;
+
+  @ApiProperty({ type: [AccountingExpensesReconciliationCompanyDto] })
+  companies: AccountingExpensesReconciliationCompanyDto[];
+
+  @ApiProperty({ type: [AccountingExpensesReconciliationUserDto] })
+  users: AccountingExpensesReconciliationUserDto[];
+
+  @ApiProperty({ type: [AccountingExpensesReconciliationSolicitudDto] })
+  solicitudes: AccountingExpensesReconciliationSolicitudDto[];
+}
+
+class GetAccountingExpensesReconciliationHttpDto {
+  @ApiProperty({ type: GetAccountingExpensesReconciliationDataDto })
+  data: GetAccountingExpensesReconciliationDataDto;
+
+  @ApiProperty()
+  message: string;
 }
 
 class ListDispersedTravelChecksDataDto {
@@ -661,6 +820,8 @@ export class TravelChecksController {
     private readonly getTripMovementCfdiUseCase: GetTripMovementCfdiUseCase,
     private readonly getTripMovementPdfUseCase: GetTripMovementPdfUseCase,
     private readonly listCompanyExpenseCatalogsUseCase: ListCompanyExpenseCatalogsUseCase,
+    private readonly getAccountingMonthIndicatorsUseCase: GetAccountingMonthIndicatorsUseCase,
+    private readonly getAccountingExpensesReconciliationUseCase: GetAccountingExpensesReconciliationUseCase,
   ) {}
   @Get('dispersed')
   @ApiOperation({
@@ -670,6 +831,34 @@ export class TravelChecksController {
   @ApiOkResponse({ type: ListDispersedTravelChecksHttpDto })
   async listDispersed(): Promise<ListDispersedTravelChecksResponse> {
     return this.listDispersedTravelChecksUseCase.execute();
+  }
+
+  @Get('accounting/month-indicators')
+  @ApiOperation({
+    summary: 'Indicadores del mes para el menú de contabilidad',
+  })
+  @ApiOkResponse({ type: GetAccountingMonthIndicatorsHttpDto })
+  async getAccountingMonthIndicators(
+    @CurrentUser() user: AuthTokenVerifiedPayload,
+  ): Promise<GetAccountingMonthIndicatorsResponse> {
+    return this.getAccountingMonthIndicatorsUseCase.execute(user);
+  }
+
+  @Get('accounting/expenses-reconciliation')
+  @ApiOperation({
+    summary:
+      'Conciliación comprobado vs solicitado por periodo de dispersión',
+  })
+  @ApiOkResponse({ type: GetAccountingExpensesReconciliationHttpDto })
+  async getAccountingExpensesReconciliation(
+    @CurrentUser() user: AuthTokenVerifiedPayload,
+    @Query('from') from?: string,
+    @Query('to') to?: string,
+  ): Promise<GetAccountingExpensesReconciliationResponse> {
+    return this.getAccountingExpensesReconciliationUseCase.execute(user, {
+      from,
+      to,
+    });
   }
 
   @Get('expense-trips/:userId')

@@ -1,6 +1,11 @@
 import { Injectable } from '@nestjs/common';
+import {
+  formatIsoCalendarDay,
+  getCalendarDatePartsInTimeZone,
+} from '../../common/date/calendar-date-parts-in-time-zone';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
 import type {
+  AccountingExpensesReconciliationDataRecord,
   DispersedExpenseTripListRecord,
   ExpenseTripMovementContextRecord,
   DispersedExpenseTripMovementsSourceRecord,
@@ -915,6 +920,293 @@ export class TravelChecksPrismaRepository implements TravelChecksRepository {
       };
     });
   }
+
+  async resolveAccountingIndicatorsScope(input: {
+    readonly userId: number;
+    readonly consolidated: boolean;
+  }): Promise<{
+    readonly companies: readonly {
+      readonly id: number;
+      readonly name: string;
+    }[];
+  }> {
+    if (input.consolidated) {
+      const companies = await this.prisma.company.findMany({
+        orderBy: { name: 'asc' },
+        select: { id: true, name: true },
+      });
+      return { companies };
+    }
+
+    const user = await this.prisma.user.findFirst({
+      where: { id: input.userId },
+      select: {
+        company: { select: { id: true, name: true } },
+      },
+    });
+
+    if (user === null) {
+      return { companies: [] };
+    }
+
+    return {
+      companies: [
+        {
+          id: user.company.id,
+          name: user.company.name.trim(),
+        },
+      ],
+    };
+  }
+
+  async getAccountingMonthIndicatorsByCompanies(input: {
+    readonly companyIds: readonly number[];
+    readonly rangeStart: Date;
+    readonly rangeEnd: Date;
+  }): Promise<
+    readonly {
+      readonly companyId: number;
+      readonly totalDispersadoMes: number;
+      readonly totalComprobadoMes: number;
+      readonly pendienteAutorizarContable: number;
+      readonly solicitudesAbiertas: number;
+    }[]
+  > {
+    const tripDispersado = {
+      tripApprovalStatus: 'dispersed' as const,
+    };
+    const solicitudDispersada = {
+      status: 'dispersed' as const,
+    };
+
+    return Promise.all(
+      input.companyIds.map(async (companyId) => {
+        const [
+          dispersadoAgg,
+          comprobadoAgg,
+          pendienteAgg,
+          solicitudesAbiertas,
+        ] = await Promise.all([
+          this.prisma.travelRequest.aggregate({
+            where: {
+              companyId,
+              ...solicitudDispersada,
+              dispersedAt: {
+                gte: input.rangeStart,
+                lte: input.rangeEnd,
+              },
+            },
+            _sum: { dispersedTotal: true },
+          }),
+          this.prisma.tripMovementProof.aggregate({
+            where: {
+              status: { in: ['submitted', 'approved'] },
+              movementDate: {
+                gte: input.rangeStart,
+                lte: input.rangeEnd,
+              },
+              trip: {
+                ...tripDispersado,
+                travelRequest: {
+                  companyId,
+                  ...solicitudDispersada,
+                },
+              },
+            },
+            _sum: { movementAmount: true },
+          }),
+          this.prisma.tripMovementProof.aggregate({
+            where: {
+              status: 'submitted',
+              trip: {
+                ...tripDispersado,
+                travelRequest: {
+                  companyId,
+                  ...solicitudDispersada,
+                },
+              },
+            },
+            _sum: { movementAmount: true },
+          }),
+          this.prisma.travelRequest.count({
+            where: {
+              companyId,
+              ...solicitudDispersada,
+              trips: { some: tripDispersado },
+            },
+          }),
+        ]);
+
+        return {
+          companyId,
+          totalDispersadoMes: decimalSumToNumber(dispersadoAgg._sum.dispersedTotal),
+          totalComprobadoMes: decimalSumToNumber(
+            comprobadoAgg._sum.movementAmount,
+          ),
+          pendienteAutorizarContable: decimalSumToNumber(
+            pendienteAgg._sum.movementAmount,
+          ),
+          solicitudesAbiertas,
+        };
+      }),
+    );
+  }
+
+  async findAccountingExpensesReconciliation(input: {
+    readonly companyIds: readonly number[];
+    readonly rangeStart: Date;
+    readonly rangeEnd: Date;
+    readonly timeZone: string;
+  }): Promise<AccountingExpensesReconciliationDataRecord> {
+    const tripDispersado = {
+      tripApprovalStatus: 'dispersed' as const,
+    };
+    const solicitudDispersada = {
+      status: 'dispersed' as const,
+    };
+
+    const [solicitudesRaw, users] = await Promise.all([
+      this.prisma.travelRequest.findMany({
+        where: {
+          companyId: { in: [...input.companyIds] },
+          ...solicitudDispersada,
+          dispersedAt: {
+            gte: input.rangeStart,
+            lte: input.rangeEnd,
+          },
+        },
+        orderBy: { dispersedAt: 'desc' },
+        select: {
+          id: true,
+          dispersedAt: true,
+          dispersedTotal: true,
+          employeeName: true,
+          userId: true,
+          user: { select: { email: true, name: true } },
+          company: { select: { id: true, name: true } },
+          trips: {
+            where: tripDispersado,
+            select: {
+              id: true,
+              tripMovementProofs: {
+                select: {
+                  movementAmount: true,
+                  movementDate: true,
+                  status: true,
+                  createdAt: true,
+                },
+              },
+            },
+          },
+        },
+      }),
+      this.prisma.user.findMany({
+        where: { companyId: { in: [...input.companyIds] } },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          companyId: true,
+        },
+        orderBy: { name: 'asc' },
+      }),
+    ]);
+
+    const solicitudes = solicitudesRaw
+      .filter(
+        (row): row is typeof row & { dispersedAt: Date; dispersedTotal: { toString(): string } } =>
+          row.dispersedAt !== null && row.dispersedTotal !== null,
+      )
+      .map((row) => {
+        const proofs = row.trips.flatMap((trip) => trip.tripMovementProofs);
+        const proofsComprobados = proofs.filter(
+          (proof) =>
+            proof.status === 'submitted' || proof.status === 'approved',
+        );
+        const proofsPendientesContable = proofs.filter(
+          (proof) => proof.status === 'submitted',
+        );
+
+        const totalComprobado = proofsComprobados.reduce(
+          (acc, proof) => acc + proof.movementAmount.toNumber(),
+          0,
+        );
+        const pendienteAutorizarContable = proofsPendientesContable.reduce(
+          (acc, proof) => acc + proof.movementAmount.toNumber(),
+          0,
+        );
+
+        const comprobacionesPorDiaMap = new Map<string, number>();
+        for (const proof of proofsComprobados) {
+          const instant = proof.movementDate ?? proof.createdAt;
+          const fechaIso = formatIsoCalendarDay(
+            getCalendarDatePartsInTimeZone(instant, input.timeZone),
+          );
+          comprobacionesPorDiaMap.set(
+            fechaIso,
+            (comprobacionesPorDiaMap.get(fechaIso) ?? 0) +
+              proof.movementAmount.toNumber(),
+          );
+        }
+
+        const ultimaComprobacionAt = proofsComprobados.reduce<Date | null>(
+          (max, proof) => {
+            const instant = proof.movementDate ?? proof.createdAt;
+            if (max === null || instant > max) {
+              return instant;
+            }
+            return max;
+          },
+          null,
+        );
+
+        const viajesSinComprobacion = row.trips.filter(
+          (trip) =>
+            !trip.tripMovementProofs.some(
+              (proof) =>
+                proof.status === 'submitted' || proof.status === 'approved',
+            ),
+        ).length;
+
+        return {
+          travelRequestId: row.id,
+          dispersedAt: row.dispersedAt,
+          dispersedTotal: Number(row.dispersedTotal.toString()),
+          userId: row.userId,
+          employeeName: row.employeeName.trim(),
+          employeeEmail: row.user.email.trim(),
+          companyId: row.company.id,
+          companyName: row.company.name.trim(),
+          totalComprobado,
+          pendienteAutorizarContable,
+          movimientosComprobados: proofsComprobados.length,
+          movimientosPendientes: viajesSinComprobacion,
+          ultimaComprobacionAt,
+          comprobacionesPorDia: [...comprobacionesPorDiaMap.entries()].map(
+            ([fechaIso, monto]) => ({ fechaIso, monto }),
+          ),
+        };
+      });
+
+    return {
+      solicitudes,
+      users: users.map((user) => ({
+        id: user.id,
+        name: user.name.trim(),
+        email: user.email.trim(),
+        companyId: user.companyId,
+      })),
+    };
+  }
+}
+
+function decimalSumToNumber(
+  value: { toString(): string } | null | undefined,
+): number {
+  if (value === null || value === undefined) {
+    return 0;
+  }
+  return Number(value.toString());
 }
 
 function mapExpenseAmounts(row: {

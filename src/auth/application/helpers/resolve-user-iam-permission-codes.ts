@@ -1,6 +1,7 @@
 import type { PrismaService } from '../../../infrastructure/prisma/prisma.service';
 import {
   IAM_KNOWN_PERMISSION_CODES,
+  IAM_PERMISOS_UNIVERSALES,
   ordenarCodigosPermisoIam,
 } from '../../../iam/application/iam-known-permission-codes';
 
@@ -31,6 +32,10 @@ export async function resolveUserIamPermissionCodes(
   }
   for (const row of extras) {
     efectivo.add(row.permissionCode);
+  }
+
+  for (const codigo of IAM_PERMISOS_UNIVERSALES) {
+    efectivo.add(codigo);
   }
 
   return ordenarCodigosPermisoIam(efectivo);

@@ -8,6 +8,7 @@ import {
 import { buildSuccessResponse } from '../../../common/exceptions/builders/success-response.builder';
 import type { ApiSuccessResponse } from '../../../common/exceptions/interfaces/api-success-response.interface';
 import type { TravelRequestRepository } from '../interfaces/travel-request-repository.interface';
+import { NotifyTravelRequestDispersedUseCase } from './notify-travel-request-dispersed.use-case';
 
 export type ConfirmTravelRequestDispersionCommand = {
   readonly travelRequestId: number;
@@ -25,6 +26,7 @@ export class ConfirmTravelRequestDispersionUseCase {
   constructor(
     @Inject('TravelRequestRepository')
     private readonly travelRequestRepository: TravelRequestRepository,
+    private readonly notifyTravelRequestDispersedUseCase: NotifyTravelRequestDispersedUseCase,
   ) {}
 
   async execute(
@@ -61,6 +63,10 @@ export class ConfirmTravelRequestDispersionUseCase {
         'Solo se puede dispersar una solicitud aprobada con viajes aprobados.',
       );
     }
+
+    await this.notifyTravelRequestDispersedUseCase.execute(
+      command.travelRequestId,
+    );
 
     return buildSuccessResponse(
       { ok: true as const },

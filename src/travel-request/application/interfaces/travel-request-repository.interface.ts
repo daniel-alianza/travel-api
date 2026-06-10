@@ -84,6 +84,20 @@ export type TravelRequestApprovedNotificationContextRecord = {
   readonly trips: readonly TravelRequestTripInput[];
 };
 
+export type TravelRequestDispersedNotificationContextRecord = {
+  readonly requestId: number;
+  readonly status: string;
+  readonly employeeName: string;
+  readonly corporateCardNumber: string | null;
+  readonly employeeEmail: string;
+  readonly bossName: string;
+  readonly bossEmail: string | null;
+  readonly dispersorName: string;
+  readonly companyName: string;
+  readonly dispersedTotal: number;
+  readonly trips: readonly TravelRequestTripInput[];
+};
+
 export type TreasuryDispersionNotificationRecipientRecord = {
   readonly email: string;
   readonly dispersorName: string;
@@ -328,6 +342,9 @@ export interface TravelRequestRepository {
   findTravelRequestApprovedNotificationContext(
     travelRequestId: number,
   ): Promise<TravelRequestApprovedNotificationContextRecord | null>;
+  findTravelRequestDispersedNotificationContext(
+    travelRequestId: number,
+  ): Promise<TravelRequestDispersedNotificationContextRecord | null>;
   findTreasuryDispersionNotificationRecipients(
     companyId: number,
   ): Promise<readonly TreasuryDispersionNotificationRecipientRecord[]>;

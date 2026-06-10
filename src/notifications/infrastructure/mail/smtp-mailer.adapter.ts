@@ -5,6 +5,8 @@ import { firstValueFrom } from 'rxjs';
 import type { MailerPort } from '../../application/interfaces/mailer.port';
 import type { ApprovedSentNotificationCommand } from '../../application/use-cases/send-approved-sent-notification.use-case';
 import type { BossAuthNotificationCommand } from '../../application/use-cases/send-boss-auth-notification.use-case';
+import type { DispersionApplicantForBossNotificationCommand } from '../../application/use-cases/send-dispersion-applicant-for-boss-notification.use-case';
+import type { DispersionApplicantNotificationCommand } from '../../application/use-cases/send-dispersion-applicant-notification.use-case';
 import type { DispersionMessageNotificationCommand } from '../../application/use-cases/send-dispersion-message-notification.use-case';
 import type { RequestApprovedNotificationCommand } from '../../application/use-cases/send-request-approved-notification.use-case';
 import type { RequestSentNotificationCommand } from '../../application/use-cases/send-request-sent-notification.use-case';
@@ -221,6 +223,87 @@ export class PowerAutomateMailerAdapter implements MailerPort {
 
     this.logger.log(
       `Power Automate dispersion_message OK solicitud #${cmd.requestId} → ${cmd.recipientEmail}`,
+    );
+  }
+
+  async notifyDispersionApplicant(
+    command: Record<string, unknown>,
+    htmlContent: string,
+  ): Promise<void> {
+    const cmd = command as unknown as DispersionApplicantNotificationCommand;
+
+    const emailSubject = 'Solicitud de viáticos dispersada';
+
+    const payload = {
+      status: 'dispertion_applicant',
+      recipientEmail: cmd.recipientEmail,
+      employeeEmail: cmd.recipientEmail,
+      dispersorName: cmd.dispersorName,
+      emailSubject,
+      employeeName: cmd.employeeName,
+      bossName: cmd.bossName,
+      companyName: cmd.companyName,
+      cardNumber: cmd.cardNumber,
+      requestId: cmd.requestId,
+      motivo: cmd.motivo,
+      destinos: cmd.destinos,
+      totalAmount: cmd.totalAmount,
+      gasolinaAmount: cmd.gasolinaAmount,
+      tagAmount: cmd.tagAmount,
+      tripCount: cmd.tripCount,
+      appUrl: cmd.appUrl,
+      htmlContent,
+    };
+
+    this.logger.debug(
+      `POST Power Automate dispertion_applicant solicitud #${cmd.requestId} → ${cmd.recipientEmail}`,
+    );
+
+    await firstValueFrom(this.httpService.post(this.webhookUrl, payload));
+
+    this.logger.log(
+      `Power Automate dispertion_applicant OK solicitud #${cmd.requestId} → ${cmd.recipientEmail}`,
+    );
+  }
+
+  async notifyDispersionApplicantForBoss(
+    command: Record<string, unknown>,
+    htmlContent: string,
+  ): Promise<void> {
+    const cmd =
+      command as unknown as DispersionApplicantForBossNotificationCommand;
+
+    const emailSubject = 'Dispersión de viáticos a colaborador';
+
+    const payload = {
+      status: 'dispertion_applicant_for_boss',
+      recipientEmail: cmd.recipientEmail,
+      bossEmail: cmd.recipientEmail,
+      dispersorName: cmd.dispersorName,
+      emailSubject,
+      employeeName: cmd.employeeName,
+      bossName: cmd.bossName,
+      companyName: cmd.companyName,
+      cardNumber: cmd.cardNumber,
+      requestId: cmd.requestId,
+      motivo: cmd.motivo,
+      destinos: cmd.destinos,
+      totalAmount: cmd.totalAmount,
+      gasolinaAmount: cmd.gasolinaAmount,
+      tagAmount: cmd.tagAmount,
+      tripCount: cmd.tripCount,
+      appUrl: cmd.appUrl,
+      htmlContent,
+    };
+
+    this.logger.debug(
+      `POST Power Automate dispertion_applicant_for_boss solicitud #${cmd.requestId} → ${cmd.recipientEmail}`,
+    );
+
+    await firstValueFrom(this.httpService.post(this.webhookUrl, payload));
+
+    this.logger.log(
+      `Power Automate dispertion_applicant_for_boss OK solicitud #${cmd.requestId} → ${cmd.recipientEmail}`,
     );
   }
 }

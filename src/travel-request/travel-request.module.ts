@@ -14,6 +14,7 @@ import { ConfirmTravelRequestDispersionUseCase } from './application/use-cases/c
 import { ResolveTravelRequestTripUseCase } from './application/use-cases/resolve-travel-request-trip.use-case';
 import { ResolveTravelRequestFromPowerAutomateUseCase } from './application/use-cases/resolve-travel-request-from-power-automate.use-case';
 import { NotifyTravelRequestApprovedUseCase } from './application/use-cases/notify-travel-request-approved.use-case';
+import { NotifyTravelRequestDispersedUseCase } from './application/use-cases/notify-travel-request-dispersed.use-case';
 import { GetMyTravelRequestsUseCase } from './application/use-cases/get-my-travel-requests.use-case';
 import { GetTravelRequestDetailForUserUseCase } from './application/use-cases/get-travel-request-detail-for-user.use-case';
 import { CorrectRejectedTravelRequestTripUseCase } from './application/use-cases/correct-rejected-travel-request-trip.use-case';
@@ -41,6 +42,7 @@ import { PowerAutomateSecretGuard } from './presentation/guards/power-automate-s
     ResolveTravelRequestTripUseCase,
     ResolveTravelRequestFromPowerAutomateUseCase,
     NotifyTravelRequestApprovedUseCase,
+    NotifyTravelRequestDispersedUseCase,
     GetMyTravelRequestsUseCase,
     GetTravelRequestDetailForUserUseCase,
     CorrectRejectedTravelRequestTripUseCase,

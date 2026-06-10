@@ -23,4 +23,14 @@ export interface MailerPort {
     command: Record<string, unknown>,
     htmlContent: string,
   ): Promise<void>;
+
+  notifyDispersionApplicant(
+    command: Record<string, unknown>,
+    htmlContent: string,
+  ): Promise<void>;
+
+  notifyDispersionApplicantForBoss(
+    command: Record<string, unknown>,
+    htmlContent: string,
+  ): Promise<void>;
 }

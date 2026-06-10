@@ -19,6 +19,7 @@ import type {
   TravelRequestFormUserRecord,
   TravelRequestNotificationContactsRecord,
   TravelRequestApprovedNotificationContextRecord,
+  TravelRequestDispersedNotificationContextRecord,
   TreasuryDispersionNotificationRecipientRecord,
   TravelRequestPowerAutomateContextRecord,
   TravelRequestRepository,
@@ -601,6 +602,125 @@ export class TravelRequestPrismaRepository implements TravelRequestRepository {
       bossName,
       bossEmail,
       companyName: travelRequest.user.company.name,
+      trips: travelRequest.trips.map((trip) =>
+        mapStoredTripToNotificationTripInput(trip),
+      ),
+    };
+  }
+
+  async findTravelRequestDispersedNotificationContext(
+    travelRequestId: number,
+  ): Promise<TravelRequestDispersedNotificationContextRecord | null> {
+    const travelRequest = await this.prismaService.travelRequest.findUnique({
+      where: { id: travelRequestId },
+      select: {
+        id: true,
+        status: true,
+        employeeName: true,
+        corporateCardNumber: true,
+        dispersedTotal: true,
+        user: {
+          select: {
+            email: true,
+            manager: { select: { name: true, email: true } },
+            company: { select: { name: true } },
+          },
+        },
+        approver: { select: { name: true, email: true } },
+        dispersedBy: { select: { name: true } },
+        trips: {
+          orderBy: { tripOrder: 'asc' },
+          select: {
+            tripOrder: true,
+            destination: true,
+            purpose: true,
+            departureDate: true,
+            returnDate: true,
+            disbursementDate: true,
+            estimatedTotal: true,
+            objectives: {
+              orderBy: { objectiveOrder: 'asc' },
+              select: { description: true },
+            },
+            expenses: {
+              select: {
+                transport: true,
+                tolls: true,
+                lodging: true,
+                food: true,
+                freight: true,
+                tools: true,
+                shipping: true,
+                miscellaneous: true,
+              },
+            },
+            gasoline: {
+              select: {
+                requiresGasoline: true,
+                cardId: true,
+                plate: true,
+                currentMileageKm: true,
+                requestedAmount: true,
+                distanceKm: true,
+                comments: true,
+              },
+            },
+            tag: {
+              select: {
+                requiresTag: true,
+                requestedAmount: true,
+                comments: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (travelRequest === null) {
+      return null;
+    }
+
+    const employeeEmail = travelRequest.user.email.trim();
+    if (employeeEmail.length === 0) {
+      return null;
+    }
+
+    const dispersedTotal = decimalToNumber(travelRequest.dispersedTotal);
+    if (!Number.isFinite(dispersedTotal) || dispersedTotal <= 0) {
+      return null;
+    }
+
+    const bossName =
+      travelRequest.approver?.name ??
+      travelRequest.user.manager?.name ??
+      'Por asignar';
+
+    const approverEmail = travelRequest.approver?.email?.trim() ?? '';
+    const managerEmail = travelRequest.user.manager?.email?.trim() ?? '';
+    const bossEmail =
+      approverEmail.length > 0
+        ? approverEmail
+        : managerEmail.length > 0
+          ? managerEmail
+          : null;
+
+    const dispersorName = travelRequest.dispersedBy?.name?.trim() ?? '';
+    if (dispersorName.length === 0) {
+      return null;
+    }
+
+    return {
+      requestId: travelRequest.id,
+      status: travelRequest.status,
+      employeeName: travelRequest.employeeName,
+      corporateCardNumber: travelRequest.corporateCardNumber,
+      employeeEmail,
+      bossName,
+      bossEmail,
+      dispersorName,
+      companyName: travelRequest.user.company.name,
+      dispersedTotal,
       trips: travelRequest.trips.map((trip) =>
         mapStoredTripToNotificationTripInput(trip),
       ),

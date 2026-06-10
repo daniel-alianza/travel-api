@@ -84,7 +84,10 @@ export class RegisterTripFileUseCase {
       fileName: normalizedFileName,
       mimeType: input.mimeType,
     });
-    this.dmsUsageMetricsService.recordFileRegistered(input.userId, input.fileSizeBytes);
+    this.dmsUsageMetricsService.recordFileRegistered(
+      input.userId,
+      input.fileSizeBytes,
+    );
 
     return buildSuccessResponse(
       {

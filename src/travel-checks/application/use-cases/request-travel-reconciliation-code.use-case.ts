@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Inject,
-  Injectable,
-} from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { randomInt } from 'crypto';
 import { buildSuccessResponse } from '../../../common/exceptions/builders/success-response.builder';
 import type { ApiSuccessResponse } from '../../../common/exceptions/interfaces/api-success-response.interface';
@@ -31,10 +27,11 @@ export class RequestTravelReconciliationCodeUseCase {
     userId: number,
     tripId: number,
   ): Promise<RequestTravelReconciliationCodeResponse> {
-    const ownership = await this.travelChecksRepository.findReconciliationTripOwnership(
-      tripId,
-      userId,
-    );
+    const ownership =
+      await this.travelChecksRepository.findReconciliationTripOwnership(
+        tripId,
+        userId,
+      );
     if (ownership === null) {
       throw new BadRequestException({
         message: 'No puedes solicitar conciliación para este viaje.',
@@ -42,10 +39,8 @@ export class RequestTravelReconciliationCodeUseCase {
       });
     }
 
-    const tripFilesCount = await this.travelChecksRepository.countTripFilesForUser(
-      tripId,
-      userId,
-    );
+    const tripFilesCount =
+      await this.travelChecksRepository.countTripFilesForUser(tripId, userId);
     if (tripFilesCount === 0) {
       throw new BadRequestException({
         message:
@@ -54,10 +49,11 @@ export class RequestTravelReconciliationCodeUseCase {
       });
     }
 
-    const attempts = await this.travelChecksRepository.countReconciliationAttempts(
-      ownership.travelRequestId,
-      userId,
-    );
+    const attempts =
+      await this.travelChecksRepository.countReconciliationAttempts(
+        ownership.travelRequestId,
+        userId,
+      );
     if (attempts >= MAX_RECONCILIATION_ATTEMPTS) {
       throw new BadRequestException({
         message:

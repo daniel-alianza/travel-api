@@ -48,8 +48,9 @@ export type ApprovalRequest = {
   readonly viajes: readonly ApprovalTrip[];
 };
 
-export type GetApprovalRequestsResponse =
-  ApiSuccessResponse<readonly ApprovalRequest[]>;
+export type GetApprovalRequestsResponse = ApiSuccessResponse<
+  readonly ApprovalRequest[]
+>;
 
 @Injectable()
 export class GetApprovalRequestsUseCase {
@@ -132,7 +133,9 @@ function resolveAutorizadoPor(request: ApprovalRequestRecord): string | null {
     }
   }
   if (names.size > 0) {
-    return Array.from(names).sort((left, right) => left.localeCompare(right)).join(' · ');
+    return Array.from(names)
+      .sort((left, right) => left.localeCompare(right))
+      .join(' · ');
   }
   return request.approver?.name ?? null;
 }
@@ -145,10 +148,15 @@ function pickApprovalResolutionComment(
     readonly approverComment: string | null;
   }[],
 ): string | null {
-  if (requestApproverComment !== null && requestApproverComment.trim().length > 0) {
+  if (
+    requestApproverComment !== null &&
+    requestApproverComment.trim().length > 0
+  ) {
     return requestApproverComment.trim();
   }
-  const ordered = trips.slice().sort((left, right) => left.tripOrder - right.tripOrder);
+  const ordered = trips
+    .slice()
+    .sort((left, right) => left.tripOrder - right.tripOrder);
   for (const trip of ordered) {
     if (
       (trip.tripApprovalStatus === 'approved' ||
@@ -162,7 +170,9 @@ function pickApprovalResolutionComment(
   return null;
 }
 
-function mapTripConcepts(expenses: TripExpensesRecord): readonly ApprovalTripConcept[] {
+function mapTripConcepts(
+  expenses: TripExpensesRecord,
+): readonly ApprovalTripConcept[] {
   if (!expenses) {
     return [];
   }
@@ -198,12 +208,7 @@ function mapTripApprovalStatus(
 
 function mapStatus(
   status: string,
-):
-  | 'Pendiente'
-  | 'En corrección'
-  | 'Aprobada'
-  | 'Rechazada'
-  | 'Dispersada' {
+): 'Pendiente' | 'En corrección' | 'Aprobada' | 'Rechazada' | 'Dispersada' {
   if (status === 'approved') {
     return 'Aprobada';
   }

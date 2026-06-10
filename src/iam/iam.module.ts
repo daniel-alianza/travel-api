@@ -7,6 +7,7 @@ import { SetIamUserGasolineNotificationsUseCase } from './application/use-cases/
 import { SetIamUserExtraPermissionsUseCase } from './application/use-cases/set-iam-user-extra-permissions.use-case';
 import { SetIamUserPasswordUseCase } from './application/use-cases/set-iam-user-password.use-case';
 import { UpdateIamUserUseCase } from './application/use-cases/update-iam-user.use-case';
+import { CreateIamUserUseCase } from './application/use-cases/create-iam-user.use-case';
 import { IamController } from './presentation/iam.controller';
 import { SuperAdminGuard } from './presentation/guards/super-admin.guard';
 
@@ -20,6 +21,7 @@ import { SuperAdminGuard } from './presentation/guards/super-admin.guard';
     SetIamUserExtraPermissionsUseCase,
     SetIamUserGasolineNotificationsUseCase,
     UpdateIamUserUseCase,
+    CreateIamUserUseCase,
     SuperAdminGuard,
   ],
 })

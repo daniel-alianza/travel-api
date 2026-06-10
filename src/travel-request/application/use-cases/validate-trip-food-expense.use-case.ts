@@ -55,10 +55,7 @@ export class ValidateTripFoodExpenseUseCase {
       );
     }
 
-    const departureDate = parseDateOrThrow(
-      command.fechaSalida,
-      'fechaSalida',
-    );
+    const departureDate = parseDateOrThrow(command.fechaSalida, 'fechaSalida');
     const returnDate = parseDateOrThrow(command.fechaRegreso, 'fechaRegreso');
 
     if (returnDate < departureDate) {
@@ -67,20 +64,14 @@ export class ValidateTripFoodExpenseUseCase {
       );
     }
 
-    const tripDays = calculateTripDaysForFoodPolicy(
-      departureDate,
-      returnDate,
-    );
+    const tripDays = calculateTripDaysForFoodPolicy(departureDate, returnDate);
     const maximumAllowedAmount = computeFoodPolicyMaximumAmount(
       foodPolicyResolution,
       tripDays,
     );
     const appliesPolicy = foodPolicyResolution.tag === 'capped';
-    const requestedAmount = roundToTwoDecimals(
-      toSafeNumber(command.alimentos),
-    );
-    const withinCap =
-      !appliesPolicy || requestedAmount <= maximumAllowedAmount;
+    const requestedAmount = roundToTwoDecimals(toSafeNumber(command.alimentos));
+    const withinCap = !appliesPolicy || requestedAmount <= maximumAllowedAmount;
 
     return buildSuccessResponse(
       {

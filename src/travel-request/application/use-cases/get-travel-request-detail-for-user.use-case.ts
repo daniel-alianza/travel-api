@@ -64,13 +64,16 @@ export class GetTravelRequestDetailForUserUseCase {
     travelRequestId: number,
     userId: number,
   ): Promise<GetTravelRequestDetailForUserResponse> {
-    const solicitud = await this.travelRequestRepository.findTravelRequestDetailForUser(
-      travelRequestId,
-      userId,
-    );
+    const solicitud =
+      await this.travelRequestRepository.findTravelRequestDetailForUser(
+        travelRequestId,
+        userId,
+      );
 
     if (!solicitud) {
-      throw new NotFoundException('No se encontró la solicitud o no pertenece al usuario.');
+      throw new NotFoundException(
+        'No se encontró la solicitud o no pertenece al usuario.',
+      );
     }
 
     return buildSuccessResponse(
@@ -78,7 +81,9 @@ export class GetTravelRequestDetailForUserUseCase {
         solicitudId: solicitud.id,
         status: solicitud.status,
         employeeName: solicitud.employeeName,
-        corporateCardNumber: maskCardNumberNullable(solicitud.corporateCardNumber),
+        corporateCardNumber: maskCardNumberNullable(
+          solicitud.corporateCardNumber,
+        ),
         company: solicitud.company,
         branch: solicitud.branch,
         area: solicitud.area,
@@ -105,7 +110,9 @@ export class GetTravelRequestDetailForUserUseCase {
           gasolina: {
             necesitaGasolina: viaje.gasoline?.requiresGasoline ?? false,
             cardId: viaje.gasoline?.cardId ?? null,
-            cardNumber: maskCardNumberNullable(viaje.gasoline?.cardNumber ?? null),
+            cardNumber: maskCardNumberNullable(
+              viaje.gasoline?.cardNumber ?? null,
+            ),
             placa: viaje.gasoline?.plate ?? null,
             kilometrajeActualKm: viaje.gasoline?.currentMileageKm ?? null,
             montoSolicitado: viaje.gasoline?.requestedAmount ?? null,

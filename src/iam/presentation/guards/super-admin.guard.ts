@@ -12,7 +12,7 @@ import { IAM_PERMISO_ADMINISTRACION_USUARIOS } from '../../application/iam-known
 export class SuperAdminGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
-    const usuario = request.user as AuthTokenVerifiedPayload | undefined;
+    const usuario = request.user;
     if (usuario === undefined) {
       throw new ForbiddenException({
         message: 'No tienes permisos para esta operación.',

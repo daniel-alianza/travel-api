@@ -123,10 +123,12 @@ export class SapGasolineDisbursementAdapter implements GasolineDisbursementPort 
 
       const items = response.value ?? [];
       const excludedDocNumsFgm = [1411, 1420];
-      const normalizedCompany = companyName.toUpperCase().replace(/\s+/g, ' ').trim();
+      const normalizedCompany = companyName
+        .toUpperCase()
+        .replace(/\s+/g, ' ')
+        .trim();
       const isFgm =
-        normalizedCompany === 'FGM' ||
-        normalizedCompany === 'FG MANUFACTURING';
+        normalizedCompany === 'FGM' || normalizedCompany === 'FG MANUFACTURING';
 
       const filtered = isFgm
         ? items.filter((item) => !excludedDocNumsFgm.includes(item.DocNum))

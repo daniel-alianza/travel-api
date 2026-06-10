@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
+import { PERMISO_VIATICOS_DISPERSAR } from '../../common/sales-viaticos/sales-viaticos-monthly-deadlines';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
 import type {
   ApprovalFilterCatalogRecord,
@@ -12,13 +13,21 @@ import type {
   MyTravelRequestListRecord,
   RequestFormCatalogRecord,
   ResolveTravelRequestTripRepositoryInput,
+  ResolveAllPendingTripsRepositoryInput,
+  ResolveAllPendingTripsResult,
   TravelRequestDetailForUserRecord,
   TravelRequestFormUserRecord,
+  TravelRequestNotificationContactsRecord,
+  TravelRequestApprovedNotificationContextRecord,
+  TreasuryDispersionNotificationRecipientRecord,
+  TravelRequestPowerAutomateContextRecord,
   TravelRequestRepository,
   TravelRequestTripInput,
   TripResolutionResult,
+  UserEmailLookupRecord,
   UserLookupRecord,
 } from '../application/interfaces/travel-request-repository.interface';
+import { TREASURY_AREA_NAME } from '../domain/treasury-area.constants';
 
 type PrismaDelegate = {
   user: {
@@ -233,7 +242,11 @@ type TravelRequestTripTransactionClient = {
     update(args: {
       where: { id: number };
       data: {
-        status: 'submitted' | 'awaiting_trip_correction' | 'approved';
+        status:
+          | 'submitted'
+          | 'awaiting_trip_correction'
+          | 'approved'
+          | 'rejected';
         approvedAt: Date | null;
         rejectedAt: Date | null;
       };
@@ -252,7 +265,11 @@ type TripStatusRow = {
 };
 
 function computeTravelRequestStatusFromTrips(trips: readonly TripStatusRow[]): {
-  readonly status: 'submitted' | 'awaiting_trip_correction' | 'approved';
+  readonly status:
+    | 'submitted'
+    | 'awaiting_trip_correction'
+    | 'approved'
+    | 'rejected';
   readonly approvedAt: Date | null;
   readonly rejectedAt: Date | null;
 } {
@@ -281,6 +298,18 @@ function computeTravelRequestStatusFromTrips(trips: readonly TripStatusRow[]): {
   );
 
   if (someRejected) {
+    const everyRejected = trips.every(
+      (tripRow) => tripRow.tripApprovalStatus === 'rejected',
+    );
+
+    if (everyRejected) {
+      return {
+        status: 'rejected',
+        approvedAt: null,
+        rejectedAt: new Date(),
+      };
+    }
+
     return {
       status: 'awaiting_trip_correction',
       approvedAt: null,
@@ -297,6 +326,8 @@ function computeTravelRequestStatusFromTrips(trips: readonly TripStatusRow[]): {
 
 @Injectable()
 export class TravelRequestPrismaRepository implements TravelRequestRepository {
+  private readonly logger = new Logger(TravelRequestPrismaRepository.name);
+
   constructor(private readonly prismaService: PrismaService) {}
 
   async findUserById(userId: number): Promise<UserLookupRecord | null> {
@@ -305,6 +336,324 @@ export class TravelRequestPrismaRepository implements TravelRequestRepository {
       where: { id: userId },
       select: { id: true, name: true, areaId: true, managerId: true },
     });
+  }
+
+  async findUserByEmail(email: string): Promise<UserEmailLookupRecord | null> {
+    const normalizedEmail = email.trim();
+
+    if (normalizedEmail.length === 0) {
+      return null;
+    }
+
+    const user = await this.prismaService.user.findUnique({
+      where: { email: normalizedEmail },
+      select: { id: true, email: true },
+    });
+
+    return user;
+  }
+
+  async findTravelRequestPowerAutomateContext(
+    travelRequestId: number,
+  ): Promise<TravelRequestPowerAutomateContextRecord | null> {
+    const travelRequest = await this.prismaService.travelRequest.findUnique({
+      where: { id: travelRequestId },
+      select: {
+        approverId: true,
+        approver: { select: { email: true } },
+        trips: {
+          where: { tripApprovalStatus: 'pending' },
+          select: { id: true },
+        },
+      },
+    });
+
+    if (travelRequest === null) {
+      return null;
+    }
+
+    return {
+      approverId: travelRequest.approverId,
+      approverEmail: travelRequest.approver?.email ?? null,
+      pendingTripIds: travelRequest.trips.map((trip) => trip.id),
+    };
+  }
+
+  async resolveAllPendingTripsForTravelRequest(
+    input: ResolveAllPendingTripsRepositoryInput,
+  ): Promise<ResolveAllPendingTripsResult> {
+    this.logger.debug(
+      `resolveAllPendingTrips solicitud #${input.travelRequestId} | resolution=${input.resolution} | actorUserId=${input.actorUserId}`,
+    );
+
+    const result = await this.prismaService.$transaction(async (transaction) => {
+      const travelRequest = await transaction.travelRequest.findUnique({
+        where: { id: input.travelRequestId },
+        select: { id: true },
+      });
+
+      if (travelRequest === null) {
+        return 'not_found';
+      }
+
+      const pendingTrips = await transaction.travelRequestTrip.findMany({
+        where: {
+          travelRequestId: input.travelRequestId,
+          tripApprovalStatus: 'pending',
+        },
+        select: { id: true },
+      });
+
+      if (pendingTrips.length === 0) {
+        return 'no_pending_trips';
+      }
+
+      const now = new Date();
+
+      for (const pendingTrip of pendingTrips) {
+        if (input.resolution === 'approve') {
+          const approvalComment =
+            input.comment !== null && input.comment.trim().length > 0
+              ? input.comment.trim()
+              : null;
+
+          await transaction.travelRequestTrip.update({
+            where: { id: pendingTrip.id },
+            data: {
+              tripApprovalStatus: 'approved',
+              approvedAt: now,
+              rejectedAt: null,
+              approverComment: approvalComment,
+              approvedById: input.actorUserId,
+            },
+          });
+        } else {
+          await transaction.travelRequestTrip.update({
+            where: { id: pendingTrip.id },
+            data: {
+              tripApprovalStatus: 'rejected',
+              rejectedAt: now,
+              approvedAt: null,
+              approvedById: null,
+              approverComment: input.comment?.trim() ?? '',
+            },
+          });
+        }
+      }
+
+      const trips = await transaction.travelRequestTrip.findMany({
+        where: { travelRequestId: input.travelRequestId },
+        select: { tripApprovalStatus: true },
+      });
+
+      const aggregate = computeTravelRequestStatusFromTrips(trips);
+
+      await transaction.travelRequest.update({
+        where: { id: input.travelRequestId },
+        data: {
+          status: aggregate.status,
+          approvedAt: aggregate.approvedAt,
+          rejectedAt: aggregate.rejectedAt,
+        },
+      });
+
+      return 'ok';
+    });
+
+    this.logger.log(
+      `resolveAllPendingTrips resultado solicitud #${input.travelRequestId}: ${result}`,
+    );
+
+    return result;
+  }
+
+  async findTravelRequestNotificationContacts(
+    userId: number,
+  ): Promise<TravelRequestNotificationContactsRecord | null> {
+    const user = await this.prismaService.user.findUnique({
+      where: { id: userId },
+      select: {
+        email: true,
+        name: true,
+        company: { select: { name: true } },
+        manager: { select: { name: true, email: true } },
+      },
+    });
+
+    if (user === null) {
+      return null;
+    }
+
+    if (user.email.trim().length === 0) {
+      return null;
+    }
+
+    const bossName = user.manager?.name ?? 'Por asignar';
+    const bossEmail = user.manager?.email?.trim() ?? null;
+
+    return {
+      employeeEmail: user.email,
+      employeeName: user.name,
+      bossName,
+      bossEmail: bossEmail && bossEmail.length > 0 ? bossEmail : null,
+      companyName: user.company.name,
+    };
+  }
+
+  async findTravelRequestApprovedNotificationContext(
+    travelRequestId: number,
+  ): Promise<TravelRequestApprovedNotificationContextRecord | null> {
+    const travelRequest = await this.prismaService.travelRequest.findUnique({
+      where: { id: travelRequestId },
+      select: {
+        id: true,
+        companyId: true,
+        status: true,
+        employeeName: true,
+        corporateCardNumber: true,
+        user: {
+          select: {
+            email: true,
+            manager: { select: { name: true, email: true } },
+            company: { select: { name: true } },
+          },
+        },
+        approver: { select: { name: true, email: true } },
+        trips: {
+          orderBy: { tripOrder: 'asc' },
+          select: {
+            tripOrder: true,
+            destination: true,
+            purpose: true,
+            departureDate: true,
+            returnDate: true,
+            disbursementDate: true,
+            estimatedTotal: true,
+            objectives: {
+              orderBy: { objectiveOrder: 'asc' },
+              select: { description: true },
+            },
+            expenses: {
+              select: {
+                transport: true,
+                tolls: true,
+                lodging: true,
+                food: true,
+                freight: true,
+                tools: true,
+                shipping: true,
+                miscellaneous: true,
+              },
+            },
+            gasoline: {
+              select: {
+                requiresGasoline: true,
+                cardId: true,
+                plate: true,
+                currentMileageKm: true,
+                requestedAmount: true,
+                distanceKm: true,
+                comments: true,
+              },
+            },
+            tag: {
+              select: {
+                requiresTag: true,
+                requestedAmount: true,
+                comments: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (travelRequest === null) {
+      return null;
+    }
+
+    const employeeEmail = travelRequest.user.email.trim();
+    if (employeeEmail.length === 0) {
+      return null;
+    }
+
+    const bossName =
+      travelRequest.approver?.name ??
+      travelRequest.user.manager?.name ??
+      'Por asignar';
+
+    const approverEmail = travelRequest.approver?.email?.trim() ?? '';
+    const managerEmail = travelRequest.user.manager?.email?.trim() ?? '';
+    const bossEmail =
+      approverEmail.length > 0
+        ? approverEmail
+        : managerEmail.length > 0
+          ? managerEmail
+          : null;
+
+    return {
+      requestId: travelRequest.id,
+      companyId: travelRequest.companyId,
+      status: travelRequest.status,
+      employeeName: travelRequest.employeeName,
+      corporateCardNumber: travelRequest.corporateCardNumber,
+      employeeEmail,
+      bossName,
+      bossEmail,
+      companyName: travelRequest.user.company.name,
+      trips: travelRequest.trips.map((trip) =>
+        mapStoredTripToNotificationTripInput(trip),
+      ),
+    };
+  }
+
+  async findTreasuryDispersionNotificationRecipients(
+    companyId: number,
+  ): Promise<readonly TreasuryDispersionNotificationRecipientRecord[]> {
+    const users = await this.prismaService.user.findMany({
+      where: {
+        isActive: true,
+        companyId,
+        area: { name: TREASURY_AREA_NAME },
+        OR: [
+          {
+            userExtraPermissions: {
+              some: { permissionCode: PERMISO_VIATICOS_DISPERSAR },
+            },
+          },
+          {
+            role: {
+              roleDefaultPermissions: {
+                some: { permissionCode: PERMISO_VIATICOS_DISPERSAR },
+              },
+            },
+          },
+          {
+            role: { name: 'super_administrador' },
+          },
+        ],
+      },
+      select: { email: true, name: true },
+      orderBy: { name: 'asc' },
+    });
+
+    const recipientsByEmail = new Map<string, TreasuryDispersionNotificationRecipientRecord>();
+
+    for (const user of users) {
+      const normalizedEmail = user.email.trim().toLowerCase();
+      const dispersorName = user.name.trim();
+      if (normalizedEmail.length === 0 || dispersorName.length === 0) {
+        continue;
+      }
+      if (!recipientsByEmail.has(normalizedEmail)) {
+        recipientsByEmail.set(normalizedEmail, {
+          email: normalizedEmail,
+          dispersorName,
+        });
+      }
+    }
+
+    return [...recipientsByEmail.values()];
   }
 
   async findAreaById(areaId: number): Promise<AreaLookupRecord | null> {
@@ -841,7 +1190,11 @@ export class TravelRequestPrismaRepository implements TravelRequestRepository {
         },
       });
 
-      return 'ok';
+      return {
+        outcome: 'ok',
+        travelRequestId: trip.travelRequestId,
+        requestStatus: aggregate.status,
+      };
     });
   }
 
@@ -1186,4 +1539,80 @@ function decimalToNullableNumber(
     return null;
   }
   return parsedValue;
+}
+
+type StoredTripForNotificationInput = {
+  readonly tripOrder: number;
+  readonly destination: string;
+  readonly purpose: string;
+  readonly departureDate: Date;
+  readonly returnDate: Date;
+  readonly disbursementDate: Date;
+  readonly estimatedTotal: { toString(): string };
+  readonly objectives: readonly { readonly description: string }[];
+  readonly expenses: {
+    readonly transport: { toString(): string };
+    readonly tolls: { toString(): string };
+    readonly lodging: { toString(): string };
+    readonly food: { toString(): string };
+    readonly freight: { toString(): string };
+    readonly tools: { toString(): string };
+    readonly shipping: { toString(): string };
+    readonly miscellaneous: { toString(): string };
+  } | null;
+  readonly gasoline: {
+    readonly requiresGasoline: boolean;
+    readonly cardId: number | null;
+    readonly plate: string | null;
+    readonly currentMileageKm: { toString(): string } | null;
+    readonly requestedAmount: { toString(): string } | null;
+    readonly distanceKm: { toString(): string } | null;
+    readonly comments: string | null;
+  } | null;
+  readonly tag: {
+    readonly requiresTag: boolean;
+    readonly requestedAmount: { toString(): string } | null;
+    readonly comments: string | null;
+  } | null;
+};
+
+function mapStoredTripToNotificationTripInput(
+  trip: StoredTripForNotificationInput,
+): TravelRequestTripInput {
+  return {
+    ordenViaje: trip.tripOrder,
+    destinoViaje: trip.destination,
+    motivoViaje: trip.purpose,
+    fechaSalida: trip.departureDate,
+    fechaRegreso: trip.returnDate,
+    fechaDispersion: trip.disbursementDate,
+    totalEstimado: decimalToNumber(trip.estimatedTotal),
+    gastos: {
+      transporte: decimalToNumber(trip.expenses?.transport),
+      peajes: decimalToNumber(trip.expenses?.tolls),
+      hospedaje: decimalToNumber(trip.expenses?.lodging),
+      alimentos: decimalToNumber(trip.expenses?.food),
+      fletes: decimalToNumber(trip.expenses?.freight),
+      herramientas: decimalToNumber(trip.expenses?.tools),
+      envios: decimalToNumber(trip.expenses?.shipping),
+      miscelaneos: decimalToNumber(trip.expenses?.miscellaneous),
+    },
+    objetivos: trip.objectives.map((objective) => objective.description),
+    gasolina: {
+      necesitaGasolina: trip.gasoline?.requiresGasoline ?? false,
+      cardId: trip.gasoline?.cardId ?? null,
+      placa: trip.gasoline?.plate ?? null,
+      kilometrajeActualKm: decimalToNullableNumber(
+        trip.gasoline?.currentMileageKm,
+      ),
+      montoSolicitado: decimalToNullableNumber(trip.gasoline?.requestedAmount),
+      distanciaKm: decimalToNullableNumber(trip.gasoline?.distanceKm),
+      comentarios: trip.gasoline?.comments ?? null,
+    },
+    tag: {
+      necesitaTag: trip.tag?.requiresTag ?? false,
+      montoSolicitado: decimalToNullableNumber(trip.tag?.requestedAmount),
+      comentarios: trip.tag?.comments ?? null,
+    },
+  };
 }

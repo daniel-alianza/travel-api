@@ -36,7 +36,8 @@ export class GetTravelRequestFormDataUseCase {
   ) {}
 
   async execute(userId: number): Promise<GetTravelRequestFormDataResponse> {
-    const user = await this.travelRequestRepository.findFormDataByUserId(userId);
+    const user =
+      await this.travelRequestRepository.findFormDataByUserId(userId);
 
     if (!user) {
       throw new NotFoundException('No se encontró el usuario para precarga.');

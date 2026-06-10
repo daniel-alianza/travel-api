@@ -19,9 +19,9 @@ export class SetIamUserExtraPermissionsUseCase {
   constructor(private readonly prismaService: PrismaService) {}
 
   async execute(command: SetIamUserExtraPermissionsCommand): Promise<void> {
-    const extras = [...new Set(command.extraPermissionCodes.map((c) => c.trim()))].filter(
-      (c) => c.length > 0,
-    );
+    const extras = [
+      ...new Set(command.extraPermissionCodes.map((c) => c.trim())),
+    ].filter((c) => c.length > 0);
 
     for (const code of extras) {
       if (!esCodigoPermisoIamConocido(code)) {

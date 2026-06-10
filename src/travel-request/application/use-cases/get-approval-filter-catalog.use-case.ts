@@ -19,7 +19,8 @@ export class GetApprovalFilterCatalogUseCase {
   ) {}
 
   async execute(): Promise<GetApprovalFilterCatalogResponse> {
-    const catalog = await this.travelRequestRepository.findApprovalFilterCatalog();
+    const catalog =
+      await this.travelRequestRepository.findApprovalFilterCatalog();
 
     return buildSuccessResponse(
       {

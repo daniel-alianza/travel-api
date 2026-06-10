@@ -63,8 +63,8 @@ export class RegisterUseCase {
   async execute(command: RegisterCommand): Promise<RegisterResponse> {
     const normalizedEmail = command.email.trim().toLowerCase();
     const hashedPassword = await hash(command.password, 10);
-    const prismaUserReaderWriter =
-      this.prismaService as unknown as PrismaUserReaderWriter;
+    const prismaUserReaderWriter = this
+      .prismaService as unknown as PrismaUserReaderWriter;
 
     const existingUser = await prismaUserReaderWriter.user.findFirst({
       where: {

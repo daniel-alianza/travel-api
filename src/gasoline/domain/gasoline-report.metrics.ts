@@ -17,17 +17,14 @@ export function computeGasolineReportMetrics(
   distanceKm: number,
 ): GasolineReportMetrics {
   const currentIndex = history.findIndex((row) => row.id === requestId);
-  const previousRow =
-    currentIndex > 0 ? history[currentIndex - 1] : null;
+  const previousRow = currentIndex > 0 ? history[currentIndex - 1] : null;
   const kmAnterior = previousRow?.currentMileageKm ?? null;
 
   const kmRecorridoReal =
     kmAnterior !== null ? currentMileageKm - kmAnterior : null;
 
   const rendimientoRealKmPeso =
-    kmRecorridoReal !== null &&
-    kmRecorridoReal > 0 &&
-    requestedAmount > 0
+    kmRecorridoReal !== null && kmRecorridoReal > 0 && requestedAmount > 0
       ? kmRecorridoReal / requestedAmount
       : null;
 
@@ -67,9 +64,7 @@ export function computeGasolineReportMetrics(
     kmAnterior,
     kmRecorridoReal,
     rendimientoRealKmPeso:
-      rendimientoRealKmPeso !== null
-        ? round3(rendimientoRealKmPeso)
-        : null,
+      rendimientoRealKmPeso !== null ? round3(rendimientoRealKmPeso) : null,
     rendimientoEsperado:
       rendimientoEsperado !== null ? round3(rendimientoEsperado) : null,
     variacionRendimiento:

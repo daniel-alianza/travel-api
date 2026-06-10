@@ -62,7 +62,8 @@ export async function validateInvoiceProofPairsFromBuffers(input: {
 
     if (uuidsInBatch.has(metadata.uuid)) {
       throw new BadRequestException({
-        message: 'No puedes comprobar el mismo UUID de CFDI dos veces en un solo envío.',
+        message:
+          'No puedes comprobar el mismo UUID de CFDI dos veces en un solo envío.',
         error: 'CFDI_UUID_REPETIDO_EN_LOTE',
       });
     }
@@ -146,7 +147,10 @@ export async function pdfBufferContainsCfdiUuid(
   }
 
   const textoExtraido = await extractPdfPlainText(buffer);
-  if (textoExtraido.length > 0 && pdfTextContainsUuidFlexible(textoExtraido, targetHyphen, targetLoose)) {
+  if (
+    textoExtraido.length > 0 &&
+    pdfTextContainsUuidFlexible(textoExtraido, targetHyphen, targetLoose)
+  ) {
     return true;
   }
 
@@ -185,7 +189,8 @@ function pdfTextContainsUuidFlexible(
   const uuidSegmentado =
     /([0-9a-f]{8})[\s:;\-\u00a0\r\n]*([0-9a-f]{4})[\s:;\-\u00a0\r\n]*([0-9a-f]{4})[\s:;\-\u00a0\r\n]*([0-9a-f]{4})[\s:;\-\u00a0\r\n]*([0-9a-f]{12})/gi;
   for (const coincidencia of text.matchAll(uuidSegmentado)) {
-    const junto = `${coincidencia[1]}${coincidencia[2]}${coincidencia[3]}${coincidencia[4]}${coincidencia[5]}`.toLowerCase();
+    const junto =
+      `${coincidencia[1]}${coincidencia[2]}${coincidencia[3]}${coincidencia[4]}${coincidencia[5]}`.toLowerCase();
     if (junto === targetLoose) {
       return true;
     }
@@ -208,7 +213,10 @@ function buildFlexibleHyphenatedUuidPattern(uuidLower: string): RegExp {
   return new RegExp(`${a}${sep}${b}${sep}${c}${sep}${d}${sep}${e}`, 'i');
 }
 
-function findUuidNearFolioFiscalLabel(text: string, targetLoose: string): boolean {
+function findUuidNearFolioFiscalLabel(
+  text: string,
+  targetLoose: string,
+): boolean {
   const plano = text
     .normalize('NFD')
     .replace(/\p{M}/gu, '')
@@ -242,7 +250,9 @@ function extraerUuidDesdeVentanaFolioFiscal(ventana: string): string | null {
   return null;
 }
 
-export function extractCfdiComprobanteMetadata(xml: string): CfdiComprobanteMetadata {
+export function extractCfdiComprobanteMetadata(
+  xml: string,
+): CfdiComprobanteMetadata {
   const trimmed = xml.trim();
   if (trimmed.length === 0) {
     throw new BadRequestException({
@@ -372,7 +382,11 @@ function buscarNodoPorSufijoEnArbol(
       continue;
     }
     if (clave.toLowerCase().endsWith(sufijo.toLowerCase())) {
-      if (valor !== null && typeof valor === 'object' && !Array.isArray(valor)) {
+      if (
+        valor !== null &&
+        typeof valor === 'object' &&
+        !Array.isArray(valor)
+      ) {
         return valor as Record<string, unknown>;
       }
     }

@@ -15,9 +15,7 @@ export type InclusiveCalendarDateRange = {
 function parseIsoDayOrThrow(value: string, fieldLabel: string): string {
   const trimmed = value.trim();
   if (!ISO_DAY_PATTERN.test(trimmed)) {
-    throw new Error(
-      `${fieldLabel} debe tener el formato YYYY-MM-DD.`,
-    );
+    throw new Error(`${fieldLabel} debe tener el formato YYYY-MM-DD.`);
   }
   const [yearText, monthText, dayText] = trimmed.split('-');
   const year = Number(yearText);

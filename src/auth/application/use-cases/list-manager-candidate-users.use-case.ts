@@ -50,8 +50,8 @@ export class ListManagerCandidateUsersUseCase {
   async execute(
     command: ListManagerCandidateUsersCommand,
   ): Promise<ManagerCandidateUserRow[]> {
-    const prisma =
-      this.prismaService as unknown as PrismaManagerCandidateReader;
+    const prisma = this
+      .prismaService as unknown as PrismaManagerCandidateReader;
     const rows = await prisma.user.findMany({
       where: {
         id: { not: command.currentUserId },

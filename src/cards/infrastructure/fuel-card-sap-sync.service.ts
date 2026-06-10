@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
 import { SapAuthAdapter } from '../../infrastructure/SL/sap-auth.adapter';
@@ -45,7 +49,9 @@ export class FuelCardSapSyncService {
     ]);
 
     if (company === null) {
-      throw new NotFoundException('No existe la compañía para sincronizar en SAP.');
+      throw new NotFoundException(
+        'No existe la compañía para sincronizar en SAP.',
+      );
     }
     if (supplier === null) {
       throw new NotFoundException(
@@ -84,7 +90,10 @@ export class FuelCardSapSyncService {
     }
   }
 
-  private async getNextSapCode(baseUrl: string, sessionId: string): Promise<string> {
+  private async getNextSapCode(
+    baseUrl: string,
+    sessionId: string,
+  ): Promise<string> {
     const existingCodes = new Set<number>();
     let url: string | null = `${baseUrl}/${SAP_GASOLINE_TABLE}?$select=Code`;
 

@@ -70,8 +70,9 @@ export class CorrectRejectedTravelRequestTripUseCase {
         `No hay política de alimentos configurada para el área ${foodPolicyResolution.areaName}.`,
       );
     }
-    const lodgingPolicyResolution =
-      resolveNationalLodgingPolicyForAreaName(area.name);
+    const lodgingPolicyResolution = resolveNationalLodgingPolicyForAreaName(
+      area.name,
+    );
     if (lodgingPolicyResolution.tag === 'unconfigured') {
       throw new BadRequestException(
         `No hay política de hospedaje nacional configurada para el área ${lodgingPolicyResolution.areaName}.`,
@@ -129,7 +130,9 @@ export class CorrectRejectedTravelRequestTripUseCase {
     const tagTotal = trip.tag.necesitaTag
       ? toSafeNumber(trip.tag.montoSolicitado)
       : 0;
-    const totalEstimado = roundToTwoDecimals(gastosTotal + gasolinaTotal + tagTotal);
+    const totalEstimado = roundToTwoDecimals(
+      gastosTotal + gasolinaTotal + tagTotal,
+    );
 
     if (trip.gasolina.necesitaGasolina && trip.gasolina.cardId) {
       const card = await this.travelRequestRepository.findFuelCardById(

@@ -52,8 +52,8 @@ export class ChangePasswordUseCase {
       );
     }
 
-    const prisma =
-      this.prismaService as unknown as PrismaUserPasswordReaderWriter;
+    const prisma = this
+      .prismaService as unknown as PrismaUserPasswordReaderWriter;
     const user = await prisma.user.findFirst({
       where: { id: command.userId },
       select: { id: true, password: true },

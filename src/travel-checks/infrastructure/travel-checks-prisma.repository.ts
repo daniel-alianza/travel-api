@@ -562,7 +562,9 @@ export class TravelChecksPrismaRepository implements TravelChecksRepository {
     };
   }
 
-  async markTripMovementProofApprovedIfSubmitted(proofId: number): Promise<boolean> {
+  async markTripMovementProofApprovedIfSubmitted(
+    proofId: number,
+  ): Promise<boolean> {
     const resultado = await this.prisma.tripMovementProof.updateMany({
       where: { id: proofId, status: 'submitted' },
       data: { status: 'approved' },
@@ -1039,7 +1041,9 @@ export class TravelChecksPrismaRepository implements TravelChecksRepository {
 
         return {
           companyId,
-          totalDispersadoMes: decimalSumToNumber(dispersadoAgg._sum.dispersedTotal),
+          totalDispersadoMes: decimalSumToNumber(
+            dispersadoAgg._sum.dispersedTotal,
+          ),
           totalComprobadoMes: decimalSumToNumber(
             comprobadoAgg._sum.movementAmount,
           ),
@@ -1114,8 +1118,12 @@ export class TravelChecksPrismaRepository implements TravelChecksRepository {
 
     const solicitudes = solicitudesRaw
       .filter(
-        (row): row is typeof row & { dispersedAt: Date; dispersedTotal: { toString(): string } } =>
-          row.dispersedAt !== null && row.dispersedTotal !== null,
+        (
+          row,
+        ): row is typeof row & {
+          dispersedAt: Date;
+          dispersedTotal: { toString(): string };
+        } => row.dispersedAt !== null && row.dispersedTotal !== null,
       )
       .map((row) => {
         const proofs = row.trips.flatMap((trip) => trip.tripMovementProofs);

@@ -1,4 +1,8 @@
-import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import type { DmsBucketConfig } from '../../config/dms-bucket/dms';
 import type { DmsStoragePort } from '../application/interfaces/dms-storage.interface';

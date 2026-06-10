@@ -28,12 +28,14 @@ export class DmsUsageMetricsService {
   }
 
   getUserUsage(userId: number): DmsUsageEntry {
-    return this.usageByUserId.get(userId) ?? {
-      uploadUrlRequests: 0,
-      uploadRegisteredFiles: 0,
-      downloadUrlRequests: 0,
-      uploadedBytes: 0,
-    };
+    return (
+      this.usageByUserId.get(userId) ?? {
+        uploadUrlRequests: 0,
+        uploadRegisteredFiles: 0,
+        downloadUrlRequests: 0,
+        uploadedBytes: 0,
+      }
+    );
   }
 
   private getOrCreateUsage(userId: number): DmsUsageEntry {

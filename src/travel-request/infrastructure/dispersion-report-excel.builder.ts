@@ -22,7 +22,9 @@ const ENCABEZADOS_REPORTE = [
 export function mapDispersedRequestToReportRow(
   request: ApprovalRequestRecord,
 ): DispersionReportExcelRow {
-  const viajes = request.trips.slice().sort((a, b) => a.tripOrder - b.tripOrder);
+  const viajes = request.trips
+    .slice()
+    .sort((a, b) => a.tripOrder - b.tripOrder);
   const salidas = viajes
     .map((viaje) => formatDateToDisplayDay(viaje.departureDate))
     .filter((fecha) => fecha.length > 0)
@@ -38,8 +40,11 @@ export function mapDispersedRequestToReportRow(
 
   return {
     nombreSolicitante: request.employeeName.trim(),
-    numeroTarjetaViaticos: formatFullCorporateCardNumber(request.corporateCardNumber),
-    motivoSolicitud: motivoUnico.length > 0 ? motivoUnico : 'Sin motivo registrado',
+    numeroTarjetaViaticos: formatFullCorporateCardNumber(
+      request.corporateCardNumber,
+    ),
+    motivoSolicitud:
+      motivoUnico.length > 0 ? motivoUnico : 'Sin motivo registrado',
     fechaInicio: salidas[0] ?? '',
     fechaRegreso: regresos[regresos.length - 1] ?? '',
     nombreAprobadorJefeDirecto: resolveApproverDisplayName(request, viajes),

@@ -66,10 +66,7 @@ export function resolveNationalLodgingPolicyForAreaName(
   return { tag: 'unconfigured', areaName };
 }
 
-export function calculateLodgingNights(
-  startDate: Date,
-  endDate: Date,
-): number {
+export function calculateLodgingNights(startDate: Date, endDate: Date): number {
   const tripDays = calculateTripDaysForFoodPolicy(startDate, endDate);
   return Math.max(0, tripDays - 1);
 }

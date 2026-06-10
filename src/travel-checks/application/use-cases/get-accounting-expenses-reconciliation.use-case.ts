@@ -217,7 +217,9 @@ export class GetAccountingExpensesReconciliationUseCase {
       });
 
     if (contexto.companies.length === 0) {
-      throw new NotFoundException('No se encontraron empresas para el alcance.');
+      throw new NotFoundException(
+        'No se encontraron empresas para el alcance.',
+      );
     }
 
     const companyIds = contexto.companies.map((company) => company.id);

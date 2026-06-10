@@ -64,9 +64,10 @@ export class ListExpenseTripMovementsForUserUseCase {
     }
     const movimientosSap =
       await this.travelChecksSapMovementsPort.fetchByReference(context);
-    const movementProofs = await this.travelChecksRepository.listTripMovementProofsByTripId(
-      context.tripId,
-    );
+    const movementProofs =
+      await this.travelChecksRepository.listTripMovementProofsByTripId(
+        context.tripId,
+      );
     return buildSuccessResponse(
       {
         movimientos: construirMovimientos(
@@ -90,9 +91,10 @@ function construirMovimientos(
   corporateCardNumber: string,
 ): readonly ExpenseMovimientoItem[] {
   const tarjeta = enmascararTarjetaCorporativa(corporateCardNumber);
-  const proofBySequence = new Map<number, 'submitted' | 'approved' | 'rejected'>(
-    movementProofs.map((proof) => [proof.movementSequence, proof.status]),
-  );
+  const proofBySequence = new Map<
+    number,
+    'submitted' | 'approved' | 'rejected'
+  >(movementProofs.map((proof) => [proof.movementSequence, proof.status]));
   return movimientosSap.map((movimiento, index) => ({
     id: `${String(tripId)}-mov-${String(movimiento.sequence)}-${String(index + 1)}`,
     numeroMovimiento: movimiento.sequence,
@@ -113,7 +115,10 @@ function mapMovementStatus(
   return 'pendiente';
 }
 
-function construirDescripcionMovimiento(memo: string, destination: string): string {
+function construirDescripcionMovimiento(
+  memo: string,
+  destination: string,
+): string {
   const memoNormalizado = memo.trim();
   if (memoNormalizado.length === 0) {
     return `Movimiento — ${destination}`;
@@ -146,7 +151,13 @@ function resolverCategoriaMovimiento(memo: string): string {
     return 'Peaje';
   }
   if (
-    contieneAlgunTermino(texto, ['HOTEL', 'HOSPEDAJE', 'INN', 'SUITES', 'HOSTAL'])
+    contieneAlgunTermino(texto, [
+      'HOTEL',
+      'HOSPEDAJE',
+      'INN',
+      'SUITES',
+      'HOSTAL',
+    ])
   ) {
     return 'Hospedaje';
   }
@@ -187,7 +198,10 @@ function resolverCategoriaMovimiento(memo: string): string {
   return 'Movimiento';
 }
 
-function contieneAlgunTermino(texto: string, terminos: readonly string[]): boolean {
+function contieneAlgunTermino(
+  texto: string,
+  terminos: readonly string[],
+): boolean {
   return terminos.some((termino) => texto.includes(termino));
 }
 

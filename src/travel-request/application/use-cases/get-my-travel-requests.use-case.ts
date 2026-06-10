@@ -20,7 +20,8 @@ type MyTravelRequestsData = {
   }[];
 };
 
-export type GetMyTravelRequestsResponse = ApiSuccessResponse<MyTravelRequestsData>;
+export type GetMyTravelRequestsResponse =
+  ApiSuccessResponse<MyTravelRequestsData>;
 
 @Injectable()
 export class GetMyTravelRequestsUseCase {

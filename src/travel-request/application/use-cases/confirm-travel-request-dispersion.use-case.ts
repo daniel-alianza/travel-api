@@ -16,8 +16,9 @@ export type ConfirmTravelRequestDispersionCommand = {
   readonly dispersedByUserId: number;
 };
 
-export type ConfirmTravelRequestDispersionResponse =
-  ApiSuccessResponse<{ readonly ok: true }>;
+export type ConfirmTravelRequestDispersionResponse = ApiSuccessResponse<{
+  readonly ok: true;
+}>;
 
 @Injectable()
 export class ConfirmTravelRequestDispersionUseCase {
@@ -29,7 +30,10 @@ export class ConfirmTravelRequestDispersionUseCase {
   async execute(
     command: ConfirmTravelRequestDispersionCommand,
   ): Promise<ConfirmTravelRequestDispersionResponse> {
-    if (!Number.isFinite(command.dispersedTotal) || command.dispersedTotal <= 0) {
+    if (
+      !Number.isFinite(command.dispersedTotal) ||
+      command.dispersedTotal <= 0
+    ) {
       throw new BadRequestException(
         'El monto dispersado debe ser un número mayor a cero.',
       );
@@ -40,12 +44,13 @@ export class ConfirmTravelRequestDispersionUseCase {
         ? command.comment.trim()
         : null;
 
-    const result = await this.travelRequestRepository.confirmTravelRequestDispersion({
-      travelRequestId: command.travelRequestId,
-      dispersedTotal: command.dispersedTotal,
-      dispersionComment,
-      dispersedByUserId: command.dispersedByUserId,
-    });
+    const result =
+      await this.travelRequestRepository.confirmTravelRequestDispersion({
+        travelRequestId: command.travelRequestId,
+        dispersedTotal: command.dispersedTotal,
+        dispersionComment,
+        dispersedByUserId: command.dispersedByUserId,
+      });
 
     if (result === 'not_found') {
       throw new NotFoundException('Solicitud de viaje no encontrada.');

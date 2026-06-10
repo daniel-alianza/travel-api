@@ -6,6 +6,7 @@ import {
   HttpCode,
   Param,
   ParseIntPipe,
+  Post,
   Put,
   Query,
   UseGuards,
@@ -14,6 +15,7 @@ import {
 } from '@nestjs/common';
 import {
   ApiBody,
+  ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiOkResponse,
   ApiOperation,
@@ -40,6 +42,8 @@ import { SetIamUserGasolineNotificationsUseCase } from '../application/use-cases
 import { SetIamUserPasswordUseCase } from '../application/use-cases/set-iam-user-password.use-case';
 import { UpdateIamUserUseCase } from '../application/use-cases/update-iam-user.use-case';
 import { UpdateIamUserRequestDto } from './dtos/update-iam-user-request.dto';
+import { CreateIamUserUseCase } from '../application/use-cases/create-iam-user.use-case';
+import { CreateIamUserRequestDto } from './dtos/create-iam-user-request.dto';
 
 class IamUserListItemDto {
   @ApiProperty()
@@ -113,6 +117,26 @@ class IamFilterCatalogDataDto {
 
   @ApiProperty({ type: [String] })
   rolesEtiqueta: readonly string[];
+
+  @ApiProperty({
+    type: [String],
+    description:
+      'Etiquetas de rol que pueden ser jefe directo (desde catálogo en BD).',
+  })
+  rolesElegiblesJefeDirecto: readonly string[];
+
+  @ApiProperty({
+    description: 'Catálogo con IDs para registro de usuarios.',
+  })
+  registro: {
+    empresas: readonly { id: number; name: string }[];
+    areas: readonly { id: number; name: string }[];
+    sucursales: readonly {
+      id: number;
+      name: string;
+      companyId: number | null;
+    }[];
+  };
 }
 
 class IamFilterCatalogHttpResponseDto {
@@ -131,6 +155,25 @@ class IamSetPasswordHttpResponseDto {
   message: string;
 }
 
+class IamCreateUserDataDto {
+  @ApiProperty()
+  id: number;
+
+  @ApiProperty()
+  name: string;
+
+  @ApiProperty()
+  email: string;
+}
+
+class IamCreateUserHttpResponseDto {
+  @ApiProperty({ type: IamCreateUserDataDto })
+  data: IamCreateUserDataDto;
+
+  @ApiProperty()
+  message: string;
+}
+
 @ApiTags('IAM')
 @Controller('iam')
 export class IamController {
@@ -141,7 +184,48 @@ export class IamController {
     private readonly setIamUserExtraPermissionsUseCase: SetIamUserExtraPermissionsUseCase,
     private readonly setIamUserGasolineNotificationsUseCase: SetIamUserGasolineNotificationsUseCase,
     private readonly updateIamUserUseCase: UpdateIamUserUseCase,
+    private readonly createIamUserUseCase: CreateIamUserUseCase,
   ) {}
+
+  @Post('users')
+  @UseGuards(JwtSessionGuard, SuperAdminGuard)
+  @HttpCode(201)
+  @UsePipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  )
+  @ApiOperation({
+    summary: 'Registrar un usuario (IAM)',
+    description:
+      'Crea un usuario con empresa, sucursal, área y rol. Solo super_administrador.',
+  })
+  @ApiBody({ type: CreateIamUserRequestDto })
+  @ApiCreatedResponse({
+    description: 'Usuario registrado',
+    type: IamCreateUserHttpResponseDto,
+  })
+  @ApiUnauthorizedResponse({ description: 'No autenticado' })
+  @ApiForbiddenResponse({ description: 'Sin permisos de super administrador' })
+  async createUser(
+    @Body() body: CreateIamUserRequestDto,
+  ): Promise<IamCreateUserHttpResponseDto> {
+    const usuario = await this.createIamUserUseCase.execute({
+      name: body.name,
+      email: body.email,
+      password: body.password,
+      companyId: body.companyId,
+      branchId: body.branchId,
+      areaId: body.areaId,
+      roleLabel: body.roleLabel,
+    });
+    return buildSuccessResponse(
+      usuario,
+      'Usuario registrado correctamente.',
+    ) as IamCreateUserHttpResponseDto;
+  }
 
   @Put('users/:userId')
   @UseGuards(JwtSessionGuard, SuperAdminGuard)
@@ -207,10 +291,7 @@ export class IamController {
   ): Promise<IamUsersListHttpResponseDto> {
     const comando: ListIamUsersCommand = { search };
     const usuarios = await this.listIamUsersUseCase.execute(comando);
-    return buildSuccessResponse(
-      usuarios,
-      'Usuarios obtenidos correctamente.',
-    );
+    return buildSuccessResponse(usuarios, 'Usuarios obtenidos correctamente.');
   }
 
   @Put('users/:userId/password')

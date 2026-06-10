@@ -5,7 +5,7 @@ export function iamRoleDbNameToLabel(nombreRol: string): string {
     case 'administrador':
       return 'Administrador';
     case 'lider/gerente':
-      return 'Supervisor';
+      return 'Líder/Gerente';
     case 'colaborador':
       return 'Colaborador';
     default:

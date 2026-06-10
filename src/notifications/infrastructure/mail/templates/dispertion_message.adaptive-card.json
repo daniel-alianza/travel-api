@@ -1,0 +1,245 @@
+{
+  "type": "AdaptiveCard",
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "version": "1.4",
+  "body": [
+    {
+      "type": "Container",
+      "style": "emphasis",
+      "bleed": true,
+      "items": [
+        {
+          "type": "ColumnSet",
+          "columns": [
+            {
+              "type": "Column",
+              "width": "auto",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "💳",
+                  "size": "ExtraLarge",
+                  "spacing": "None"
+                }
+              ],
+              "verticalContentAlignment": "Center"
+            },
+            {
+              "type": "Column",
+              "width": "stretch",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "Nueva dispersión pendiente",
+                  "weight": "Bolder",
+                  "size": "Large",
+                  "color": "Attention",
+                  "spacing": "None"
+                },
+                {
+                  "type": "TextBlock",
+                  "text": "@{coalesce(triggerBody()?['companyName'], 'Tesorería')}",
+                  "isSubtle": true,
+                  "size": "Small",
+                  "spacing": "Small",
+                  "wrap": true
+                }
+              ],
+              "verticalContentAlignment": "Center"
+            },
+            {
+              "type": "Column",
+              "width": "auto",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "PENDIENTE",
+                  "weight": "Bolder",
+                  "size": "Small",
+                  "color": "Attention",
+                  "horizontalAlignment": "Right"
+                },
+                {
+                  "type": "TextBlock",
+                  "text": "#@{triggerBody()?['requestId']}",
+                  "isSubtle": true,
+                  "size": "Small",
+                  "horizontalAlignment": "Right",
+                  "spacing": "None"
+                }
+              ],
+              "verticalContentAlignment": "Center"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Container",
+      "style": "attention",
+      "spacing": "Medium",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "Hola **@{triggerBody()?['dispersorName']}** 👋",
+          "wrap": true,
+          "size": "Medium"
+        },
+        {
+          "type": "TextBlock",
+          "text": "Tu equipo de **Tesorería** tiene una nueva solicitud de dispersión del colaborador **@{triggerBody()?['employeeName']}**.",
+          "wrap": true,
+          "spacing": "Small"
+        },
+        {
+          "type": "TextBlock",
+          "text": "Fue **aprobada por @{triggerBody()?['bossName']}** y está lista para confirmar la dispersión de fondos.",
+          "wrap": true,
+          "spacing": "Small"
+        }
+      ]
+    },
+    {
+      "type": "Container",
+      "spacing": "Medium",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "Resumen para dispersión",
+          "weight": "Bolder",
+          "size": "Medium",
+          "spacing": "None"
+        },
+        {
+          "type": "FactSet",
+          "spacing": "Small",
+          "facts": [
+            {
+              "title": "Colaborador",
+              "value": "@{triggerBody()?['employeeName']}"
+            },
+            {
+              "title": "Aprobado por",
+              "value": "@{triggerBody()?['bossName']}"
+            },
+            {
+              "title": "Monto total",
+              "value": "$@{formatNumber(triggerBody()?['totalAmount'], 'N2')}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Container",
+      "spacing": "Medium",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "Detalle adicional",
+          "weight": "Bolder",
+          "size": "Small",
+          "spacing": "None"
+        },
+        {
+          "type": "FactSet",
+          "spacing": "Small",
+          "facts": [
+            {
+              "title": "Motivo",
+              "value": "@{coalesce(triggerBody()?['motivo'], '—')}"
+            },
+            {
+              "title": "Destinos",
+              "value": "@{coalesce(triggerBody()?['destinos'], '—')}"
+            },
+            {
+              "title": "Viajes",
+              "value": "@{string(triggerBody()?['tripCount'])}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "ColumnSet",
+      "spacing": "Medium",
+      "columns": [
+        {
+          "type": "Column",
+          "width": "stretch",
+          "items": [
+            {
+              "type": "Container",
+              "style": "warning",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "⛽ Gasolina",
+                  "weight": "Bolder",
+                  "size": "Small",
+                  "spacing": "None"
+                },
+                {
+                  "type": "TextBlock",
+                  "text": "@{if(greater(coalesce(triggerBody()?['gasolinaAmount'], 0), 0), concat('$', formatNumber(triggerBody()?['gasolinaAmount'], 'N2')), 'No aplica')}",
+                  "wrap": true,
+                  "spacing": "Small"
+                },
+                {
+                  "type": "TextBlock",
+                  "text": "@{if(and(greater(coalesce(triggerBody()?['gasolinaAmount'], 0), 0), not(empty(coalesce(triggerBody()?['cardNumber'], '')))), concat('Tarjeta: ', triggerBody()?['cardNumber']), '')}",
+                  "isSubtle": true,
+                  "size": "Small",
+                  "wrap": true,
+                  "spacing": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Column",
+          "width": "stretch",
+          "items": [
+            {
+              "type": "Container",
+              "style": "accent",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "🏷️ TAG",
+                  "weight": "Bolder",
+                  "size": "Small",
+                  "spacing": "None"
+                },
+                {
+                  "type": "TextBlock",
+                  "text": "@{if(greater(coalesce(triggerBody()?['tagAmount'], 0), 0), concat('$', formatNumber(triggerBody()?['tagAmount'], 'N2')), 'No aplica')}",
+                  "wrap": true,
+                  "spacing": "Small"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "TextBlock",
+      "text": "Accede a la cola de dispersión en la app para confirmar el pago.",
+      "wrap": true,
+      "isSubtle": true,
+      "size": "Small",
+      "spacing": "Medium"
+    }
+  ],
+  "actions": [
+    {
+      "type": "Action.OpenUrl",
+      "title": "Revisar y dispersar",
+      "style": "positive",
+      "url": "@{triggerBody()?['appUrl']}"
+    }
+  ]
+}

@@ -1,9 +1,11 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
   Header,
   HttpCode,
+  Logger,
   Param,
   ParseIntPipe,
   Patch,
@@ -67,6 +69,10 @@ import {
   type ResolveTravelRequestTripResponse,
 } from '../application/use-cases/resolve-travel-request-trip.use-case';
 import {
+  ResolveTravelRequestFromPowerAutomateUseCase,
+  type ResolveTravelRequestFromPowerAutomateResponse,
+} from '../application/use-cases/resolve-travel-request-from-power-automate.use-case';
+import {
   GetMyTravelRequestsUseCase,
   type GetMyTravelRequestsResponse,
 } from '../application/use-cases/get-my-travel-requests.use-case';
@@ -92,10 +98,12 @@ import {
   CreateTravelRequestDto,
 } from './dtos/create-travel-request.dto';
 import { RejectTravelRequestTripDto } from './dtos/reject-travel-request-trip.dto';
+import { ResolveTravelRequestFromPowerAutomateDto } from './dtos/resolve-travel-request-from-power-automate.dto';
 import { ConfirmDispersionDto } from './dtos/confirm-dispersion.dto';
 import { ValidateTripFoodExpenseDto } from './dtos/validate-trip-food-expense.dto';
 import { ValidateTripLodgingExpenseDto } from './dtos/validate-trip-lodging-expense.dto';
 import { JwtSessionGuard } from '../../auth/presentation/guards/jwt-session.guard';
+import { PowerAutomateSecretGuard } from './guards/power-automate-secret.guard';
 import { CurrentUser } from '../../auth/presentation/decorators/current-user.decorator';
 import type { AuthTokenVerifiedPayload } from '../../auth/application/interfaces/auth-token.service.interface';
 
@@ -137,6 +145,8 @@ type TravelRequestPoliciesResponse = {
 @ApiTags('Travel Request')
 @Controller('travel-request')
 export class TravelRequestController {
+  private readonly logger = new Logger(TravelRequestController.name);
+
   constructor(
     private readonly createTravelRequestUseCase: CreateTravelRequestUseCase,
     private readonly getTravelRequestFormDataUseCase: GetTravelRequestFormDataUseCase,
@@ -149,6 +159,7 @@ export class TravelRequestController {
     private readonly exportDispersionReportUseCase: ExportDispersionReportUseCase,
     private readonly confirmTravelRequestDispersionUseCase: ConfirmTravelRequestDispersionUseCase,
     private readonly resolveTravelRequestTripUseCase: ResolveTravelRequestTripUseCase,
+    private readonly resolveTravelRequestFromPowerAutomateUseCase: ResolveTravelRequestFromPowerAutomateUseCase,
     private readonly getMyTravelRequestsUseCase: GetMyTravelRequestsUseCase,
     private readonly getTravelRequestDetailForUserUseCase: GetTravelRequestDetailForUserUseCase,
     private readonly correctRejectedTravelRequestTripUseCase: CorrectRejectedTravelRequestTripUseCase,
@@ -382,6 +393,53 @@ export class TravelRequestController {
       resolution: 'reject',
       comment: requestBody.comment,
       actorUserId: parseJwtSubToUserId(user),
+    });
+  }
+
+  @Post('power-automate/resolve')
+  @UseGuards(PowerAutomateSecretGuard)
+  @HttpCode(200)
+  @UsePipes(
+    new ValidationPipe({
+      transform: true,
+      transformOptions: { enableImplicitConversion: true },
+      whitelist: true,
+      exceptionFactory: (errors) => {
+        const details = errors.flatMap((error) =>
+          error.constraints !== undefined
+            ? Object.values(error.constraints)
+            : [`Campo inválido: ${error.property}`],
+        );
+
+        Logger.warn(
+          `Validación PA fallida: ${details.join(' | ')}`,
+          TravelRequestController.name,
+        );
+
+        return new BadRequestException(details.join('. '));
+      },
+    }),
+  )
+  @ApiOperation({
+    summary: 'Resolver solicitud de viáticos desde Power Automate (Teams)',
+  })
+  @ApiBody({ type: ResolveTravelRequestFromPowerAutomateDto })
+  @ApiOkResponse({
+    description:
+      'Aprueba o rechaza todos los viajes pendientes de la solicitud.',
+  })
+  async resolveFromPowerAutomate(
+    @Body() requestBody: ResolveTravelRequestFromPowerAutomateDto,
+  ): Promise<ResolveTravelRequestFromPowerAutomateResponse> {
+    this.logger.log(
+      `Controller PA resolve: requestId=${requestBody.requestId} action=${requestBody.action} bossEmail=${requestBody.bossEmail}`,
+    );
+
+    return this.resolveTravelRequestFromPowerAutomateUseCase.execute({
+      requestId: requestBody.requestId,
+      action: requestBody.action,
+      bossEmail: requestBody.bossEmail,
+      comment: requestBody.comment ?? null,
     });
   }
 

@@ -36,5 +36,8 @@ export interface DmsRepository {
     tripId: number,
     userId: number,
   ): Promise<readonly DmsTripFileRecord[]>;
-  findTripFileForUser(fileId: number, userId: number): Promise<DmsTripFileRecord | null>;
+  findTripFileForUser(
+    fileId: number,
+    userId: number,
+  ): Promise<DmsTripFileRecord | null>;
 }

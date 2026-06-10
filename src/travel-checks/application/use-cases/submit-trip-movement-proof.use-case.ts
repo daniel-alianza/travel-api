@@ -1,4 +1,9 @@
-import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { buildSuccessResponse } from '../../../common/exceptions/builders/success-response.builder';
 import type { ApiSuccessResponse } from '../../../common/exceptions/interfaces/api-success-response.interface';
 import type { DmsBucketConfig } from '../../../config/dms-bucket/dms';
@@ -58,10 +63,11 @@ export class SubmitTripMovementProofUseCase {
     comment: string | null;
     files: readonly { tripFileId: number; fileRole: MovementProofFileRole }[];
   }): Promise<SubmitTripMovementProofResponse> {
-    const context = await this.travelChecksRepository.findExpenseTripMovementContext(
-      input.tripId,
-      input.userId,
-    );
+    const context =
+      await this.travelChecksRepository.findExpenseTripMovementContext(
+        input.tripId,
+        input.userId,
+      );
     if (context === null) {
       throw new NotFoundException({
         message: 'Viaje no encontrado o no dispersado para este usuario.',
@@ -77,11 +83,12 @@ export class SubmitTripMovementProofUseCase {
 
     validateProofFiles(input.proofType, input.files);
 
-    const filesBelongToUser = await this.travelChecksRepository.areTripFilesOwnedByUser({
-      tripId: input.tripId,
-      userId: input.userId,
-      fileIds: input.files.map((file) => file.tripFileId),
-    });
+    const filesBelongToUser =
+      await this.travelChecksRepository.areTripFilesOwnedByUser({
+        tripId: input.tripId,
+        userId: input.userId,
+        fileIds: input.files.map((file) => file.tripFileId),
+      });
     if (!filesBelongToUser) {
       throw new BadRequestException({
         message: 'Uno o más archivos no pertenecen a este viaje.',
@@ -106,18 +113,19 @@ export class SubmitTripMovementProofUseCase {
       });
     }
 
-    const createdProof = await this.travelChecksRepository.createTripMovementProof({
-      tripId: input.tripId,
-      movementSequence: input.movementSequence,
-      movementDate: new Date(movement.dueDate),
-      movementAmount: movement.debitAmount,
-      movementMemo: movement.memo,
-      proofType: input.proofType,
-      createdByUserId: input.userId,
-      comment: input.comment,
-      files: input.files,
-      invoiceCfdi,
-    });
+    const createdProof =
+      await this.travelChecksRepository.createTripMovementProof({
+        tripId: input.tripId,
+        movementSequence: input.movementSequence,
+        movementDate: new Date(movement.dueDate),
+        movementAmount: movement.debitAmount,
+        movementMemo: movement.memo,
+        proofType: input.proofType,
+        createdByUserId: input.userId,
+        comment: input.comment,
+        files: input.files,
+        invoiceCfdi,
+      });
 
     return buildSuccessResponse(
       { id: createdProof.id, status: 'submitted' },
@@ -128,7 +136,10 @@ export class SubmitTripMovementProofUseCase {
   private async buildInvoiceCfdiPersistInput(input: {
     readonly tripId: number;
     readonly userId: number;
-    readonly files: readonly { tripFileId: number; fileRole: MovementProofFileRole }[];
+    readonly files: readonly {
+      tripFileId: number;
+      fileRole: MovementProofFileRole;
+    }[];
     readonly departureDate: Date;
     readonly returnDate: Date;
     readonly movementSequence: number;
@@ -141,7 +152,8 @@ export class SubmitTripMovementProofUseCase {
     });
     if (rows.length !== fileIds.length) {
       throw new BadRequestException({
-        message: 'No se pudieron resolver todos los archivos de la comprobación.',
+        message:
+          'No se pudieron resolver todos los archivos de la comprobación.',
         error: 'Archivos inválidos',
       });
     }
@@ -150,10 +162,12 @@ export class SubmitTripMovementProofUseCase {
     const crosscheckAt = new Date();
 
     const excludeProofId =
-      await this.travelChecksRepository.findTripMovementProofIdByTripAndSequence({
-        tripId: input.tripId,
-        movementSequence: input.movementSequence,
-      });
+      await this.travelChecksRepository.findTripMovementProofIdByTripAndSequence(
+        {
+          tripId: input.tripId,
+          movementSequence: input.movementSequence,
+        },
+      );
 
     const bufferPairs: InvoiceProofPairBuffersInput[] = [];
     const xmlTripFileIds: number[] = [];
@@ -166,7 +180,8 @@ export class SubmitTripMovementProofUseCase {
       }
       if (xmlSpec === undefined || pdfSpec === undefined) {
         throw new BadRequestException({
-          message: 'Cada XML de factura debe ir acompañado de su PDF correspondiente.',
+          message:
+            'Cada XML de factura debe ir acompañado de su PDF correspondiente.',
           error: 'CFDI_ARCHIVOS_INCOMPLETOS',
         });
       }
@@ -199,10 +214,11 @@ export class SubmitTripMovementProofUseCase {
     });
 
     for (const row of validated) {
-      const hasConflict = await this.travelChecksRepository.hasTripMovementProofCfdiUuidConflict({
-        cfdiUuid: row.cfdiUuid,
-        excludeTripMovementProofId: excludeProofId,
-      });
+      const hasConflict =
+        await this.travelChecksRepository.hasTripMovementProofCfdiUuidConflict({
+          cfdiUuid: row.cfdiUuid,
+          excludeTripMovementProofId: excludeProofId,
+        });
       if (hasConflict) {
         throw new BadRequestException({
           message:
@@ -212,21 +228,23 @@ export class SubmitTripMovementProofUseCase {
       }
     }
 
-    const cfdiRecords: TripMovementProofInvoiceCfdiRecordInput[] = validated.map((row, index) => {
-      const tripFileId = xmlTripFileIds[index];
-      if (tripFileId === undefined) {
-        throw new BadRequestException({
-          message: 'No se pudo asociar el XML del CFDI con el archivo del viaje.',
-          error: 'CFDI_ASOCIACION_INVALIDA',
-        });
-      }
-      return {
-        tripFileId,
-        cfdiUuid: row.cfdiUuid,
-        fechaEmision: row.fechaEmision,
-        xmlFileRole: mapInvoiceXmlRoleToCfdiEnum(row.xmlRole),
-      };
-    });
+    const cfdiRecords: TripMovementProofInvoiceCfdiRecordInput[] =
+      validated.map((row, index) => {
+        const tripFileId = xmlTripFileIds[index];
+        if (tripFileId === undefined) {
+          throw new BadRequestException({
+            message:
+              'No se pudo asociar el XML del CFDI con el archivo del viaje.',
+            error: 'CFDI_ASOCIACION_INVALIDA',
+          });
+        }
+        return {
+          tripFileId,
+          cfdiUuid: row.cfdiUuid,
+          fechaEmision: row.fechaEmision,
+          xmlFileRole: mapInvoiceXmlRoleToCfdiEnum(row.xmlRole),
+        };
+      });
 
     if (cfdiRecords.length === 0) {
       throw new BadRequestException({
@@ -284,7 +302,9 @@ export class SubmitTripMovementProofUseCase {
     };
     movementSequence: number;
   }): Promise<SapExpenseMovementRecord> {
-    const movements = await this.travelChecksSapMovementsPort.fetchByReference(input.context);
+    const movements = await this.travelChecksSapMovementsPort.fetchByReference(
+      input.context,
+    );
     const movement = movements.find(
       (item) => item.sequence === input.movementSequence,
     );
@@ -313,7 +333,8 @@ function validateProofFiles(
     const validTicket = files.length === 1 && files[0]?.fileRole === 'ticket';
     if (!validTicket) {
       throw new BadRequestException({
-        message: 'Para ticket debes enviar exactamente un archivo con rol ticket.',
+        message:
+          'Para ticket debes enviar exactamente un archivo con rol ticket.',
         error: 'Archivos inválidos',
       });
     }

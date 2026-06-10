@@ -22,10 +22,13 @@ export class GetUserFuelCardsUseCase {
   ) {}
 
   async execute(userId: number): Promise<GetUserFuelCardsResponse> {
-    const user = await this.travelRequestRepository.findFormDataByUserId(userId);
+    const user =
+      await this.travelRequestRepository.findFormDataByUserId(userId);
 
     if (!user) {
-      throw new NotFoundException('No se encontró el usuario para tarjetas fuel.');
+      throw new NotFoundException(
+        'No se encontró el usuario para tarjetas fuel.',
+      );
     }
 
     const fuelCards = user.cards

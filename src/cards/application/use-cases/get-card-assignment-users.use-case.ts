@@ -27,7 +27,9 @@ export class GetCardAssignmentUsersUseCase {
     private readonly cardRepository: CardRepository,
   ) {}
 
-  async execute(query: CardAssignmentUsersQuery): Promise<GetCardAssignmentUsersResponse> {
+  async execute(
+    query: CardAssignmentUsersQuery,
+  ): Promise<GetCardAssignmentUsersResponse> {
     const users = await this.cardRepository.findCardAssignmentUsers(query);
     return buildSuccessResponse(
       {

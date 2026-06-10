@@ -20,7 +20,8 @@ type ListGasolineCardsData = {
   readonly cards: readonly GasolineCardListItem[];
 };
 
-export type ListGasolineCardsResponse = ApiSuccessResponse<ListGasolineCardsData>;
+export type ListGasolineCardsResponse =
+  ApiSuccessResponse<ListGasolineCardsData>;
 
 @Injectable()
 export class ListGasolineCardsUseCase {
@@ -50,7 +51,11 @@ export class ListGasolineCardsUseCase {
         ...(searchText.length >= 2
           ? {
               OR: [
-                { cardNumber: { contains: digitsOnly.length >= 2 ? digitsOnly : searchText } },
+                {
+                  cardNumber: {
+                    contains: digitsOnly.length >= 2 ? digitsOnly : searchText,
+                  },
+                },
                 { fuelName: { contains: searchText } },
               ],
             }

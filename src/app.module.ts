@@ -12,6 +12,7 @@ import { IamModule } from './iam/iam.module';
 import { SapPurchaseInvoicesModule } from './sappurchaseinvoices/sappurchaseinvoices.module';
 import { AccountingInvoiceModule } from './accounting-invoice/accounting-invoice.module';
 import { GasolineModule } from './gasoline/gasoline.module';
+import { NotificationsModule } from './notifications/notifications.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { GasolineModule } from './gasoline/gasoline.module';
     SapPurchaseInvoicesModule,
     AccountingInvoiceModule,
     GasolineModule,
+    NotificationsModule,
   ],
   controllers: [],
   providers: [],

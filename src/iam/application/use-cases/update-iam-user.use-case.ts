@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../../../infrastructure/prisma/prisma.service';
-import { iamRoleLabelToDbName } from '../iam-role-label-to-db.mapper';
+import { resolveIamRoleRecordByLabel } from '../resolve-iam-role-by-label';
 
 export type UpdateIamUserCommand = {
   readonly targetUserId: number;
@@ -22,7 +22,6 @@ export class UpdateIamUserUseCase {
   constructor(private readonly prismaService: PrismaService) {}
 
   async execute(command: UpdateIamUserCommand): Promise<void> {
-    const nombreRolDb = iamRoleLabelToDbName(command.roleLabel);
     const nombreNormalizado = command.name.trim();
     const correoNormalizado = command.email.trim().toLowerCase();
     const areaNombre = command.areaName.trim();
@@ -54,10 +53,7 @@ export class UpdateIamUserUseCase {
     }
 
     const [rol, area, sucursal, correoDuplicado, jefe] = await Promise.all([
-      this.prismaService.role.findFirst({
-        where: { name: nombreRolDb },
-        select: { id: true },
-      }),
+      resolveIamRoleRecordByLabel(this.prismaService, command.roleLabel),
       this.prismaService.area.findFirst({
         where: { name: areaNombre },
         select: { id: true },
@@ -65,10 +61,7 @@ export class UpdateIamUserUseCase {
       this.prismaService.branch.findFirst({
         where: {
           name: sucursalNombre,
-          OR: [
-            { companyId: usuarioActual.companyId },
-            { companyId: null },
-          ],
+          OR: [{ companyId: usuarioActual.companyId }, { companyId: null }],
         },
         select: { id: true },
       }),
@@ -88,7 +81,9 @@ export class UpdateIamUserUseCase {
     ]);
 
     if (rol === null) {
-      throw new NotFoundException(`Rol no encontrado: ${nombreRolDb}.`);
+      throw new NotFoundException(
+        `Rol no encontrado: ${command.roleLabel.trim()}.`,
+      );
     }
     if (area === null) {
       throw new NotFoundException(`Área no encontrada: ${areaNombre}.`);

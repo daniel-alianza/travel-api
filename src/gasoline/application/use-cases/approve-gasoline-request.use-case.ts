@@ -40,14 +40,13 @@ export class ApproveGasolineRequestUseCase {
     }
 
     if (request.status !== 'pending') {
-      throw new BadRequestException(
-        `La solicitud ya fue ${request.status}.`,
-      );
+      throw new BadRequestException(`La solicitud ya fue ${request.status}.`);
     }
 
-    const applicant = await this.gasolineRequestRepository.findUserApprovalContext(
-      request.userId,
-    );
+    const applicant =
+      await this.gasolineRequestRepository.findUserApprovalContext(
+        request.userId,
+      );
     if (applicant === null) {
       throw new NotFoundException('Solicitante no encontrado.');
     }

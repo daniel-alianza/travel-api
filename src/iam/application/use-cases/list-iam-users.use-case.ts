@@ -81,8 +81,8 @@ export class ListIamUsersUseCase {
     const roleIds = [...new Set(rows.map((row) => row.roleId))];
     const userIds = rows.map((row) => row.id);
 
-    const [defaultsRows, extrasRows, gasolineFlagsByUserId] =
-      await Promise.all([
+    const [defaultsRows, extrasRows, gasolineFlagsByUserId] = await Promise.all(
+      [
         this.prismaService.roleDefaultPermission.findMany({
           where: { roleId: { in: roleIds } },
           select: { roleId: true, permissionCode: true },
@@ -91,8 +91,11 @@ export class ListIamUsersUseCase {
           where: { userId: { in: userIds } },
           select: { userId: true, permissionCode: true },
         }),
-        this.gasolineNotificationRecipientRepository.findFlagsByUserIds(userIds),
-      ]);
+        this.gasolineNotificationRecipientRepository.findFlagsByUserIds(
+          userIds,
+        ),
+      ],
+    );
 
     const defaultsByRoleId = new Map<number, Set<string>>();
     for (const row of defaultsRows) {

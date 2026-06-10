@@ -19,6 +19,8 @@ const AREA_NAMES: readonly string[] = [
   'Recursos Humanos',
   'Seguridad e Higiene',
   'Tecnologías de la Información',
+  'Tesoreria',
+  'Innovación y Transformación Digital',
   'Ventas',
 ];
 

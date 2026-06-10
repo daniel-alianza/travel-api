@@ -34,7 +34,10 @@ export class TravelChecksSapMovementsService implements TravelChecksSapMovements
       return [];
     }
 
-    const normalizedCardReference = context.corporateCardNumber.replace(/\D/g, '');
+    const normalizedCardReference = context.corporateCardNumber.replace(
+      /\D/g,
+      '',
+    );
     if (normalizedCardReference.length === 0) {
       return [];
     }

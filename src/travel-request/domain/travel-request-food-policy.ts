@@ -18,7 +18,9 @@ export function normalizeTextForFoodPolicy(value: string): string {
     .replace(/[\u0300-\u036f]/g, '');
 }
 
-export function resolveFoodPolicyForAreaName(areaName: string): FoodPolicyResolution {
+export function resolveFoodPolicyForAreaName(
+  areaName: string,
+): FoodPolicyResolution {
   const normalizedAreaName = normalizeTextForFoodPolicy(areaName);
   if (normalizedAreaName === 'direccion') {
     return { tag: 'exempt' };
@@ -63,7 +65,10 @@ export function resolveFoodPolicyForAreaName(areaName: string): FoodPolicyResolu
   return { tag: 'unconfigured', areaName };
 }
 
-export function calculateTripDaysForFoodPolicy(startDate: Date, endDate: Date): number {
+export function calculateTripDaysForFoodPolicy(
+  startDate: Date,
+  endDate: Date,
+): number {
   const normalizedStart = new Date(startDate);
   normalizedStart.setHours(0, 0, 0, 0);
   const normalizedEnd = new Date(endDate);

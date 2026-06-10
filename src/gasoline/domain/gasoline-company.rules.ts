@@ -10,7 +10,10 @@ export function normalizeAreaName(name: string): string {
   return normalizeCompanyName(name);
 }
 
-export function isAlianzaCompany(companyId: number, companyName: string): boolean {
+export function isAlianzaCompany(
+  companyId: number,
+  companyName: string,
+): boolean {
   if (companyId === 1) {
     return true;
   }

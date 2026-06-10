@@ -1,4 +1,9 @@
-import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { xml2js } from 'xml-js';
 import { buildSuccessResponse } from '../../../common/exceptions/builders/success-response.builder';
 import type { ApiSuccessResponse } from '../../../common/exceptions/interfaces/api-success-response.interface';
@@ -50,10 +55,11 @@ export class GetTripMovementCfdiUseCase {
     tripId: number,
     movementSequence: number,
   ): Promise<GetTripMovementCfdiResponse> {
-    const xmlFile = await this.travelChecksRepository.findTripMovementProofXmlFile({
-      tripId,
-      movementSequence,
-    });
+    const xmlFile =
+      await this.travelChecksRepository.findTripMovementProofXmlFile({
+        tripId,
+        movementSequence,
+      });
 
     if (xmlFile === null) {
       throw new NotFoundException({
@@ -106,7 +112,9 @@ async function descargarXml(signedUrl: string): Promise<string> {
   return response.text();
 }
 
-function extraerCamposDesdeXml(xml: string): readonly { campo: string; valor: string }[] {
+function extraerCamposDesdeXml(
+  xml: string,
+): readonly { campo: string; valor: string }[] {
   const xmlCompacto = xml2js(xml, {
     compact: true,
     trim: true,
@@ -140,7 +148,9 @@ function extraerCamposDesdeXml(xml: string): readonly { campo: string; valor: st
 }
 
 function normalizarNombreAtributo(nombre: string): string {
-  const limpio = nombre.includes(':') ? nombre.split(':').at(-1) ?? nombre : nombre;
+  const limpio = nombre.includes(':')
+    ? (nombre.split(':').at(-1) ?? nombre)
+    : nombre;
   const humanizado = limpio
     .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
     .replace(/_/g, ' ')
@@ -167,14 +177,22 @@ function extraerCamposClaveEmisorReceptor(
 
   const resultado: Array<{ campo: string; valor: string }> = [];
   agregarCampoSiExiste(resultado, 'RFC Emisor', leerAtributo(emisor, 'Rfc'));
-  agregarCampoSiExiste(resultado, 'Nombre Emisor', leerAtributo(emisor, 'Nombre'));
+  agregarCampoSiExiste(
+    resultado,
+    'Nombre Emisor',
+    leerAtributo(emisor, 'Nombre'),
+  );
   agregarCampoSiExiste(
     resultado,
     'Régimen Fiscal Emisor',
     leerAtributo(emisor, 'RegimenFiscal'),
   );
 
-  agregarCampoSiExiste(resultado, 'RFC Receptor', leerAtributo(receptor, 'Rfc'));
+  agregarCampoSiExiste(
+    resultado,
+    'RFC Receptor',
+    leerAtributo(receptor, 'Rfc'),
+  );
   agregarCampoSiExiste(
     resultado,
     'Nombre Receptor',
@@ -185,7 +203,11 @@ function extraerCamposClaveEmisorReceptor(
     'Régimen Fiscal Receptor',
     leerAtributo(receptor, 'RegimenFiscalReceptor'),
   );
-  agregarCampoSiExiste(resultado, 'Uso CFDI', leerAtributo(receptor, 'UsoCFDI'));
+  agregarCampoSiExiste(
+    resultado,
+    'Uso CFDI',
+    leerAtributo(receptor, 'UsoCFDI'),
+  );
   return resultado;
 }
 
@@ -305,8 +327,9 @@ function leerNodo(
 
 function comoArregloRegistros(valor: unknown): Record<string, unknown>[] {
   if (Array.isArray(valor)) {
-    return valor.filter((item): item is Record<string, unknown> =>
-      item !== null && typeof item === 'object',
+    return valor.filter(
+      (item): item is Record<string, unknown> =>
+        item !== null && typeof item === 'object',
     );
   }
   if (valor !== null && typeof valor === 'object') {

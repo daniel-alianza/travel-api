@@ -10,11 +10,14 @@ type GetDmsUsageForUserData = {
   readonly uploadedBytes: number;
 };
 
-export type GetDmsUsageForUserResponse = ApiSuccessResponse<GetDmsUsageForUserData>;
+export type GetDmsUsageForUserResponse =
+  ApiSuccessResponse<GetDmsUsageForUserData>;
 
 @Injectable()
 export class GetDmsUsageForUserUseCase {
-  constructor(private readonly dmsUsageMetricsService: DmsUsageMetricsService) {}
+  constructor(
+    private readonly dmsUsageMetricsService: DmsUsageMetricsService,
+  ) {}
 
   execute(userId: number): GetDmsUsageForUserResponse {
     const usage = this.dmsUsageMetricsService.getUserUsage(userId);

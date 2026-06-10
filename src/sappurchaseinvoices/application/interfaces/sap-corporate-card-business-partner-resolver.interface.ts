@@ -1,4 +1,5 @@
-export const SAP_CORPORATE_CARD_BP_RESOLVER = 'SapCorporateCardBusinessPartnerResolver';
+export const SAP_CORPORATE_CARD_BP_RESOLVER =
+  'SapCorporateCardBusinessPartnerResolver';
 
 export type SapCorporateCardResolveResult = {
   readonly cardCode: string;

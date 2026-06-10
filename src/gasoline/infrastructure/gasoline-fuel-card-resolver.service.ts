@@ -73,7 +73,10 @@ export class GasolineFuelCardResolverService {
         type: 'FUEL',
         companyId: input.companyId,
         isActive: true,
-        fuelName: sapCard.name.length > 0 ? sapCard.name : `Tarjeta ${sapCard.cardNumber.slice(-4)}`,
+        fuelName:
+          sapCard.name.length > 0
+            ? sapCard.name
+            : `Tarjeta ${sapCard.cardNumber.slice(-4)}`,
         fuelStatus: 'active',
         sapCode: sapCard.sapCode,
         sapSyncedAt: new Date(),

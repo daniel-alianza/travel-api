@@ -105,16 +105,20 @@ export class GetAccountingMonthIndicatorsUseCase {
       });
 
     if (contexto.companies.length === 0) {
-      throw new NotFoundException('No se encontraron empresas para el alcance.');
+      throw new NotFoundException(
+        'No se encontraron empresas para el alcance.',
+      );
     }
 
     const companyIds = contexto.companies.map((company) => company.id);
     const indicadores =
-      await this.travelChecksRepository.getAccountingMonthIndicatorsByCompanies({
-        companyIds,
-        rangeStart: rango.startInstant,
-        rangeEnd: rango.endInstant,
-      });
+      await this.travelChecksRepository.getAccountingMonthIndicatorsByCompanies(
+        {
+          companyIds,
+          rangeStart: rango.startInstant,
+          rangeEnd: rango.endInstant,
+        },
+      );
 
     const indicadoresPorId = new Map(
       indicadores.map((row) => [row.companyId, row]),

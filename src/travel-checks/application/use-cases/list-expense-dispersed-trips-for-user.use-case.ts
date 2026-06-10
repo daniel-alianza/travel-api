@@ -37,9 +37,13 @@ export class ListExpenseDispersedTripsForUserUseCase {
     private readonly travelChecksRepository: TravelChecksRepository,
   ) {}
 
-  async execute(userId: number): Promise<ListExpenseDispersedTripsForUserResponse> {
+  async execute(
+    userId: number,
+  ): Promise<ListExpenseDispersedTripsForUserResponse> {
     const registros =
-      await this.travelChecksRepository.findDispersedExpenseTripsForUser(userId);
+      await this.travelChecksRepository.findDispersedExpenseTripsForUser(
+        userId,
+      );
 
     return buildSuccessResponse(
       {
@@ -50,10 +54,15 @@ export class ListExpenseDispersedTripsForUserUseCase {
   }
 }
 
-function mapTrip(registro: DispersedExpenseTripListRecord): ExpenseDispersedTripItem {
+function mapTrip(
+  registro: DispersedExpenseTripListRecord,
+): ExpenseDispersedTripItem {
   const solicitud = registro.travelRequest;
   const fechaAutorizacion =
-    registro.approvedAt ?? solicitud.approvedAt ?? solicitud.dispersedAt ?? registro.departureDate;
+    registro.approvedAt ??
+    solicitud.approvedAt ??
+    solicitud.dispersedAt ??
+    registro.departureDate;
   return {
     id: String(registro.id),
     solicitudId: String(solicitud.id),

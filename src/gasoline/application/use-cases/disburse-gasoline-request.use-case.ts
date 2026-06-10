@@ -104,19 +104,21 @@ export class DisburseGasolineRequestUseCase {
     const cardType = request.fuelCardKind ?? '';
     const comments = `${request.cardNumber}\t${cardType}\t${request.plate}\t$${request.requestedAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}\tCOMBUSTIBLE`;
 
-    const sapResult = await this.gasolineDisbursementPort.createPurchaseInvoice({
-      companyId: request.companyId,
-      supplierCode: supplier.code,
-      amount: request.requestedAmount,
-      comments,
-      solicitudRef: `SG. ${request.id} ${request.plate}`,
-      taxCode: vat.code,
-      accountCode: viaticCategory.code,
-      costingCode,
-      approverEmail: request.approverEmail,
-      approverName: request.approverName,
-      downPaymentDocEntry: command.downPaymentDocEntry,
-    });
+    const sapResult = await this.gasolineDisbursementPort.createPurchaseInvoice(
+      {
+        companyId: request.companyId,
+        supplierCode: supplier.code,
+        amount: request.requestedAmount,
+        comments,
+        solicitudRef: `SG. ${request.id} ${request.plate}`,
+        taxCode: vat.code,
+        accountCode: viaticCategory.code,
+        costingCode,
+        approverEmail: request.approverEmail,
+        approverName: request.approverName,
+        downPaymentDocEntry: command.downPaymentDocEntry,
+      },
+    );
 
     const updated = await this.gasolineRequestRepository.markDisbursed({
       requestId: command.requestId,
@@ -125,7 +127,9 @@ export class DisburseGasolineRequestUseCase {
     });
 
     if (updated === null) {
-      throw new BadRequestException('No fue posible marcar la solicitud como dispersada.');
+      throw new BadRequestException(
+        'No fue posible marcar la solicitud como dispersada.',
+      );
     }
 
     return buildSuccessResponse(

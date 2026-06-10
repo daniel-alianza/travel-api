@@ -2,8 +2,10 @@ import {
   BadRequestException,
   Inject,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { buildSuccessResponse } from '../../../common/exceptions/builders/success-response.builder';
 import type { ApiSuccessResponse } from '../../../common/exceptions/interfaces/api-success-response.interface';
 import type {
@@ -20,6 +22,11 @@ import {
   computeLodgingPolicyMaximumAmount,
   resolveNationalLodgingPolicyForAreaName,
 } from '../../domain/travel-request-lodging-policy';
+import { buildBossAuthNotificationPayload } from '../../domain/build-boss-auth-notification-payload';
+import { buildRequestSentNotificationPayload } from '../../domain/build-request-sent-notification-payload';
+import { buildTravelRequestApprovalAppUrl } from '../../domain/build-travel-request-approval-app-url';
+import { SendBossAuthNotificationUseCase } from '../../../notifications/application/use-cases/send-boss-auth-notification.use-case';
+import { SendRequestSentNotificationUseCase } from '../../../notifications/application/use-cases/send-request-sent-notification.use-case';
 
 export type CreateTravelRequestTripCommand = {
   readonly destinoViaje: string;
@@ -77,9 +84,14 @@ const CAR_RENT_RECOMMENDED_PER_DAY = 850;
 
 @Injectable()
 export class CreateTravelRequestUseCase {
+  private readonly logger = new Logger(CreateTravelRequestUseCase.name);
+
   constructor(
     @Inject('TravelRequestRepository')
     private readonly travelRequestRepository: TravelRequestRepository,
+    private readonly sendRequestSentNotificationUseCase: SendRequestSentNotificationUseCase,
+    private readonly sendBossAuthNotificationUseCase: SendBossAuthNotificationUseCase,
+    private readonly configService: ConfigService,
   ) {}
 
   async execute(
@@ -109,8 +121,9 @@ export class CreateTravelRequestUseCase {
         `No hay política de alimentos configurada para el área ${foodPolicyResolution.areaName}.`,
       );
     }
-    const lodgingPolicyResolution =
-      resolveNationalLodgingPolicyForAreaName(area.name);
+    const lodgingPolicyResolution = resolveNationalLodgingPolicyForAreaName(
+      area.name,
+    );
     if (lodgingPolicyResolution.tag === 'unconfigured') {
       throw new BadRequestException(
         `No hay política de hospedaje nacional configurada para el área ${lodgingPolicyResolution.areaName}.`,
@@ -140,7 +153,10 @@ export class CreateTravelRequestUseCase {
         );
       }
 
-      const tripDays = calculateTripDaysForFoodPolicy(departureDate, returnDate);
+      const tripDays = calculateTripDaysForFoodPolicy(
+        departureDate,
+        returnDate,
+      );
       const foodPolicyRecommendedTotal = computeFoodPolicyMaximumAmount(
         foodPolicyResolution,
         tripDays,
@@ -240,6 +256,14 @@ export class CreateTravelRequestUseCase {
         trips: repositoryInputTrips,
       });
 
+    await this.notifyTravelRequestCreatedSafely({
+      requestId: createdRequest.id,
+      userId: command.userId,
+      employeeName: command.employeeName.trim(),
+      corporateCardNumber: command.corporateCardNumber?.trim() ?? null,
+      trips: repositoryInputTrips,
+    });
+
     return buildSuccessResponse(
       {
         id: createdRequest.id,
@@ -248,6 +272,102 @@ export class CreateTravelRequestUseCase {
       },
       'Solicitud creada correctamente.',
     );
+  }
+
+  private async notifyTravelRequestCreatedSafely(input: {
+    readonly requestId: number;
+    readonly userId: number;
+    readonly employeeName: string;
+    readonly corporateCardNumber: string | null;
+    readonly trips: CreateTravelRequestRepositoryInput['trips'];
+  }): Promise<void> {
+    try {
+      this.logger.debug(
+        `Iniciando notificaciones para solicitud #${input.requestId} (userId=${input.userId})`,
+      );
+
+      const contacts =
+        await this.travelRequestRepository.findTravelRequestNotificationContacts(
+          input.userId,
+        );
+
+      if (contacts === null) {
+        this.logger.warn(
+          `Notificaciones omitidas para solicitud #${input.requestId}: el solicitante no tiene correo registrado.`,
+        );
+        return;
+      }
+
+      this.logger.debug(
+        `Contactos solicitud #${input.requestId}: employee=${contacts.employeeEmail}, boss=${contacts.bossName}, bossEmail=${contacts.bossEmail ?? 'null'}, company=${contacts.companyName}`,
+      );
+
+      const frontendUrl = this.configService.get<string>('FRONTEND_URL') ?? '';
+      const employeeAppUrl = frontendUrl;
+      const approvalAppUrl = buildTravelRequestApprovalAppUrl(frontendUrl);
+
+      const requestSentPayload = buildRequestSentNotificationPayload({
+        requestId: input.requestId,
+        employeeName: input.employeeName,
+        corporateCardNumber: input.corporateCardNumber,
+        trips: input.trips,
+        contacts,
+        appUrl: employeeAppUrl,
+      });
+
+      try {
+        this.logger.debug(
+          `Enviando request_sent solicitud #${input.requestId} → ${requestSentPayload.recipientEmail}`,
+        );
+        await this.sendRequestSentNotificationUseCase.execute(
+          requestSentPayload,
+        );
+        this.logger.log(
+          `Notificación request_sent enviada para solicitud #${input.requestId}`,
+        );
+      } catch (error) {
+        this.logger.error(
+          `Falló request_sent para solicitud #${input.requestId}`,
+          error,
+        );
+      }
+
+      const bossAuthPayload = buildBossAuthNotificationPayload({
+        requestId: input.requestId,
+        employeeName: input.employeeName,
+        corporateCardNumber: input.corporateCardNumber,
+        trips: input.trips,
+        contacts,
+        appUrl: approvalAppUrl,
+      });
+
+      if (bossAuthPayload === null) {
+        this.logger.warn(
+          `Notificación boss_authorization omitida para solicitud #${input.requestId}: jefe "${contacts.bossName}" sin correo registrado (bossEmail=null).`,
+        );
+        return;
+      }
+
+      try {
+        this.logger.debug(
+          `Enviando boss_authorization solicitud #${input.requestId} → ${bossAuthPayload.recipientEmail} (jefe: ${bossAuthPayload.bossName}, empleado: ${bossAuthPayload.employeeName})`,
+        );
+        await this.sendBossAuthNotificationUseCase.execute(bossAuthPayload);
+        this.logger.log(
+          `Notificación boss_authorization enviada para solicitud #${input.requestId} → ${bossAuthPayload.recipientEmail}`,
+        );
+      } catch (error) {
+        this.logger.error(
+          `Falló boss_authorization para solicitud #${input.requestId} → ${bossAuthPayload.recipientEmail}`,
+          error,
+        );
+      }
+    } catch (error) {
+      this.logger.error(
+        `Error inesperado en notificaciones para solicitud #${input.requestId}`,
+        error,
+      );
+    }
   }
 }
 

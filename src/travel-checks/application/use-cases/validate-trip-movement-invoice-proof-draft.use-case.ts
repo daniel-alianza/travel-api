@@ -1,4 +1,9 @@
-import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { buildSuccessResponse } from '../../../common/exceptions/builders/success-response.builder';
 import type { ApiSuccessResponse } from '../../../common/exceptions/interfaces/api-success-response.interface';
 import {
@@ -38,10 +43,11 @@ export class ValidateTripMovementInvoiceProofDraftUseCase {
     readonly movementSequence: number;
     readonly files: ValidateTripMovementInvoiceProofDraftFileBuffers;
   }): Promise<ValidateTripMovementInvoiceProofDraftResponse> {
-    const context = await this.travelChecksRepository.findExpenseTripMovementContext(
-      input.tripId,
-      input.userId,
-    );
+    const context =
+      await this.travelChecksRepository.findExpenseTripMovementContext(
+        input.tripId,
+        input.userId,
+      );
     if (context === null) {
       throw new NotFoundException({
         message: 'Viaje no encontrado o no dispersado para este usuario.',
@@ -59,16 +65,19 @@ export class ValidateTripMovementInvoiceProofDraftUseCase {
     });
 
     const excludeProofId =
-      await this.travelChecksRepository.findTripMovementProofIdByTripAndSequence({
-        tripId: input.tripId,
-        movementSequence: input.movementSequence,
-      });
+      await this.travelChecksRepository.findTripMovementProofIdByTripAndSequence(
+        {
+          tripId: input.tripId,
+          movementSequence: input.movementSequence,
+        },
+      );
 
     for (const row of validated) {
-      const hasConflict = await this.travelChecksRepository.hasTripMovementProofCfdiUuidConflict({
-        cfdiUuid: row.cfdiUuid,
-        excludeTripMovementProofId: excludeProofId,
-      });
+      const hasConflict =
+        await this.travelChecksRepository.hasTripMovementProofCfdiUuidConflict({
+          cfdiUuid: row.cfdiUuid,
+          excludeTripMovementProofId: excludeProofId,
+        });
       if (hasConflict) {
         throw new BadRequestException({
           message:
@@ -101,7 +110,8 @@ export class ValidateTripMovementInvoiceProofDraftUseCase {
       }
       if (!hasXml || !hasPdf) {
         throw new BadRequestException({
-          message: 'Cada XML de factura debe ir acompañado de su PDF correspondiente.',
+          message:
+            'Cada XML de factura debe ir acompañado de su PDF correspondiente.',
           error: 'CFDI_ARCHIVOS_INCOMPLETOS',
         });
       }
@@ -113,9 +123,7 @@ export class ValidateTripMovementInvoiceProofDraftUseCase {
       });
     }
 
-    const rolesPresent = new Set(
-      pairs.map((item) => item.xmlRole),
-    );
+    const rolesPresent = new Set(pairs.map((item) => item.xmlRole));
     const isSimple =
       rolesPresent.has('invoice_xml') &&
       pairs.length === 1 &&

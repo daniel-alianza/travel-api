@@ -63,6 +63,32 @@ export type UserLookupRecord = {
   readonly managerId: number | null;
 };
 
+export type TravelRequestNotificationContactsRecord = {
+  readonly employeeEmail: string;
+  readonly employeeName: string;
+  readonly bossName: string;
+  readonly bossEmail: string | null;
+  readonly companyName: string;
+};
+
+export type TravelRequestApprovedNotificationContextRecord = {
+  readonly requestId: number;
+  readonly companyId: number;
+  readonly status: string;
+  readonly employeeName: string;
+  readonly corporateCardNumber: string | null;
+  readonly employeeEmail: string;
+  readonly bossName: string;
+  readonly bossEmail: string | null;
+  readonly companyName: string;
+  readonly trips: readonly TravelRequestTripInput[];
+};
+
+export type TreasuryDispersionNotificationRecipientRecord = {
+  readonly email: string;
+  readonly dispersorName: string;
+};
+
 export type AreaLookupRecord = {
   readonly id: number;
   readonly name: string;
@@ -178,7 +204,37 @@ export type ResolveTravelRequestTripRepositoryInput = {
   readonly actorUserId: number;
 };
 
-export type TripResolutionResult = 'ok' | 'not_found' | 'invalid_status';
+export type TripResolutionResult =
+  | {
+      readonly outcome: 'ok';
+      readonly travelRequestId: number;
+      readonly requestStatus: string;
+    }
+  | 'not_found'
+  | 'invalid_status';
+
+export type UserEmailLookupRecord = {
+  readonly id: number;
+  readonly email: string;
+};
+
+export type TravelRequestPowerAutomateContextRecord = {
+  readonly approverId: number | null;
+  readonly approverEmail: string | null;
+  readonly pendingTripIds: readonly number[];
+};
+
+export type ResolveAllPendingTripsRepositoryInput = {
+  readonly travelRequestId: number;
+  readonly resolution: 'approve' | 'reject';
+  readonly comment: string | null;
+  readonly actorUserId: number;
+};
+
+export type ResolveAllPendingTripsResult =
+  | 'ok'
+  | 'not_found'
+  | 'no_pending_trips';
 
 export type ConfirmTravelRequestDispersionResult =
   | 'ok'
@@ -259,6 +315,22 @@ export type CorrectRejectedTripRepositoryResult =
 
 export interface TravelRequestRepository {
   findUserById(userId: number): Promise<UserLookupRecord | null>;
+  findUserByEmail(email: string): Promise<UserEmailLookupRecord | null>;
+  findTravelRequestPowerAutomateContext(
+    travelRequestId: number,
+  ): Promise<TravelRequestPowerAutomateContextRecord | null>;
+  resolveAllPendingTripsForTravelRequest(
+    input: ResolveAllPendingTripsRepositoryInput,
+  ): Promise<ResolveAllPendingTripsResult>;
+  findTravelRequestNotificationContacts(
+    userId: number,
+  ): Promise<TravelRequestNotificationContactsRecord | null>;
+  findTravelRequestApprovedNotificationContext(
+    travelRequestId: number,
+  ): Promise<TravelRequestApprovedNotificationContextRecord | null>;
+  findTreasuryDispersionNotificationRecipients(
+    companyId: number,
+  ): Promise<readonly TreasuryDispersionNotificationRecipientRecord[]>;
   findAreaById(areaId: number): Promise<AreaLookupRecord | null>;
   findFuelCardById(cardId: number): Promise<CardLookupRecord | null>;
   findFormDataByUserId(

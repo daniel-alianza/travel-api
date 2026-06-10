@@ -30,14 +30,13 @@ export class DecideTravelReconciliationUseCase {
       });
     }
 
-    const updated = await this.travelChecksRepository.decideTravelRequestReconciliation(
-      {
+    const updated =
+      await this.travelChecksRepository.decideTravelRequestReconciliation({
         reconciliationId: input.reconciliationId,
         decidedByUserId: input.decidedByUserId,
         approve: false,
         rejectionReason: input.rejectionReason,
-      },
-    );
+      });
     if (updated === null) {
       throw new BadRequestException({
         message: 'La conciliación no existe o ya fue atendida.',

@@ -16,7 +16,9 @@ export class SetIamUserGasolineNotificationsUseCase {
     private readonly gasolineNotificationRecipientRepository: GasolineNotificationRecipientRepository,
   ) {}
 
-  async execute(command: SetIamUserGasolineNotificationsCommand): Promise<void> {
+  async execute(
+    command: SetIamUserGasolineNotificationsCommand,
+  ): Promise<void> {
     const user = await this.prismaService.user.findUnique({
       where: { id: command.targetUserId },
       select: { id: true },

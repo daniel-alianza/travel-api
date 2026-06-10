@@ -16,8 +16,9 @@ export type DispersionQueueItem = {
   readonly fechaFinViaje: string;
 };
 
-export type GetDispersionQueueResponse =
-  ApiSuccessResponse<readonly DispersionQueueItem[]>;
+export type GetDispersionQueueResponse = ApiSuccessResponse<
+  readonly DispersionQueueItem[]
+>;
 
 @Injectable()
 export class GetDispersionQueueUseCase {
@@ -27,7 +28,8 @@ export class GetDispersionQueueUseCase {
   ) {}
 
   async execute(): Promise<GetDispersionQueueResponse> {
-    const requests = await this.travelRequestRepository.findDispersionPendingRequests();
+    const requests =
+      await this.travelRequestRepository.findDispersionPendingRequests();
 
     return buildSuccessResponse(
       requests.map((request) => mapRequestToDispersionItem(request)),
@@ -36,8 +38,12 @@ export class GetDispersionQueueUseCase {
   }
 }
 
-function mapRequestToDispersionItem(request: ApprovalRequestRecord): DispersionQueueItem {
-  const tripsOrdenados = request.trips.slice().sort((a, b) => a.tripOrder - b.tripOrder);
+function mapRequestToDispersionItem(
+  request: ApprovalRequestRecord,
+): DispersionQueueItem {
+  const tripsOrdenados = request.trips
+    .slice()
+    .sort((a, b) => a.tripOrder - b.tripOrder);
   const salidasIso = tripsOrdenados
     .map((trip) => formatDateToIsoDay(trip.departureDate))
     .filter((fecha) => fecha.length > 0)
@@ -52,7 +58,9 @@ function mapRequestToDispersionItem(request: ApprovalRequestRecord): DispersionQ
     (total, trip) => total + Number(trip.estimatedTotal),
     0,
   );
-  const destinos = tripsOrdenados.map((trip) => trip.destination).filter((d) => d.trim().length > 0);
+  const destinos = tripsOrdenados
+    .map((trip) => trip.destination)
+    .filter((d) => d.trim().length > 0);
   const resumenDestinos =
     destinos.length === 0
       ? 'Sin destinos'

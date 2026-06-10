@@ -38,7 +38,10 @@ export class CreateTripFileUploadUrlUseCase {
     mimeType: string;
     fileSizeBytes: number;
   }): Promise<CreateTripFileUploadUrlResponse> {
-    const ownership = await this.assertTripOwnership(input.tripId, input.userId);
+    const ownership = await this.assertTripOwnership(
+      input.tripId,
+      input.userId,
+    );
     this.dmsUploadRateLimitService.assertUploadUrlAllowed({
       userId: input.userId,
       maxRequestsPerMinute: this.dmsBucketConfig.uploadRequestsPerMinutePerUser,
@@ -53,7 +56,8 @@ export class CreateTripFileUploadUrlUseCase {
       fileName: input.fileName,
     });
 
-    const uploadSession = await this.dmsStoragePort.createSignedUploadUrl(storagePath);
+    const uploadSession =
+      await this.dmsStoragePort.createSignedUploadUrl(storagePath);
     this.dmsUsageMetricsService.recordUploadUrlRequest(input.userId);
 
     return buildSuccessResponse(
@@ -71,7 +75,10 @@ export class CreateTripFileUploadUrlUseCase {
     tripId: number,
     userId: number,
   ): Promise<{ readonly travelRequestId: number }> {
-    const ownership = await this.dmsRepository.findTripOwnershipForUser(tripId, userId);
+    const ownership = await this.dmsRepository.findTripOwnershipForUser(
+      tripId,
+      userId,
+    );
     if (ownership === null) {
       throw new BadRequestException({
         message: 'No puedes cargar archivos para este viaje.',
@@ -93,7 +100,10 @@ export class CreateTripFileUploadUrlUseCase {
   }
 
   private assertFileSize(fileSizeBytes: number): void {
-    if (fileSizeBytes <= 0 || fileSizeBytes > this.dmsBucketConfig.maxUploadBytes) {
+    if (
+      fileSizeBytes <= 0 ||
+      fileSizeBytes > this.dmsBucketConfig.maxUploadBytes
+    ) {
       throw new BadRequestException({
         message: 'El archivo excede el tamaño máximo permitido.',
         error: 'Archivo inválido',

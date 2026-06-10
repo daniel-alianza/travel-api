@@ -846,8 +846,7 @@ export class TravelChecksController {
 
   @Get('accounting/expenses-reconciliation')
   @ApiOperation({
-    summary:
-      'Conciliación comprobado vs solicitado por periodo de dispersión',
+    summary: 'Conciliación comprobado vs solicitado por periodo de dispersión',
   })
   @ApiOkResponse({ type: GetAccountingExpensesReconciliationHttpDto })
   async getAccountingExpensesReconciliation(
@@ -909,7 +908,9 @@ export class TravelChecksController {
     summary:
       'Validar factura CFDI (XML+PDF) antes de subir al almacén: fechas del viaje, UUID único y cruce PDF',
   })
-  @ApiOkResponse({ description: 'Archivos válidos para continuar con la subida.' })
+  @ApiOkResponse({
+    description: 'Archivos válidos para continuar con la subida.',
+  })
   async validateInvoiceProofDraft(
     @Param('userId', ParseIntPipe) userId: number,
     @Param('tripId', ParseIntPipe) tripId: number,
@@ -1050,7 +1051,8 @@ export class TravelChecksController {
 
   @Get('trips/:tripId/movements/:movementSequence/pdf')
   @ApiOperation({
-    summary: 'Obtener URL firmada de descarga del PDF de factura del movimiento',
+    summary:
+      'Obtener URL firmada de descarga del PDF de factura del movimiento',
   })
   @ApiOkResponse({ type: GetTripMovementPdfHttpDto })
   async getTripMovementPdf(

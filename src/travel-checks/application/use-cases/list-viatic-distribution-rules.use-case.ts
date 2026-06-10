@@ -23,7 +23,8 @@ export class ListViaticDistributionRulesUseCase {
   ) {}
 
   async execute(): Promise<ListViaticDistributionRulesResponse> {
-    const rules = await this.travelChecksRepository.listViaticDistributionRules();
+    const rules =
+      await this.travelChecksRepository.listViaticDistributionRules();
     return buildSuccessResponse(
       {
         distributionRules: rules,

@@ -51,7 +51,8 @@ type GetGasolineReportData = {
   readonly total: number;
 };
 
-export type GetGasolineReportResponse = ApiSuccessResponse<GetGasolineReportData>;
+export type GetGasolineReportResponse =
+  ApiSuccessResponse<GetGasolineReportData>;
 
 @Injectable()
 export class GetGasolineReportUseCase {

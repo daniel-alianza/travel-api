@@ -56,10 +56,7 @@ export class ValidateTripLodgingExpenseUseCase {
       );
     }
 
-    const departureDate = parseDateOrThrow(
-      command.fechaSalida,
-      'fechaSalida',
-    );
+    const departureDate = parseDateOrThrow(command.fechaSalida, 'fechaSalida');
     const returnDate = parseDateOrThrow(command.fechaRegreso, 'fechaRegreso');
 
     if (returnDate < departureDate) {
@@ -74,11 +71,8 @@ export class ValidateTripLodgingExpenseUseCase {
       returnDate,
     );
     const appliesPolicy = lodgingPolicyResolution.tag === 'capped';
-    const requestedAmount = roundToTwoDecimals(
-      toSafeNumber(command.hospedaje),
-    );
-    const withinCap =
-      !appliesPolicy || requestedAmount <= maximumAllowedAmount;
+    const requestedAmount = roundToTwoDecimals(toSafeNumber(command.hospedaje));
+    const withinCap = !appliesPolicy || requestedAmount <= maximumAllowedAmount;
 
     return buildSuccessResponse(
       {

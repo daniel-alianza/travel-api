@@ -27,7 +27,9 @@ export class ListCompanyExpenseCatalogsUseCase {
     private readonly travelChecksRepository: TravelChecksRepository,
   ) {}
 
-  async execute(companyId: number): Promise<ListCompanyExpenseCatalogsResponse> {
+  async execute(
+    companyId: number,
+  ): Promise<ListCompanyExpenseCatalogsResponse> {
     const [vatIndicators, viaticCategories] = await Promise.all([
       this.travelChecksRepository.listVatByCompanyId(companyId),
       this.travelChecksRepository.listViaticCategoriesByCompanyId(companyId),

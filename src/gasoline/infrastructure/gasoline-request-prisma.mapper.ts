@@ -39,9 +39,7 @@ type GasolineRequestDbRecord = {
   readonly disbursedBy: { readonly id: number; readonly name: string } | null;
 };
 
-function decimalToNumber(
-  value: { toNumber(): number } | number,
-): number {
+function decimalToNumber(value: { toNumber(): number } | number): number {
   return typeof value === 'number' ? value : value.toNumber();
 }
 

@@ -42,7 +42,9 @@ export class GasolineRequestPrismaRepository implements GasolineRequestRepositor
     return mapGasolineRequestSummary(created);
   }
 
-  async findById(requestId: number): Promise<GasolineRequestDetailRecord | null> {
+  async findById(
+    requestId: number,
+  ): Promise<GasolineRequestDetailRecord | null> {
     const record = await this.prismaService.gasolineRequest.findUnique({
       where: { id: requestId },
       include: {

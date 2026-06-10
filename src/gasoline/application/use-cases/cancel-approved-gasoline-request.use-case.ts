@@ -44,9 +44,7 @@ export class CancelApprovedGasolineRequestUseCase {
     }
 
     if (command.comment.trim().length === 0) {
-      throw new BadRequestException(
-        'El motivo de cancelación es obligatorio.',
-      );
+      throw new BadRequestException('El motivo de cancelación es obligatorio.');
     }
 
     const updated = await this.gasolineRequestRepository.cancelApproved({
@@ -59,9 +57,6 @@ export class CancelApprovedGasolineRequestUseCase {
       throw new BadRequestException('No fue posible cancelar la solicitud.');
     }
 
-    return buildSuccessResponse(
-      updated,
-      'Solicitud cancelada correctamente.',
-    );
+    return buildSuccessResponse(updated, 'Solicitud cancelada correctamente.');
   }
 }

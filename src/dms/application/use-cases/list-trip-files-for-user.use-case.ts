@@ -15,7 +15,8 @@ type ListTripFilesForUserData = {
   }[];
 };
 
-export type ListTripFilesForUserResponse = ApiSuccessResponse<ListTripFilesForUserData>;
+export type ListTripFilesForUserResponse =
+  ApiSuccessResponse<ListTripFilesForUserData>;
 
 @Injectable()
 export class ListTripFilesForUserUseCase {
@@ -24,7 +25,10 @@ export class ListTripFilesForUserUseCase {
     private readonly dmsRepository: DmsRepository,
   ) {}
 
-  async execute(userId: number, tripId: number): Promise<ListTripFilesForUserResponse> {
+  async execute(
+    userId: number,
+    tripId: number,
+  ): Promise<ListTripFilesForUserResponse> {
     const files = await this.dmsRepository.listTripFilesForUser(tripId, userId);
     return buildSuccessResponse(
       {

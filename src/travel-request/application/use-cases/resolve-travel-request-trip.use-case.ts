@@ -8,6 +8,7 @@ import {
 import { buildSuccessResponse } from '../../../common/exceptions/builders/success-response.builder';
 import type { ApiSuccessResponse } from '../../../common/exceptions/interfaces/api-success-response.interface';
 import type { TravelRequestRepository } from '../interfaces/travel-request-repository.interface';
+import { NotifyTravelRequestApprovedUseCase } from './notify-travel-request-approved.use-case';
 
 export type ResolveTravelRequestTripCommand = {
   readonly tripId: number;
@@ -16,14 +17,16 @@ export type ResolveTravelRequestTripCommand = {
   readonly actorUserId: number;
 };
 
-export type ResolveTravelRequestTripResponse =
-  ApiSuccessResponse<{ readonly ok: true }>;
+export type ResolveTravelRequestTripResponse = ApiSuccessResponse<{
+  readonly ok: true;
+}>;
 
 @Injectable()
 export class ResolveTravelRequestTripUseCase {
   constructor(
     @Inject('TravelRequestRepository')
     private readonly travelRequestRepository: TravelRequestRepository,
+    private readonly notifyTravelRequestApprovedUseCase: NotifyTravelRequestApprovedUseCase,
   ) {}
 
   async execute(
@@ -43,15 +46,16 @@ export class ResolveTravelRequestTripUseCase {
         ? (command.comment?.trim() ?? '') || null
         : null;
 
-    const result = await this.travelRequestRepository.resolveTravelRequestTripResolution({
-      tripId: command.tripId,
-      resolution: command.resolution,
-      comment:
-        command.resolution === 'reject'
-          ? (command.comment ?? '').trim()
-          : trimmedApproveComment,
-      actorUserId: command.actorUserId,
-    });
+    const result =
+      await this.travelRequestRepository.resolveTravelRequestTripResolution({
+        tripId: command.tripId,
+        resolution: command.resolution,
+        comment:
+          command.resolution === 'reject'
+            ? (command.comment ?? '').trim()
+            : trimmedApproveComment,
+        actorUserId: command.actorUserId,
+      });
 
     if (result === 'not_found') {
       throw new NotFoundException('Viaje no encontrado.');
@@ -60,6 +64,15 @@ export class ResolveTravelRequestTripUseCase {
     if (result === 'invalid_status') {
       throw new ConflictException(
         'Solo se puede aprobar o rechazar un viaje en estado pendiente.',
+      );
+    }
+
+    if (
+      command.resolution === 'approve' &&
+      result.requestStatus === 'approved'
+    ) {
+      await this.notifyTravelRequestApprovedUseCase.execute(
+        result.travelRequestId,
       );
     }
 

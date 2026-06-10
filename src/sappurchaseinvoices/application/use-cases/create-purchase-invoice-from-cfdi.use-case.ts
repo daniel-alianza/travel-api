@@ -247,10 +247,14 @@ export class CreatePurchaseInvoiceFromCfdiUseCase {
     }
 
     try {
-      await this.sapPurchaseInvoiceWriter.patchDocumentUrls(sessionId, docEntry, {
-        ...(xmlUrl !== undefined ? { xmlUrl } : {}),
-        ...(pdfUrl !== undefined ? { pdfUrl } : {}),
-      });
+      await this.sapPurchaseInvoiceWriter.patchDocumentUrls(
+        sessionId,
+        docEntry,
+        {
+          ...(xmlUrl !== undefined ? { xmlUrl } : {}),
+          ...(pdfUrl !== undefined ? { pdfUrl } : {}),
+        },
+      );
     } catch (error: unknown) {
       const mensaje = error instanceof Error ? error.message : String(error);
       this.logger.error(

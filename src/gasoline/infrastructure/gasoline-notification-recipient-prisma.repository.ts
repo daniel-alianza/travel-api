@@ -19,13 +19,14 @@ export class GasolineNotificationRecipientPrismaRepository implements GasolineNo
       return map;
     }
 
-    const rows = await this.prismaService.gasolineNotificationRecipient.findMany({
-      where: {
-        userId: { in: [...userIds] },
-        isActive: true,
-      },
-      select: { userId: true, role: true },
-    });
+    const rows =
+      await this.prismaService.gasolineNotificationRecipient.findMany({
+        where: {
+          userId: { in: [...userIds] },
+          isActive: true,
+        },
+        select: { userId: true, role: true },
+      });
 
     for (const userId of userIds) {
       map.set(userId, {
@@ -61,7 +62,7 @@ export class GasolineNotificationRecipientPrismaRepository implements GasolineNo
 
     const count = await this.prismaService.gasolineNotificationRecipient.count({
       where: {
-        role: role as GasolineNotificationRecipientRole,
+        role: role,
         isActive: true,
         user: { email: normalized },
       },
@@ -77,7 +78,7 @@ export class GasolineNotificationRecipientPrismaRepository implements GasolineNo
     const count = await this.prismaService.gasolineNotificationRecipient.count({
       where: {
         userId,
-        role: role as GasolineNotificationRecipientRole,
+        role: role,
         isActive: true,
       },
     });
@@ -88,13 +89,14 @@ export class GasolineNotificationRecipientPrismaRepository implements GasolineNo
   async listActiveEmailsByRole(
     role: GasolineNotificationRecipientRoleValue,
   ): Promise<readonly string[]> {
-    const rows = await this.prismaService.gasolineNotificationRecipient.findMany({
-      where: {
-        role: role as GasolineNotificationRecipientRole,
-        isActive: true,
-      },
-      select: { user: { select: { email: true } } },
-    });
+    const rows =
+      await this.prismaService.gasolineNotificationRecipient.findMany({
+        where: {
+          role: role,
+          isActive: true,
+        },
+        select: { user: { select: { email: true } } },
+      });
 
     return rows.map((row) => row.user.email.trim().toLowerCase());
   }
@@ -112,7 +114,7 @@ export class GasolineNotificationRecipientPrismaRepository implements GasolineNo
     role: GasolineNotificationRecipientRoleValue,
     active: boolean,
   ): Promise<void> {
-    const prismaRole = role as GasolineNotificationRecipientRole;
+    const prismaRole = role;
 
     if (active) {
       await this.prismaService.gasolineNotificationRecipient.upsert({

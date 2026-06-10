@@ -15,6 +15,7 @@ export class UnknownExceptionFilter implements ExceptionFilter {
 
   catch(exception: unknown, host: ArgumentsHost): void {
     const context = host.switchToHttp();
+    const request = context.getRequest<{ url?: string }>();
     const response = context.getResponse<Response>();
 
     if (exception instanceof HttpException) {
@@ -42,10 +43,17 @@ export class UnknownExceptionFilter implements ExceptionFilter {
         ? exception.message
         : 'Error interno no controlado.';
 
-    this.logger.error(
-      errorMessage,
-      exception instanceof Error ? exception.stack : '',
-    );
+    if (request.url?.includes('power-automate') === true) {
+      this.logger.error(
+        `Error PA no controlado ${request.url}: ${errorMessage}`,
+        exception instanceof Error ? exception.stack : '',
+      );
+    } else {
+      this.logger.error(
+        errorMessage,
+        exception instanceof Error ? exception.stack : '',
+      );
+    }
 
     response
       .status(HttpStatus.INTERNAL_SERVER_ERROR)

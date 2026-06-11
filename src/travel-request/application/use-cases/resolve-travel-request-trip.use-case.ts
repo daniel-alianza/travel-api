@@ -9,6 +9,7 @@ import { buildSuccessResponse } from '../../../common/exceptions/builders/succes
 import type { ApiSuccessResponse } from '../../../common/exceptions/interfaces/api-success-response.interface';
 import type { TravelRequestRepository } from '../interfaces/travel-request-repository.interface';
 import { NotifyTravelRequestApprovedUseCase } from './notify-travel-request-approved.use-case';
+import { SpawnApprovedGasolineForTravelTripUseCase } from './spawn-approved-gasoline-for-travel-trip.use-case';
 
 export type ResolveTravelRequestTripCommand = {
   readonly tripId: number;
@@ -27,6 +28,7 @@ export class ResolveTravelRequestTripUseCase {
     @Inject('TravelRequestRepository')
     private readonly travelRequestRepository: TravelRequestRepository,
     private readonly notifyTravelRequestApprovedUseCase: NotifyTravelRequestApprovedUseCase,
+    private readonly spawnApprovedGasolineForTravelTripUseCase: SpawnApprovedGasolineForTravelTripUseCase,
   ) {}
 
   async execute(
@@ -67,8 +69,19 @@ export class ResolveTravelRequestTripUseCase {
       );
     }
 
+    if (command.resolution === 'approve' && result.outcome === 'ok') {
+      const approvedAt = new Date();
+      await this.spawnApprovedGasolineForTravelTripUseCase.execute({
+        tripId: command.tripId,
+        approverId: command.actorUserId,
+        approverComment: trimmedApproveComment,
+        approvedAt,
+      });
+    }
+
     if (
       command.resolution === 'approve' &&
+      result.outcome === 'ok' &&
       result.requestStatus === 'approved'
     ) {
       await this.notifyTravelRequestApprovedUseCase.execute(

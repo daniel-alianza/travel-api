@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { buildSuccessResponse } from '../../../common/exceptions/builders/success-response.builder';
 import type { ApiSuccessResponse } from '../../../common/exceptions/interfaces/api-success-response.interface';
 import type { TravelChecksRepository } from '../interfaces/travel-checks-repository.interface';
+import { sumViaticosExpenseRecord } from '../utils/sum-viaticos-expense-record';
 
 type ListDispersedTravelChecksData = {
   readonly solicitudes: readonly {
@@ -111,7 +112,7 @@ export class ListDispersedTravelChecksUseCase {
               fechaSalida: viaje.departureDate.toISOString(),
               fechaRegreso: viaje.returnDate.toISOString(),
               fechaDispersion: viaje.disbursementDate.toISOString(),
-              totalEstimado: viaje.estimatedTotal,
+              totalEstimado: sumViaticosExpenseRecord(viaje.expenses),
               movimientosComprobados: movementProofsComprobados.length,
               totalComprobadoMovimientos,
               movimientosComprobadosDetalle: movementProofsComprobados.map(

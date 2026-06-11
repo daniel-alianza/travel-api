@@ -11,6 +11,7 @@ import { buildSuccessResponse } from '../../../common/exceptions/builders/succes
 import type { ApiSuccessResponse } from '../../../common/exceptions/interfaces/api-success-response.interface';
 import type { TravelRequestRepository } from '../interfaces/travel-request-repository.interface';
 import { NotifyTravelRequestApprovedUseCase } from './notify-travel-request-approved.use-case';
+import { SpawnApprovedGasolineForTravelTripUseCase } from './spawn-approved-gasoline-for-travel-trip.use-case';
 
 export type ResolveTravelRequestFromPowerAutomateCommand = {
   readonly requestId: number;
@@ -39,6 +40,7 @@ export class ResolveTravelRequestFromPowerAutomateUseCase {
     @Inject('TravelRequestRepository')
     private readonly travelRequestRepository: TravelRequestRepository,
     private readonly notifyTravelRequestApprovedUseCase: NotifyTravelRequestApprovedUseCase,
+    private readonly spawnApprovedGasolineForTravelTripUseCase: SpawnApprovedGasolineForTravelTripUseCase,
   ) {}
 
   async execute(
@@ -175,6 +177,16 @@ export class ResolveTravelRequestFromPowerAutomateUseCase {
     );
 
     if (command.action === 'approved') {
+      const approvedAt = new Date();
+      for (const tripId of context.pendingTripIds) {
+        await this.spawnApprovedGasolineForTravelTripUseCase.execute({
+          tripId,
+          approverId: boss.id,
+          approverComment:
+            trimmedComment.length > 0 ? trimmedComment : null,
+          approvedAt,
+        });
+      }
       await this.notifyTravelRequestApprovedUseCase.execute(command.requestId);
     }
 

@@ -17,6 +17,7 @@ export type TravelRequestGasolineInput = {
   readonly montoSolicitado: number | null;
   readonly distanciaKm: number | null;
   readonly comentarios: string | null;
+  readonly fotoOdometroBase64: string | null;
 };
 
 export type TravelRequestTagInput = {
@@ -327,6 +328,25 @@ export type CorrectRejectedTripRepositoryResult =
   | 'forbidden'
   | 'invalid_status';
 
+export type TravelTripGasolineBridgeSourceRecord = {
+  readonly tripId: number;
+  readonly travelRequestId: number;
+  readonly userId: number;
+  readonly companyId: number;
+  readonly branchId: number;
+  readonly areaId: number;
+  readonly destination: string;
+  readonly requiresGasoline: boolean;
+  readonly cardId: number | null;
+  readonly plate: string | null;
+  readonly currentMileageKm: number | null;
+  readonly requestedAmount: number | null;
+  readonly distanceKm: number | null;
+  readonly comments: string | null;
+  readonly odometerPhoto: Buffer | null;
+  readonly existingGasolineRequestId: number | null;
+};
+
 export interface TravelRequestRepository {
   findUserById(userId: number): Promise<UserLookupRecord | null>;
   findUserByEmail(email: string): Promise<UserEmailLookupRecord | null>;
@@ -389,4 +409,7 @@ export interface TravelRequestRepository {
     tripId: number,
     trip: TravelRequestTripInput,
   ): Promise<CorrectRejectedTripRepositoryResult>;
+  findTravelTripGasolineBridgeSource(
+    tripId: number,
+  ): Promise<TravelTripGasolineBridgeSourceRecord | null>;
 }

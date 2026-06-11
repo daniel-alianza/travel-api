@@ -53,6 +53,7 @@ export type CreateTravelRequestTripCommand = {
     readonly montoSolicitado: number | null;
     readonly distanciaKm: number | null;
     readonly comentarios: string | null;
+    readonly fotoOdometroBase64: string | null;
   };
   readonly tag: {
     readonly necesitaTag: boolean;
@@ -235,6 +236,7 @@ export class CreateTravelRequestUseCase {
           montoSolicitado: trip.gasolina.montoSolicitado,
           distanciaKm: trip.gasolina.distanciaKm,
           comentarios: trip.gasolina.comentarios?.trim() || null,
+          fotoOdometroBase64: trip.gasolina.fotoOdometroBase64?.trim() || null,
         },
         tag: {
           necesitaTag: trip.tag.necesitaTag,

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
 import type {
+  CreateApprovedGasolineFromTravelTripRepositoryInput,
   CreateGasolineRequestRepositoryInput,
   GasolineRequestDetailRecord,
   GasolineRequestRepository,
@@ -35,6 +36,50 @@ export class GasolineRequestPrismaRepository implements GasolineRequestRepositor
         odometerPhotos: {
           create: { photo: Buffer.from(input.odometerPhoto) },
         },
+      },
+      include: gasolineRequestInclude,
+    });
+
+    return mapGasolineRequestSummary(created);
+  }
+
+  async createApprovedFromTravelTrip(
+    input: CreateApprovedGasolineFromTravelTripRepositoryInput,
+  ): Promise<GasolineRequestSummaryRecord> {
+    const baseData = {
+      userId: input.userId,
+      companyId: input.companyId,
+      branchId: input.branchId,
+      areaId: input.areaId,
+      cardId: input.cardId,
+      plate: input.plate,
+      currentMileageKm: input.currentMileageKm,
+      requestedAmount: input.requestedAmount,
+      distanceKm: input.distanceKm,
+      routeToTake: input.routeToTake,
+      applicantComments: input.applicantComments,
+      status: 'approved' as const,
+      approverId: input.approverId,
+      approverComment: input.approverComment,
+      approvedAt: input.approvedAt,
+      travelRequestTripId: input.travelRequestTripId,
+    };
+
+    const photoPayload =
+      input.odometerPhoto !== null
+        ? {
+            odometerPhotos: {
+              create: {
+                photo: new Uint8Array(input.odometerPhoto),
+              },
+            },
+          }
+        : {};
+
+    const created = await this.prismaService.gasolineRequest.create({
+      data: {
+        ...baseData,
+        ...photoPayload,
       },
       include: gasolineRequestInclude,
     });

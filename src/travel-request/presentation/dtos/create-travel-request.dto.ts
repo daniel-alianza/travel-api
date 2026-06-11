@@ -118,6 +118,11 @@ class TravelRequestGasolineDto {
   @IsOptional()
   @IsString()
   comentarios: string | null;
+
+  @ValidateIf((gasoline: TravelRequestGasolineDto) => gasoline.necesitaGasolina)
+  @IsOptional()
+  @IsString()
+  fotoOdometroBase64: string | null;
 }
 
 class TravelRequestTagDto {

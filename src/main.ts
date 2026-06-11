@@ -1,12 +1,17 @@
 import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 import { Logger } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { HttpExceptionFilter } from './common/exceptions/filters/http-exception.filter';
 import { UnknownExceptionFilter } from './common/exceptions/filters/unknown-exception.filter';
+import { getHttpConfig } from './config/http/http';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const { maxJsonBodyBytes } = getHttpConfig();
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  app.useBodyParser('json', { limit: maxJsonBodyBytes });
+  app.useBodyParser('urlencoded', { limit: maxJsonBodyBytes, extended: true });
   app.setGlobalPrefix('api');
   app.useGlobalFilters(new HttpExceptionFilter(), new UnknownExceptionFilter());
 

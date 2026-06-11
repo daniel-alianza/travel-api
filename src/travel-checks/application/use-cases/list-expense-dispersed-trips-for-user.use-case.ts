@@ -6,6 +6,7 @@ import type {
   ExpenseTripExpenseAmountsRecord,
   TravelChecksRepository,
 } from '../interfaces/travel-checks-repository.interface';
+import { sumViaticosExpenseRecord } from '../utils/sum-viaticos-expense-record';
 
 type ExpenseDispersedTripItem = {
   readonly id: string;
@@ -70,7 +71,7 @@ function mapTrip(
     motivo: registro.purpose,
     emailSolicitante: solicitud.user.email,
     compania: solicitud.company.name,
-    montoSolicitado: registro.estimatedTotal,
+    montoSolicitado: sumViaticosExpenseRecord(registro.expenses),
     fechaAutorizacion: toIsoDateOnly(fechaAutorizacion),
     numeroTarjeta: enmascararTarjetaCorporativa(solicitud.corporateCardNumber),
     fechaSalida: toIsoDateOnly(registro.departureDate),

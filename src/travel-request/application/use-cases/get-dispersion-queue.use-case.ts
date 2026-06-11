@@ -5,6 +5,7 @@ import type {
   ApprovalRequestRecord,
   TravelRequestRepository,
 } from '../interfaces/travel-request-repository.interface';
+import { computeTravelRequestViaticosDispersionAmount } from '../utils/travel-request-dispersion-amount.utils';
 
 export type DispersionQueueItem = {
   readonly id: number;
@@ -54,10 +55,7 @@ function mapRequestToDispersionItem(
     .sort();
   const fechaInicioViaje = salidasIso[0] ?? '';
   const fechaFinViaje = regresosIso[regresosIso.length - 1] ?? '';
-  const montoSolicitado = tripsOrdenados.reduce(
-    (total, trip) => total + Number(trip.estimatedTotal),
-    0,
-  );
+  const montoSolicitado = computeTravelRequestViaticosDispersionAmount(request);
   const destinos = tripsOrdenados
     .map((trip) => trip.destination)
     .filter((d) => d.trim().length > 0);

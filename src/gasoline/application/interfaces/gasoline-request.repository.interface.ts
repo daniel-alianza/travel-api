@@ -63,9 +63,31 @@ export type CreateGasolineRequestRepositoryInput = {
   readonly odometerPhoto: Buffer;
 };
 
+export type CreateApprovedGasolineFromTravelTripRepositoryInput = {
+  readonly travelRequestTripId: number;
+  readonly userId: number;
+  readonly companyId: number;
+  readonly branchId: number;
+  readonly areaId: number;
+  readonly cardId: number;
+  readonly plate: string;
+  readonly currentMileageKm: number;
+  readonly requestedAmount: number;
+  readonly distanceKm: number;
+  readonly routeToTake: string;
+  readonly applicantComments: string | null;
+  readonly odometerPhoto: Buffer | null;
+  readonly approverId: number;
+  readonly approverComment: string | null;
+  readonly approvedAt: Date;
+};
+
 export interface GasolineRequestRepository {
   create(
     input: CreateGasolineRequestRepositoryInput,
+  ): Promise<GasolineRequestSummaryRecord>;
+  createApprovedFromTravelTrip(
+    input: CreateApprovedGasolineFromTravelTripRepositoryInput,
   ): Promise<GasolineRequestSummaryRecord>;
   findById(requestId: number): Promise<GasolineRequestDetailRecord | null>;
   findPending(

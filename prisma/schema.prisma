@@ -77,6 +77,11 @@ enum GasolineNotificationRecipientRole {
   dispersal_notify
 }
 
+enum TravelRequestTripTagDispersionStatus {
+  pending
+  dispersed
+}
+
 datasource db {
   provider = "mysql"
 }
@@ -150,22 +155,22 @@ model User {
   tripsApprovedAsAuthorizer TravelRequestTrip[] @relation("TravelRequestTripApprovedBy")
   travelRequestsDispersed   TravelRequest[]     @relation("TravelRequestDispersedBy")
 
-  company                   Company                       @relation(fields: [companyId], references: [id])
-  branch                    Branch                        @relation(fields: [branchId], references: [id])
-  area                      Area                          @relation(fields: [areaId], references: [id])
-  role                      Role                          @relation(fields: [roleId], references: [id])
-  cards                     Card[]
-  createdCards              Card[]                        @relation("CardCreatedByUser")
-  assignedCards             Card[]                        @relation("CardAssignedByUser")
-  deactivatedCards          Card[]                        @relation("CardDeactivatedByUser")
-  requestedReconciliations  TravelRequestReconciliation[] @relation("TravelRequestReconciliationRequestedBy")
-  decidedReconciliations    TravelRequestReconciliation[] @relation("TravelRequestReconciliationDecidedBy")
-  movementProofs            TripMovementProof[]
-  userExtraPermissions      UserExtraPermission[]
-  gasolineRequests                 GasolineRequest[]                 @relation("GasolineRequestUser")
-  approvedGasolineRequests         GasolineRequest[]                 @relation("GasolineRequestApprover")
-  dispersedGasolineRequests        GasolineRequest[]                 @relation("GasolineRequestDisbursed")
-  gasolineNotificationRecipients   GasolineNotificationRecipient[]
+  company                        Company                         @relation(fields: [companyId], references: [id])
+  branch                         Branch                          @relation(fields: [branchId], references: [id])
+  area                           Area                            @relation(fields: [areaId], references: [id])
+  role                           Role                            @relation(fields: [roleId], references: [id])
+  cards                          Card[]
+  createdCards                   Card[]                          @relation("CardCreatedByUser")
+  assignedCards                  Card[]                          @relation("CardAssignedByUser")
+  deactivatedCards               Card[]                          @relation("CardDeactivatedByUser")
+  requestedReconciliations       TravelRequestReconciliation[]   @relation("TravelRequestReconciliationRequestedBy")
+  decidedReconciliations         TravelRequestReconciliation[]   @relation("TravelRequestReconciliationDecidedBy")
+  movementProofs                 TripMovementProof[]
+  userExtraPermissions           UserExtraPermission[]
+  gasolineRequests               GasolineRequest[]               @relation("GasolineRequestUser")
+  approvedGasolineRequests       GasolineRequest[]               @relation("GasolineRequestApprover")
+  dispersedGasolineRequests      GasolineRequest[]               @relation("GasolineRequestDisbursed")
+  gasolineNotificationRecipients GasolineNotificationRecipient[]
 }
 
 model Card {
@@ -289,6 +294,7 @@ model TravelRequestTrip {
   expenses           TravelRequestTripExpense?
   gasoline           TravelRequestTripGasoline?
   tag                TravelRequestTripTag?
+  gasolineRequest    GasolineRequest?
   files              TravelRequestTripFile[]
   tripMovementProofs TripMovementProof[]
 
@@ -338,6 +344,7 @@ model TravelRequestTripGasoline {
   requestedAmount  Decimal? @db.Decimal(12, 2)
   distanceKm       Decimal? @db.Decimal(12, 2)
   comments         String?  @db.Text
+  odometerPhoto    Bytes?
 
   trip TravelRequestTrip @relation(fields: [tripId], references: [id])
   card Card?             @relation(fields: [cardId], references: [id])
@@ -347,15 +354,17 @@ model TravelRequestTripGasoline {
 }
 
 model TravelRequestTripTag {
-  id              Int      @id @default(autoincrement())
-  tripId          Int      @unique
-  requiresTag     Boolean  @default(false)
-  requestedAmount Decimal? @db.Decimal(12, 2)
-  comments        String?  @db.Text
+  id                Int                                  @id @default(autoincrement())
+  tripId            Int                                  @unique
+  requiresTag       Boolean                              @default(false)
+  requestedAmount   Decimal?                             @db.Decimal(12, 2)
+  comments          String?                              @db.Text
+  dispersionStatus  TravelRequestTripTagDispersionStatus @default(pending)
 
   trip TravelRequestTrip @relation(fields: [tripId], references: [id])
 
   @@index([tripId])
+  @@index([dispersionStatus])
 }
 
 model TravelRequestTripFile {
@@ -562,17 +571,19 @@ model GasolineRequest {
   disbursedById     Int?
   disbursedComment  String?               @db.Text
   disbursedAt       DateTime?
+  travelRequestTripId Int?                @unique
   createdAt         DateTime              @default(now())
   updatedAt         DateTime              @updatedAt
 
-  user           User                           @relation("GasolineRequestUser", fields: [userId], references: [id])
-  company        Company                        @relation(fields: [companyId], references: [id])
-  branch         Branch?                        @relation(fields: [branchId], references: [id])
-  area           Area?                          @relation(fields: [areaId], references: [id])
-  card           Card                           @relation(fields: [cardId], references: [id])
-  approver       User?                          @relation("GasolineRequestApprover", fields: [approverId], references: [id])
-  disbursedBy    User?                          @relation("GasolineRequestDisbursed", fields: [disbursedById], references: [id])
-  odometerPhotos GasolineRequestOdometerPhoto[]
+  user              User                           @relation("GasolineRequestUser", fields: [userId], references: [id])
+  company           Company                        @relation(fields: [companyId], references: [id])
+  branch            Branch?                        @relation(fields: [branchId], references: [id])
+  area              Area?                          @relation(fields: [areaId], references: [id])
+  card              Card                           @relation(fields: [cardId], references: [id])
+  approver          User?                          @relation("GasolineRequestApprover", fields: [approverId], references: [id])
+  disbursedBy       User?                          @relation("GasolineRequestDisbursed", fields: [disbursedById], references: [id])
+  travelRequestTrip TravelRequestTrip?             @relation(fields: [travelRequestTripId], references: [id])
+  odometerPhotos    GasolineRequestOdometerPhoto[]
 
   @@index([userId])
   @@index([companyId])
@@ -594,13 +605,13 @@ model GasolineRequestOdometerPhoto {
 }
 
 model GasolineNotificationRecipient {
-  id        Int                             @id @default(autoincrement())
+  id        Int                               @id @default(autoincrement())
   userId    Int
   role      GasolineNotificationRecipientRole
-  isActive  Boolean                         @default(true)
-  createdAt DateTime                        @default(now())
-  updatedAt DateTime                        @updatedAt
-  user      User                            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  isActive  Boolean                           @default(true)
+  createdAt DateTime                          @default(now())
+  updatedAt DateTime                          @updatedAt
+  user      User                              @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, role])
   @@index([role, isActive])

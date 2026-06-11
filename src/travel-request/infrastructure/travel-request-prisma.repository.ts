@@ -17,6 +17,7 @@ import type {
   ResolveAllPendingTripsResult,
   TravelRequestDetailForUserRecord,
   TravelRequestFormUserRecord,
+  TravelRequestGasolineInput,
   TravelRequestNotificationContactsRecord,
   TravelRequestApprovedNotificationContextRecord,
   TravelRequestDispersedNotificationContextRecord,
@@ -24,10 +25,13 @@ import type {
   TravelRequestPowerAutomateContextRecord,
   TravelRequestRepository,
   TravelRequestTripInput,
+  TravelTripGasolineBridgeSourceRecord,
   TripResolutionResult,
   UserEmailLookupRecord,
   UserLookupRecord,
 } from '../application/interfaces/travel-request-repository.interface';
+import { decodeBase64ImageBuffer } from '../application/utils/decode-base64-image-buffer.util';
+import { toPrismaBytesField } from '../application/utils/to-prisma-bytes-field.util';
 import { TREASURY_AREA_NAME } from '../domain/treasury-area.constants';
 
 type PrismaDelegate = {
@@ -912,15 +916,7 @@ export class TravelRequestPrismaRepository implements TravelRequestRepository {
               })),
             },
             gasoline: {
-              create: {
-                requiresGasoline: trip.gasolina.necesitaGasolina,
-                cardId: trip.gasolina.cardId,
-                plate: trip.gasolina.placa,
-                currentMileageKm: trip.gasolina.kilometrajeActualKm,
-                requestedAmount: trip.gasolina.montoSolicitado,
-                distanceKm: trip.gasolina.distanciaKm,
-                comments: trip.gasolina.comentarios,
-              },
+              create: buildTravelTripGasolineCreateData(trip.gasolina),
             },
             tag: {
               create: {
@@ -943,7 +939,7 @@ export class TravelRequestPrismaRepository implements TravelRequestRepository {
   async findApprovalRequests(): Promise<readonly ApprovalRequestRecord[]> {
     const prisma = this.prismaService as unknown as PrismaDelegate;
 
-    return prisma.travelRequest.findMany({
+    const rows = await prisma.travelRequest.findMany({
       orderBy: {
         createdAt: 'desc',
       },
@@ -1018,6 +1014,8 @@ export class TravelRequestPrismaRepository implements TravelRequestRepository {
         },
       },
     });
+
+    return rows.map(mapApprovalRequestRow);
   }
 
   async findDispersedRequestsInDateRange(input: {
@@ -1107,7 +1105,7 @@ export class TravelRequestPrismaRepository implements TravelRequestRepository {
       },
     });
 
-    return filas as unknown as readonly ApprovalRequestRecord[];
+    return filas.map(mapApprovalRequestRow);
   }
 
   async findDispersionPendingRequests(): Promise<
@@ -1115,7 +1113,7 @@ export class TravelRequestPrismaRepository implements TravelRequestRepository {
   > {
     const prisma = this.prismaService as unknown as PrismaDelegate;
 
-    return prisma.travelRequest.findMany({
+    const rows = await prisma.travelRequest.findMany({
       where: DISPERSION_QUEUE_WHERE,
       orderBy: {
         createdAt: 'desc',
@@ -1191,6 +1189,8 @@ export class TravelRequestPrismaRepository implements TravelRequestRepository {
         },
       },
     });
+
+    return rows.map(mapApprovalRequestRow);
   }
 
   async confirmTravelRequestDispersion(input: {
@@ -1594,15 +1594,7 @@ export class TravelRequestPrismaRepository implements TravelRequestRepository {
             },
           },
           gasoline: {
-            update: {
-              requiresGasoline: trip.gasolina.necesitaGasolina,
-              cardId: trip.gasolina.cardId,
-              plate: trip.gasolina.placa,
-              currentMileageKm: trip.gasolina.kilometrajeActualKm,
-              requestedAmount: trip.gasolina.montoSolicitado,
-              distanceKm: trip.gasolina.distanciaKm,
-              comments: trip.gasolina.comentarios,
-            },
+            update: buildTravelTripGasolineUpdateData(trip.gasolina),
           },
           tag: {
             update: {
@@ -1633,6 +1625,185 @@ export class TravelRequestPrismaRepository implements TravelRequestRepository {
       return 'ok';
     });
   }
+
+  async findTravelTripGasolineBridgeSource(
+    tripId: number,
+  ): Promise<TravelTripGasolineBridgeSourceRecord | null> {
+    const trip = await this.prismaService.travelRequestTrip.findUnique({
+      where: { id: tripId },
+      select: {
+        id: true,
+        destination: true,
+        travelRequest: {
+          select: {
+            id: true,
+            userId: true,
+            companyId: true,
+            branchId: true,
+            areaId: true,
+          },
+        },
+        gasoline: {
+          select: {
+            requiresGasoline: true,
+            cardId: true,
+            plate: true,
+            currentMileageKm: true,
+            requestedAmount: true,
+            distanceKm: true,
+            comments: true,
+            odometerPhoto: true,
+          },
+        },
+        gasolineRequest: {
+          select: { id: true },
+        },
+      },
+    });
+
+    if (trip === null || trip.gasoline === null) {
+      return null;
+    }
+
+    const travelRequest = trip.travelRequest;
+
+    return {
+      tripId: trip.id,
+      travelRequestId: travelRequest.id,
+      userId: travelRequest.userId,
+      companyId: travelRequest.companyId,
+      branchId: travelRequest.branchId,
+      areaId: travelRequest.areaId,
+      destination: trip.destination,
+      requiresGasoline: trip.gasoline.requiresGasoline,
+      cardId: trip.gasoline.cardId,
+      plate: trip.gasoline.plate,
+      currentMileageKm: decimalToNullableNumber(trip.gasoline.currentMileageKm),
+      requestedAmount: decimalToNullableNumber(trip.gasoline.requestedAmount),
+      distanceKm: decimalToNullableNumber(trip.gasoline.distanceKm),
+      comments: trip.gasoline.comments,
+      odometerPhoto:
+        trip.gasoline.odometerPhoto !== null &&
+        trip.gasoline.odometerPhoto !== undefined
+          ? Buffer.from(trip.gasoline.odometerPhoto)
+          : null,
+      existingGasolineRequestId: trip.gasolineRequest?.id ?? null,
+    };
+  }
+}
+
+type RawApprovalRequestTripRow = {
+  readonly id: number;
+  readonly tripOrder: number;
+  readonly tripApprovalStatus: string;
+  readonly approverComment: string | null;
+  readonly approvedBy: { readonly name: string } | null;
+  readonly destination: string;
+  readonly purpose: string;
+  readonly departureDate: Date;
+  readonly returnDate: Date;
+  readonly disbursementDate: Date;
+  readonly estimatedTotal: { toString(): string };
+  readonly expenses: {
+    readonly transport: { toString(): string };
+    readonly tolls: { toString(): string };
+    readonly lodging: { toString(): string };
+    readonly food: { toString(): string };
+    readonly freight: { toString(): string };
+    readonly tools: { toString(): string };
+    readonly shipping: { toString(): string };
+    readonly miscellaneous: { toString(): string };
+  } | null;
+  readonly gasoline: {
+    readonly requiresGasoline: boolean;
+    readonly requestedAmount: { toString(): string } | null;
+  } | null;
+  readonly tag: {
+    readonly requiresTag: boolean;
+    readonly requestedAmount: { toString(): string } | null;
+  } | null;
+};
+
+type RawApprovalRequestRow = {
+  readonly id: number;
+  readonly employeeName: string;
+  readonly corporateCardNumber: string | null;
+  readonly status: string;
+  readonly approverComment: string | null;
+  readonly createdAt: Date;
+  readonly approvedAt: Date | null;
+  readonly rejectedAt: Date | null;
+  readonly user: { readonly email: string };
+  readonly company: { readonly name: string };
+  readonly area: { readonly name: string };
+  readonly approver: { readonly name: string } | null;
+  readonly dispersedBy: { readonly name: string } | null;
+  readonly trips: readonly RawApprovalRequestTripRow[];
+};
+
+function mapApprovalRequestTripRow(
+  trip: RawApprovalRequestTripRow,
+): ApprovalRequestRecord['trips'][number] {
+  return {
+    id: trip.id,
+    tripOrder: trip.tripOrder,
+    tripApprovalStatus: trip.tripApprovalStatus,
+    approverComment: trip.approverComment,
+    approvedBy: trip.approvedBy,
+    destination: trip.destination,
+    purpose: trip.purpose,
+    departureDate: trip.departureDate,
+    returnDate: trip.returnDate,
+    disbursementDate: trip.disbursementDate,
+    estimatedTotal: decimalToNumber(trip.estimatedTotal),
+    expenses: trip.expenses
+      ? {
+          transport: decimalToNumber(trip.expenses.transport),
+          tolls: decimalToNumber(trip.expenses.tolls),
+          lodging: decimalToNumber(trip.expenses.lodging),
+          food: decimalToNumber(trip.expenses.food),
+          freight: decimalToNumber(trip.expenses.freight),
+          tools: decimalToNumber(trip.expenses.tools),
+          shipping: decimalToNumber(trip.expenses.shipping),
+          miscellaneous: decimalToNumber(trip.expenses.miscellaneous),
+        }
+      : null,
+    gasoline: trip.gasoline
+      ? {
+          requiresGasoline: trip.gasoline.requiresGasoline,
+          requestedAmount: decimalToNullableNumber(
+            trip.gasoline.requestedAmount,
+          ),
+        }
+      : null,
+    tag: trip.tag
+      ? {
+          requiresTag: trip.tag.requiresTag,
+          requestedAmount: decimalToNullableNumber(trip.tag.requestedAmount),
+        }
+      : null,
+  };
+}
+
+function mapApprovalRequestRow(
+  row: RawApprovalRequestRow,
+): ApprovalRequestRecord {
+  return {
+    id: row.id,
+    employeeName: row.employeeName,
+    corporateCardNumber: row.corporateCardNumber,
+    status: row.status,
+    approverComment: row.approverComment,
+    createdAt: row.createdAt,
+    approvedAt: row.approvedAt,
+    rejectedAt: row.rejectedAt,
+    user: row.user,
+    company: row.company,
+    area: row.area,
+    approver: row.approver,
+    dispersedBy: row.dispersedBy,
+    trips: row.trips.map(mapApprovalRequestTripRow),
+  };
 }
 
 function decimalToNumber(
@@ -1728,6 +1899,7 @@ function mapStoredTripToNotificationTripInput(
       montoSolicitado: decimalToNullableNumber(trip.gasoline?.requestedAmount),
       distanciaKm: decimalToNullableNumber(trip.gasoline?.distanceKm),
       comentarios: trip.gasoline?.comments ?? null,
+      fotoOdometroBase64: null,
     },
     tag: {
       necesitaTag: trip.tag?.requiresTag ?? false,
@@ -1735,4 +1907,48 @@ function mapStoredTripToNotificationTripInput(
       comentarios: trip.tag?.comments ?? null,
     },
   };
+}
+
+function buildTravelTripGasolineCreateData(
+  gasolina: TravelRequestGasolineInput,
+): {
+  readonly requiresGasoline: boolean;
+  readonly cardId: number | null;
+  readonly plate: string | null;
+  readonly currentMileageKm: number | null;
+  readonly requestedAmount: number | null;
+  readonly distanceKm: number | null;
+  readonly comments: string | null;
+  readonly odometerPhoto?: Uint8Array<ArrayBuffer>;
+} {
+  const decodedPhoto = decodeBase64ImageBuffer(gasolina.fotoOdometroBase64);
+  const odometerPhoto = toPrismaBytesField(decodedPhoto) as
+    | Uint8Array<ArrayBuffer>
+    | undefined;
+
+  return {
+    requiresGasoline: gasolina.necesitaGasolina,
+    cardId: gasolina.cardId,
+    plate: gasolina.placa,
+    currentMileageKm: gasolina.kilometrajeActualKm,
+    requestedAmount: gasolina.montoSolicitado,
+    distanceKm: gasolina.distanciaKm,
+    comments: gasolina.comentarios,
+    ...(odometerPhoto !== undefined ? { odometerPhoto } : {}),
+  };
+}
+
+function buildTravelTripGasolineUpdateData(
+  gasolina: TravelRequestGasolineInput,
+): {
+  readonly requiresGasoline: boolean;
+  readonly cardId: number | null;
+  readonly plate: string | null;
+  readonly currentMileageKm: number | null;
+  readonly requestedAmount: number | null;
+  readonly distanceKm: number | null;
+  readonly comments: string | null;
+  readonly odometerPhoto?: Uint8Array<ArrayBuffer>;
+} {
+  return buildTravelTripGasolineCreateData(gasolina);
 }

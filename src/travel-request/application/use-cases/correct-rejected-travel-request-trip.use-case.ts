@@ -173,6 +173,7 @@ export class CorrectRejectedTravelRequestTripUseCase {
         montoSolicitado: trip.gasolina.montoSolicitado,
         distanciaKm: trip.gasolina.distanciaKm,
         comentarios: trip.gasolina.comentarios?.trim() || null,
+        fotoOdometroBase64: trip.gasolina.fotoOdometroBase64?.trim() || null,
       },
       tag: {
         necesitaTag: trip.tag.necesitaTag,

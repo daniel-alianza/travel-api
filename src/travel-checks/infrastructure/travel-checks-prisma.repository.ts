@@ -135,6 +135,18 @@ export class TravelChecksPrismaRepository implements TravelChecksRepository {
             returnDate: true,
             disbursementDate: true,
             estimatedTotal: true,
+            expenses: {
+              select: {
+                transport: true,
+                tolls: true,
+                lodging: true,
+                food: true,
+                freight: true,
+                tools: true,
+                shipping: true,
+                miscellaneous: true,
+              },
+            },
           },
         },
       },
@@ -1265,6 +1277,16 @@ type TravelRequestRow = {
     readonly returnDate: Date;
     readonly disbursementDate: Date;
     readonly estimatedTotal: { toString(): string };
+    readonly expenses: {
+      readonly transport: { toString(): string };
+      readonly tolls: { toString(): string };
+      readonly lodging: { toString(): string };
+      readonly food: { toString(): string };
+      readonly freight: { toString(): string };
+      readonly tools: { toString(): string };
+      readonly shipping: { toString(): string };
+      readonly miscellaneous: { toString(): string };
+    } | null;
   }[];
 };
 
@@ -1303,5 +1325,7 @@ function mapTrip(
     returnDate: trip.returnDate,
     disbursementDate: trip.disbursementDate,
     estimatedTotal: Number(trip.estimatedTotal.toString()),
+    expenses:
+      trip.expenses === null ? null : mapExpenseAmounts(trip.expenses),
   };
 }

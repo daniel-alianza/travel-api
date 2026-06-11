@@ -8,6 +8,7 @@ export type DispersedTripForCheckRecord = {
   readonly returnDate: Date;
   readonly disbursementDate: Date;
   readonly estimatedTotal: number;
+  readonly expenses: ExpenseTripExpenseAmountsRecord | null;
 };
 
 export type DispersedTravelRequestForCheckRecord = {

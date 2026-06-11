@@ -31,6 +31,7 @@ import { GasolineController } from './presentation/gasoline.controller';
   exports: [
     GasolineNotificationRecipientService,
     'GasolineNotificationRecipientRepository',
+    'GasolineRequestRepository',
   ],
   providers: [
     SapGasolineCardsAdapter,

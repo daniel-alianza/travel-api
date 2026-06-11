@@ -491,6 +491,7 @@ export class TravelRequestController {
           montoSolicitado: requestBody.trip.gasolina.montoSolicitado,
           distanciaKm: requestBody.trip.gasolina.distanciaKm,
           comentarios: requestBody.trip.gasolina.comentarios,
+          fotoOdometroBase64: requestBody.trip.gasolina.fotoOdometroBase64,
         },
         tag: {
           necesitaTag: requestBody.trip.tag.necesitaTag,
@@ -676,6 +677,7 @@ export class TravelRequestController {
           montoSolicitado: trip.gasolina.montoSolicitado,
           distanciaKm: trip.gasolina.distanciaKm,
           comentarios: trip.gasolina.comentarios,
+          fotoOdometroBase64: trip.gasolina.fotoOdometroBase64,
         },
         tag: {
           necesitaTag: trip.tag.necesitaTag,

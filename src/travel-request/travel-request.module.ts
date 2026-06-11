@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from '../auth/auth.module';
+import { GasolineModule } from '../gasoline/gasoline.module';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { CreateTravelRequestUseCase } from './application/use-cases/create-travel-request.use-case';
 import { GetGasolineRequestFormDataUseCase } from './application/use-cases/get-gasoline-request-form-data.use-case';
@@ -20,12 +21,13 @@ import { GetTravelRequestDetailForUserUseCase } from './application/use-cases/ge
 import { CorrectRejectedTravelRequestTripUseCase } from './application/use-cases/correct-rejected-travel-request-trip.use-case';
 import { ValidateTripFoodExpenseUseCase } from './application/use-cases/validate-trip-food-expense.use-case';
 import { ValidateTripLodgingExpenseUseCase } from './application/use-cases/validate-trip-lodging-expense.use-case';
+import { SpawnApprovedGasolineForTravelTripUseCase } from './application/use-cases/spawn-approved-gasoline-for-travel-trip.use-case';
 import { TravelRequestPrismaRepository } from './infrastructure/travel-request-prisma.repository';
 import { TravelRequestController } from './presentation/travel-request.controller';
 import { PowerAutomateSecretGuard } from './presentation/guards/power-automate-secret.guard';
 
 @Module({
-  imports: [AuthModule, NotificationsModule],
+  imports: [AuthModule, NotificationsModule, GasolineModule],
   controllers: [TravelRequestController],
   providers: [
     TravelRequestPrismaRepository,
@@ -48,6 +50,7 @@ import { PowerAutomateSecretGuard } from './presentation/guards/power-automate-s
     CorrectRejectedTravelRequestTripUseCase,
     ValidateTripFoodExpenseUseCase,
     ValidateTripLodgingExpenseUseCase,
+    SpawnApprovedGasolineForTravelTripUseCase,
     PowerAutomateSecretGuard,
     {
       provide: 'TravelRequestRepository',

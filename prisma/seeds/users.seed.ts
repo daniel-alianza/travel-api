@@ -15,35 +15,113 @@ const SEED_USER = {
   isActive: true,
 } as const;
 
-const SEED_ACCOUNTING_USER = {
-  id: 2,
-  name: 'Contabilidad Alianza',
-  email: 'contabilidad@alianzaelectrica.com',
-  password: 'contaalianza10',
-  companyId: 1,
+const SEED_FERNANDO_USER = {
+  id: 5,
+  name: 'Fernando Mata Camacho',
+  email: 'compras@alianzaelectrica.com',
+  password: 'FeMa2026$',
+  companyId: 2,
   branchId: 1,
   roleId: 2,
-  areaId: 8,
+  areaId: 1,
+  managerId: null,
   isActive: true,
 } as const;
 
-const SEED_USERS = [SEED_USER, SEED_ACCOUNTING_USER] as const;
+const SEED_JUAN_USER = {
+  id: 6,
+  name: 'Juan Carlos Morales',
+  email: 'juan.morales@alianzaelectrica.com',
+  password: 'JuCa2026$',
+  companyId: 2,
+  branchId: 1,
+  roleId: 2,
+  areaId: 20,
+  managerId: SEED_FERNANDO_USER.id,
+  isActive: true,
+} as const;
+
+const SEED_JOSE_USER = {
+  id: 2,
+  name: 'Jose Antonio Silveira Aguila',
+  email: 'jose.silveira@fgelectrical.com',
+  password: 'JoAn2026$',
+  companyId: 2,
+  branchId: 1,
+  roleId: 3,
+  areaId: 21,
+  managerId: SEED_FERNANDO_USER.id,
+  isActive: true,
+} as const;
+
+const SEED_CECILIA_USER = {
+  id: 3,
+  name: 'Cecilia Leon',
+  email: 'cecilia.leon@fgelectrical.com',
+  password: 'CeLe2026$',
+  companyId: 2,
+  branchId: 1,
+  roleId: 4,
+  areaId: 21,
+  managerId: SEED_JOSE_USER.id,
+  isActive: true,
+} as const;
+
+const SEED_ALBERTO_USER = {
+  id: 4,
+  name: 'Alberto Gomez',
+  email: 'alberto.gomez@alianzaelectrica.com',
+  password: 'AbGo2026$',
+  companyId: 2,
+  branchId: 1,
+  roleId: 4,
+  areaId: 21,
+  managerId: SEED_JOSE_USER.id,
+  isActive: true,
+} as const;
+
+const SEED_USERS = [
+  SEED_USER,
+  SEED_FERNANDO_USER,
+  SEED_JUAN_USER,
+  SEED_JOSE_USER,
+  SEED_CECILIA_USER,
+  SEED_ALBERTO_USER,
+] as const;
 
 const SEED_CARDS = [
   {
-    cardNumber: '2222222222222222',
-    type: 'FUEL',
-    userId: SEED_USER.id,
-    companyId: SEED_USER.companyId,
+    cardNumber: '5161020004227593',
+    type: 'VIATIC' as const,
+    userId: SEED_JUAN_USER.id,
+    companyId: SEED_JUAN_USER.companyId,
     isActive: true,
-    fuelName: 'Tarjeta fuel demo',
-    fuelStatus: 'active',
+    fuelName: null,
+    fuelStatus: null,
   },
   {
-    cardNumber: '5161020005113727',
-    type: 'VIATIC',
-    userId: SEED_USER.id,
-    companyId: SEED_USER.companyId,
+    cardNumber: '5161020004761047',
+    type: 'VIATIC' as const,
+    userId: SEED_JOSE_USER.id,
+    companyId: SEED_JOSE_USER.companyId,
+    isActive: true,
+    fuelName: null,
+    fuelStatus: null,
+  },
+  {
+    cardNumber: '5161020004202646',
+    type: 'VIATIC' as const,
+    userId: SEED_CECILIA_USER.id,
+    companyId: SEED_CECILIA_USER.companyId,
+    isActive: true,
+    fuelName: null,
+    fuelStatus: null,
+  },
+  {
+    cardNumber: '5161020004149144',
+    type: 'VIATIC' as const,
+    userId: SEED_ALBERTO_USER.id,
+    companyId: SEED_ALBERTO_USER.companyId,
     isActive: true,
     fuelName: null,
     fuelStatus: null,
@@ -83,6 +161,7 @@ type PrismaClientWithUserDelegate = PrismaClient & {
         branchId: number;
         areaId: number;
         roleId: number;
+        managerId: number | null;
         isActive: boolean;
       };
       select: { id: true };
@@ -96,12 +175,12 @@ type PrismaClientWithUserDelegate = PrismaClient & {
     createMany(args: {
       data: readonly {
         cardNumber: string;
-        type: 'FUEL' | 'VIATIC';
+        type: 'VIATIC';
         userId: number;
         companyId: number;
         isActive: boolean;
-        fuelName: string | null;
-        fuelStatus: 'active' | null;
+        fuelName: null;
+        fuelStatus: null;
       }[];
     }): Promise<CardCreateManyResult>;
   };
@@ -135,6 +214,7 @@ export async function seedUsers(prismaClient: PrismaClient): Promise<number> {
         branchId: seedUser.branchId,
         areaId: seedUser.areaId,
         roleId: seedUser.roleId,
+        managerId: 'managerId' in seedUser ? seedUser.managerId : null,
         isActive: seedUser.isActive,
       },
       select: { id: true },
